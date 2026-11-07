@@ -1,0 +1,144 @@
+<Window
+    x:Class="MovieShelf.App.BackupsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieShelf.App">
+
+    <Grid x:Name="Root">
+        <Grid.Resources>
+            <DataTemplate x:Key="AutoTemplate" x:DataType="local:AutoBackupVm">
+                <Grid ColumnSpacing="12" Padding="0,6" MinHeight="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind Date}" FontWeight="SemiBold" FlowDirection="LeftToRight" HorizontalAlignment="Left" />
+                        <TextBlock Text="{x:Bind SizeText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="{x:Bind RestoreLabel}" Tag="{x:Bind}" Click="OnRestoreAuto" VerticalAlignment="Center" />
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="Backups" IsBackButtonVisible="False" />
+
+        <InfoBar x:Name="Info" Grid.Row="1" IsOpen="False" IsClosable="True" Margin="16,0,16,8" />
+
+        <Grid x:Name="JobPanel" Grid.Row="2" Visibility="Collapsed" ColumnSpacing="12" Margin="16,0,16,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="JobText" />
+                <ProgressBar x:Name="JobBar" IsIndeterminate="True" />
+            </StackPanel>
+            <Button x:Name="StopBtn" Grid.Column="1" Content="Stop" Click="OnStop" VerticalAlignment="Center" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="3" Padding="16,4,16,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+            <SelectorBar x:Name="Tabs" SelectionChanged="OnTabChanged" />
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+            <Grid Padding="16,12,16,24" MaxWidth="860" HorizontalAlignment="Stretch">
+                <!-- Quick backup: the user's own data -->
+                <StackPanel x:Name="PersonalPanel" Spacing="14">
+                    <TextBlock Text="Your favorites, watched flags, ratings, notes, manual matches, ignored problems, saved views and wishlist. A copy is also saved automatically once a day in the data folder (the last 14 are kept)."
+                               TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="ExportBtn" Click="OnExportPersonal">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE896;" FontSize="14" />
+                                <TextBlock Text="Export backup…" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ImportBtn" Content="Import backup…" Click="OnImportPersonal" />
+                    </StackPanel>
+                    <InfoBar x:Name="PersonalInfo" IsOpen="False" IsClosable="True">
+                        <InfoBar.ActionButton>
+                            <Button x:Name="UpdateBtn" Content="Update now" Click="OnUpdateNow" HorizontalAlignment="Right" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                    <Border CornerRadius="8" Padding="18,14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Automatic backups" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock x:Name="AutoNote" Text="Restoring one merges it into your library. Nothing is deleted." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <ItemsControl x:Name="AutoList" ItemTemplate="{StaticResource AutoTemplate}" />
+                            <TextBlock x:Name="AutoEmpty" Text="No automatic backups yet." Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Full backup: one .zip with everything -->
+                <StackPanel x:Name="FullPanel" Spacing="16" Visibility="Collapsed">
+                    <Border CornerRadius="8" Padding="18,14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Save a full backup" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock Text="One .zip file with what you tick below. Restoring it on this or another PC brings everything back." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <CheckBox x:Name="SvDb" IsChecked="True" IsEnabled="False" />
+                            <CheckBox x:Name="SvSettings" IsChecked="True" IsEnabled="False" />
+                            <CheckBox x:Name="SvKeys" Click="OnSaveOptionChanged" />
+                            <TextBlock x:Name="SvKeysNote" Margin="32,-6,0,0" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <CheckBox x:Name="SvLists" Click="OnSaveOptionChanged" />
+                            <CheckBox x:Name="SvPosters" Click="OnSaveOptionChanged" />
+                            <CheckBox x:Name="SvImdb" Click="OnSaveOptionChanged" />
+                            <TextBlock x:Name="SvImdbNote" Margin="32,-6,0,0" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <Grid ColumnSpacing="12" Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="SvSummary" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <Button x:Name="SaveFullBtn" Grid.Column="1" Style="{StaticResource AccentButtonStyle}" Click="OnSaveFull">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE896;" FontSize="14" />
+                                        <TextBlock Text="Save backup…" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="8" Padding="18,14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Load a full backup" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock Text="Pick a backup .zip made by Save a full backup. What you choose below replaces what you have now. A copy of your current library, settings and list files is saved first in the backups folder (before-restore-…)."
+                                       TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Button x:Name="PickZipBtn" Content="Choose backup file…" Click="OnPickZip" />
+                                <TextBlock x:Name="ZipPath" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="460" FlowDirection="LeftToRight" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <StackPanel x:Name="RestoreOptions" Spacing="8" Visibility="Collapsed">
+                                <Border CornerRadius="6" Padding="12,10" Background="{ThemeResource LayerFillColorAltBrush}">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock x:Name="ZipTitle" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock x:Name="ZipDetail" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                </Border>
+                                <CheckBox x:Name="RsLibrary" IsChecked="True" IsEnabled="False" />
+                                <CheckBox x:Name="RsSettings" />
+                                <CheckBox x:Name="RsKeys" />
+                                <CheckBox x:Name="RsLists" />
+                                <CheckBox x:Name="RsPosters" />
+                                <CheckBox x:Name="RsImdb" />
+                            </StackPanel>
+                            <Button x:Name="RestoreFullBtn" Content="Restore…" Click="OnRestoreFull" IsEnabled="False" HorizontalAlignment="Left" Margin="0,4,0,0" />
+                            <InfoBar x:Name="FullInfo" IsOpen="False" IsClosable="True" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

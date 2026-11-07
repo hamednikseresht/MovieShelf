@@ -1,0 +1,53 @@
+MOVIESHELF LICENSE AGREEMENT
+
+Please read this agreement before you install MovieShelf. If you do not agree with it, cancel setup.
+
+
+1. MOVIESHELF
+
+MovieShelf is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from, out of or in connection with MovieShelf or its use.
+
+You use MovieShelf at your own risk. Keep backups of anything that matters to you.
+
+
+2. THIRD-PARTY SOFTWARE
+
+MovieShelf is built with the following software. Each part stays under its own terms.
+
+Microsoft .NET
+Copyright (c) .NET Foundation and Contributors. MIT License.
+
+Windows App SDK and WinUI
+Copyright (c) Microsoft Corporation. Microsoft Software License Terms, and the MIT License for the open-source parts.
+
+SQLite
+Public domain. https://www.sqlite.org
+Used through Microsoft.Data.Sqlite, copyright (c) .NET Foundation and Contributors, MIT License.
+
+7-Zip
+Copyright (c) Igor Pavlov. GNU LGPL, with parts under the BSD 3-clause license and the unRAR license restriction. Source code: https://www.7-zip.org
+Setup uses 7-Zip only while it runs. It is not left on your computer.
+
+
+3. DATA AND SERVICES
+
+MovieShelf reads data from these services. The data belongs to them and stays under their terms.
+
+IMDb
+Information courtesy of IMDb (https://www.imdb.com). Used with permission. The IMDb datasets are for personal and non-commercial use only: https://developer.imdb.com/non-commercial-datasets/
+Do not use the IMDb data that MovieShelf downloads for any commercial purpose.
+
+TMDB
+This product uses the TMDB API but is not endorsed or certified by TMDB. https://www.themoviedb.org
+Using TMDB needs your own free API key, under the TMDB terms of use.
+
+OMDb
+Optional. Using OMDb needs your own API key, under the terms of the OMDb API. https://www.omdbapi.com
+
+Wikidata
+Critic scores come from Wikidata, under CC0. https://www.wikidata.org
+
+
+4. FFMPEG (ONLY IF YOU CHOOSE FFPROBE)
+
+ffprobe is part of FFmpeg, a project of the FFmpeg developers. Setup downloads it from https://www.gyan.dev/ffmpeg/builds/ and does not ship it. That build is licensed under the GNU General Public License, version 3. Source code: https://ffmpeg.org

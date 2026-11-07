@@ -1,0 +1,74 @@
+{
+ "app": "MovieShelf",
+ "format": 1,
+ "created": "2026-10-31 09:05:58",
+ "user": [
+  {
+   "mkey": "tt0000001",
+   "fav": 1,
+   "watched": 1,
+   "myrating": 9,
+   "notes": "Très bon – \"quoted\", café",
+   "watched_at": "2026-10-31 09:05:58"
+  },
+  {
+   "mkey": "tt0000002",
+   "fav": 0,
+   "watched": 1,
+   "myrating": null,
+   "notes": null,
+   "watched_at": "2026-10-31 09:05:58"
+  }
+ ],
+ "manual": [
+  {
+   "raw": "Heat.1995.720p",
+   "tconst": 2
+  }
+ ],
+ "forced": [
+  {
+   "raw": "Future.Movie.2030",
+   "tconst": 5
+  }
+ ],
+ "dismissed": [
+  "dupes:tt0000001:1-2"
+ ],
+ "views": [
+  {
+   "name": "Dramas 90s",
+   "state": "{\"F\": {\"q\": \"heat\", \"genre\": [\"Drama\"]}, \"sort\": \"title\", \"rev\": false, \"group\": \"none\"}"
+  },
+  {
+   "name": "پدرخوانده",
+   "state": "{\"F\": {\"q\": \"\"}}"
+  }
+ ],
+ "wishlist": [
+  {
+   "title": "Alien",
+   "year": 1979,
+   "tconst": null,
+   "note": "blu-ray",
+   "source": "check",
+   "status": "wanted",
+   "added": "2026-10-31 09:05:58"
+  },
+  {
+   "title": "Ça",
+   "year": 2017,
+   "tconst": 1396484,
+   "note": null,
+   "source": null,
+   "status": "found",
+   "added": "2026-10-31 09:05:58"
+  }
+ ],
+ "fa_titles": [
+  {
+   "tconst": 1,
+   "title": "آملی"
+  }
+ ]
+}

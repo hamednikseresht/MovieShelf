@@ -1,0 +1,65 @@
+توافق‌نامه مجوز MovieShelf
+
+لطفاً پیش از نصب MovieShelf این توافق‌نامه را بخوانید. اگر با آن موافق نیستید، نصب را لغو کنید.
+
+
+۱. MovieShelf
+
+MovieShelf به همان صورت که هست ارائه می‌شود و هیچ ضمانتی، صریح یا ضمنی، ندارد؛ از جمله ضمانت قابل فروش بودن، مناسب بودن برای هدفی خاص یا نقض نکردن حقوق دیگران. سازندگان و دارندگان حق نشر در هیچ شرایطی مسئول ادعا، خسارت یا هر تعهد دیگری که از MovieShelf یا استفاده از آن ناشی شود نیستند.
+
+مسئولیت استفاده از MovieShelf با خود شماست. از هر چیزی که برایتان مهم است پشتیبان بگیرید.
+
+
+۲. نرم‌افزارهای دیگران
+
+MovieShelf با نرم‌افزارهای زیر ساخته شده است. هر کدام تابع شرایط خودشان هستند.
+
+Microsoft .NET
+Copyright (c) .NET Foundation and Contributors
+مجوز MIT License
+
+Windows App SDK و WinUI
+Copyright (c) Microsoft Corporation
+مجوز Microsoft Software License Terms، و برای بخش‌های متن‌باز MIT License
+
+SQLite
+مالکیت عمومی (Public Domain)
+https://www.sqlite.org
+از طریق Microsoft.Data.Sqlite با مجوز MIT License استفاده می‌شود.
+Copyright (c) .NET Foundation and Contributors
+
+7-Zip
+Copyright (c) Igor Pavlov
+مجوز GNU LGPL، با بخش‌هایی تحت BSD 3-clause و محدودیت unRAR
+کد منبع: https://www.7-zip.org
+نصب‌کننده فقط هنگام اجرا از 7-Zip استفاده می‌کند و آن را روی رایانه شما باقی نمی‌گذارد.
+
+
+۳. داده‌ها و سرویس‌ها
+
+MovieShelf داده‌ها را از این سرویس‌ها می‌خواند. این داده‌ها متعلق به آن‌هاست و تابع شرایط خودشان است.
+
+IMDb
+Information courtesy of IMDb (https://www.imdb.com). Used with permission.
+داده‌های IMDb فقط برای استفاده شخصی و غیرتجاری است:
+https://developer.imdb.com/non-commercial-datasets/
+از داده‌های IMDb که MovieShelf دانلود می‌کند برای هیچ هدف تجاری استفاده نکنید.
+
+TMDB
+This product uses the TMDB API but is not endorsed or certified by TMDB.
+https://www.themoviedb.org
+استفاده از TMDB به کلید API رایگان خودتان نیاز دارد و تابع شرایط استفاده TMDB است.
+
+OMDb
+اختیاری است. استفاده از OMDb به کلید API خودتان نیاز دارد و تابع شرایط OMDb API است.
+https://www.omdbapi.com
+
+Wikidata
+امتیاز منتقدان از Wikidata می‌آید و تحت مجوز CC0 است.
+https://www.wikidata.org
+
+
+۴. FFmpeg (فقط اگر ffprobe را انتخاب کنید)
+
+ffprobe بخشی از FFmpeg است که توسعه‌دهندگان FFmpeg آن را می‌سازند. نصب‌کننده آن را از https://www.gyan.dev/ffmpeg/builds/ دانلود می‌کند و همراه خود ندارد. این نسخه تحت مجوز GNU General Public License نسخه ۳ است.
+کد منبع: https://ffmpeg.org

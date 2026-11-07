@@ -1,0 +1,269 @@
+<Window
+    x:Class="MovieShelf.App.ProblemsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieShelf.App">
+
+    <Grid x:Name="Root">
+        <Grid.Resources>
+            <Style x:Key="RowButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Padding" Value="10,3" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style x:Key="SmallLink" TargetType="HyperlinkButton" BasedOn="{StaticResource DefaultHyperlinkButtonStyle}">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Padding" Value="2,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="Tag" TargetType="Border">
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+            </Style>
+
+            <DataTemplate x:Key="MatchTemplate" x:DataType="local:MatchVm">
+                <Grid Padding="4,10" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="5">
+                        <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="0">
+                            <TextBlock Text="{x:Bind Raw}" FontWeight="SemiBold" TextWrapping="Wrap" IsTextSelectionEnabled="True" FlowDirection="LeftToRight" VerticalAlignment="Center" />
+                            <HyperlinkButton NavigateUri="{x:Bind GoogleUri}" ToolTipService.ToolTip="{x:Bind GoogleTip}" Style="{StaticResource SmallLink}" AutomationProperties.Name="{x:Bind GoogleTip}">
+                                <FontIcon Glyph="&#xE721;" FontSize="12" />
+                            </HyperlinkButton>
+                        </local:WrapPanel>
+                        <ItemsControl ItemsSource="{x:Bind PathLinks}" Visibility="{x:Bind PathsVis}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:IssuePathVm">
+                                    <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="0">
+                                        <TextBlock Text="{x:Bind Short}" FontSize="12" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Path}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" FlowDirection="LeftToRight" />
+                                        <HyperlinkButton Content="{x:Bind ShowLabel}" Tag="{x:Bind Path}" Click="OnReveal" Style="{StaticResource SmallLink}" />
+                                    </local:WrapPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Grid ColumnSpacing="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE7BA;" FontSize="12" Foreground="{ThemeResource SystemFillColorCautionBrush}" VerticalAlignment="Top" Margin="0,3,0,0" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Reason}" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="13" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                        </Grid>
+                        <TextBlock Text="{x:Bind DoneText, Mode=OneWay}" Visibility="{x:Bind DoneVis, Mode=OneWay}" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+                        <StackPanel Spacing="5" Visibility="{x:Bind OpenVis, Mode=OneWay}">
+                            <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="2" Visibility="{x:Bind CurrentVis}">
+                                <TextBlock Text="{x:Bind NowLabel}" VerticalAlignment="Center" FontSize="13" />
+                                <HyperlinkButton Content="{x:Bind CurrentTitle}" Tag="{x:Bind}" Click="OnCurrentImdb" Style="{StaticResource SmallLink}" FlowDirection="LeftToRight" />
+                                <TextBlock Text="{x:Bind CurrentMeta}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <Button Tag="{x:Bind}" Click="OnAccept" Style="{StaticResource RowButton}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="11" />
+                                        <TextBlock Text="{x:Bind LooksRight}" />
+                                    </StackPanel>
+                                </Button>
+                            </local:WrapPanel>
+                            <TextBlock Text="{x:Bind CandsLabel, Mode=OneWay}" Visibility="{x:Bind CandsVis, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <ItemsControl ItemsSource="{x:Bind Cands, Mode=OneWay}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="local:CandVm">
+                                        <Grid ColumnSpacing="8" Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel FlowDirection="LeftToRight">
+                                                <TextBlock Text="{x:Bind Text}" FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                <TextBlock Text="{x:Bind Detail}" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </StackPanel>
+                                            <HyperlinkButton Grid.Column="1" Content="{x:Bind ViewLabel}" Tag="{x:Bind}" Click="OnCandImdb" Style="{StaticResource SmallLink}" />
+                                            <Button Grid.Column="2" Content="{x:Bind UseLabel}" Tag="{x:Bind}" Click="OnUseCandidate" Style="{StaticResource RowButton}" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2,0,0">
+                                <Button Content="{x:Bind SearchLabel}" Tag="{x:Bind}" Click="OnSearch" Style="{StaticResource RowButton}" />
+                                <Button Content="{x:Bind NotImdbLabel}" Tag="{x:Bind}" Click="OnNotImdb" Style="{StaticResource RowButton}" />
+                                <Button Content="{x:Bind RemoveLabel}" Tag="{x:Bind}" Click="OnRemoveMatch" Style="{StaticResource RowButton}" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border Grid.Column="1" Style="{StaticResource Tag}" VerticalAlignment="Top" Background="{x:Bind ConfBg}">
+                        <TextBlock Text="{x:Bind ConfLabel}" FontSize="12" Foreground="{x:Bind ConfFg}" />
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="IssueTemplate" x:DataType="local:IssueVm">
+                <Grid Padding="4,10" ColumnSpacing="14" Opacity="{x:Bind RowOpacity, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <local:WrapPanel HorizontalSpacing="8" VerticalSpacing="0">
+                            <TextBlock Text="{x:Bind Title}" FontWeight="SemiBold" VerticalAlignment="Center" FlowDirection="LeftToRight" IsTextSelectionEnabled="True" />
+                            <TextBlock Text="{x:Bind Year}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind Meta}" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <HyperlinkButton NavigateUri="{x:Bind GoogleUri}" ToolTipService.ToolTip="{x:Bind GoogleTip}" Style="{StaticResource SmallLink}" AutomationProperties.Name="{x:Bind GoogleTip}">
+                                <FontIcon Glyph="&#xE721;" FontSize="12" />
+                            </HyperlinkButton>
+                            <HyperlinkButton Tag="{x:Bind}" Click="OnIssueImdb" Visibility="{x:Bind ImdbVis}" ToolTipService.ToolTip="{x:Bind ImdbTip}" Style="{StaticResource SmallLink}">
+                                <FontIcon Glyph="&#xE8A7;" FontSize="12" />
+                            </HyperlinkButton>
+                        </local:WrapPanel>
+                        <Grid ColumnSpacing="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE7BA;" FontSize="12" Foreground="{ThemeResource SystemFillColorCautionBrush}" VerticalAlignment="Top" Margin="0,3,0,0" Visibility="{x:Bind AlertVis}" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Note}" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="13" Foreground="{x:Bind NoteBrush}" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{x:Bind Junk}" Visibility="{x:Bind JunkVis}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:JunkVm">
+                                    <StackPanel Spacing="2" Margin="0,4,0,0">
+                                        <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="2">
+                                            <Border Style="{StaticResource Tag}" Background="{x:Bind BadBg}">
+                                                <TextBlock Text="{x:Bind Status}" FontSize="12" Foreground="{x:Bind BadFg}" />
+                                            </Border>
+                                            <Border Style="{StaticResource Tag}" Visibility="{x:Bind SizeVis}">
+                                                <TextBlock Text="{x:Bind SizeText}" FontSize="12" />
+                                            </Border>
+                                            <TextBlock Text="{x:Bind Path}" FontSize="12" FontFamily="Consolas" VerticalAlignment="Center" IsTextSelectionEnabled="True" TextWrapping="Wrap" FlowDirection="LeftToRight" />
+                                            <HyperlinkButton Content="{x:Bind OpenLabel}" Tag="{x:Bind Path}" Click="OnReveal" Style="{StaticResource SmallLink}" />
+                                        </local:WrapPanel>
+                                        <TextBlock Text="{x:Bind Names}" Visibility="{x:Bind NamesVis}" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{x:Bind Files}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:IssueFileVm">
+                                    <StackPanel Spacing="1" Margin="0,3,0,0">
+                                        <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="2">
+                                            <Border Style="{StaticResource Tag}" Background="{x:Bind VerdictBg}" Visibility="{x:Bind VerdictVis}">
+                                                <TextBlock Text="{x:Bind VerdictText}" FontSize="12" Foreground="{x:Bind VerdictFg}" />
+                                            </Border>
+                                            <Border Style="{StaticResource Tag}">
+                                                <TextBlock Text="{x:Bind Quality}" FontSize="12" FlowDirection="LeftToRight" />
+                                            </Border>
+                                            <Border Style="{StaticResource Tag}" Visibility="{x:Bind SizeVis}">
+                                                <TextBlock Text="{x:Bind SizeText}" FontSize="12" />
+                                            </Border>
+                                            <TextBlock Text="{x:Bind Raw}" FontSize="12" FontFamily="Consolas" VerticalAlignment="Center" IsTextSelectionEnabled="True" TextWrapping="Wrap" FlowDirection="LeftToRight" />
+                                            <HyperlinkButton Content="{x:Bind RemoveLabel}" Tag="{x:Bind}" Click="OnRemoveFile" Visibility="{x:Bind RemoveVis}" Style="{StaticResource SmallLink}" />
+                                            <HyperlinkButton Content="{x:Bind FixLabel}" Tag="{x:Bind}" Click="OnFixFile" Visibility="{x:Bind FixVis}" Style="{StaticResource SmallLink}" />
+                                        </local:WrapPanel>
+                                        <ItemsControl ItemsSource="{x:Bind Paths}" Visibility="{x:Bind PathsVis}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="local:IssuePathVm">
+                                                    <local:WrapPanel HorizontalSpacing="6" VerticalSpacing="0">
+                                                        <TextBlock Text="{x:Bind Short}" FontSize="12" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Path}"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" FlowDirection="LeftToRight" />
+                                                        <HyperlinkButton Content="{x:Bind ShowLabel}" Tag="{x:Bind Path}" Click="OnReveal" Style="{StaticResource SmallLink}" />
+                                                    </local:WrapPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4" Width="170">
+                        <Button Content="{x:Bind SeriesLabel}" Tag="{x:Bind}" Click="OnSeries" Visibility="{x:Bind SeriesVis}" Style="{StaticResource RowButton}" />
+                        <Button Content="{x:Bind RemoveLabel}" Tag="{x:Bind}" Click="OnRemoveRow" Style="{StaticResource RowButton}" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                        <Button Content="{x:Bind PosterLabel}" Tag="{x:Bind}" Click="OnAddPoster" Visibility="{x:Bind PosterVis}" Style="{StaticResource RowButton}" />
+                        <Button Content="{x:Bind OpenLabel}" Tag="{x:Bind}" Click="OnOpenMovie" Visibility="{x:Bind OpenVis}" Style="{StaticResource RowButton}" />
+                        <Button Tag="{x:Bind}" Click="OnCopy" Visibility="{x:Bind CopyVis}" Style="{StaticResource RowButton}">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="11" />
+                                <TextBlock Text="{x:Bind CopyLabel}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Button>
+                        <Button Content="{x:Bind WishLabel}" Tag="{x:Bind}" Click="OnWish" Visibility="{x:Bind WishVis}" Style="{StaticResource RowButton}" />
+                        <Button Tag="{x:Bind}" Click="OnFixIssue" Visibility="{x:Bind FixVis}" Style="{StaticResource RowButton}">
+                            <TextBlock Text="{x:Bind FixLabel}" TextWrapping="Wrap" TextAlignment="Center" />
+                        </Button>
+                        <Button Content="{x:Bind IgnoreLabel}" Tag="{x:Bind}" Click="OnIgnore" Style="{StaticResource RowButton}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="Problems" IsBackButtonVisible="False" />
+
+        <ScrollViewer Grid.Row="1" Margin="16,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+            <SelectorBar x:Name="Areas" SelectionChanged="OnAreaChanged" />
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Padding="16,6,16,6" Spacing="6">
+            <TextBlock x:Name="HelpText" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock x:Name="WastedText" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Collapsed" />
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+                    <StackPanel x:Name="Chips" Orientation="Horizontal" Spacing="6" Padding="0,0,0,4" />
+                </ScrollViewer>
+                <CheckBox x:Name="ShowIgnored" Grid.Column="1" Click="OnShowIgnored" MinWidth="0" Visibility="Collapsed" />
+            </Grid>
+            <StackPanel x:Name="BulkRow" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+                <Button x:Name="RemoveAllBtn" Click="OnRemoveAll" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                <Button x:Name="PostersBtn" Click="OnRetryPosters" Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE896;" FontSize="13" />
+                        <TextBlock x:Name="PostersText" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="3">
+            <ListView x:Name="MatchList" ItemTemplate="{StaticResource MatchTemplate}" SelectionMode="None" />
+            <ListView x:Name="IssueList" ItemTemplate="{StaticResource IssueTemplate}" SelectionMode="None" Visibility="Collapsed" />
+            <StackPanel x:Name="Empty" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" Visibility="Collapsed" Padding="24">
+                <FontIcon x:Name="EmptyIcon" Glyph="&#xE73E;" FontSize="32" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+                <TextBlock x:Name="EmptyText" TextWrapping="Wrap" TextAlignment="Center" />
+            </StackPanel>
+            <StackPanel x:Name="LoadingBox" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                <ProgressRing x:Name="Ring" IsActive="True" Width="48" Height="48" />
+                <TextBlock x:Name="LoadingText" />
+            </StackPanel>
+            <InfoBar x:Name="Toast" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="12" MaxWidth="640" />
+        </Grid>
+
+        <StackPanel Grid.Row="4" Padding="16,6,16,10" Spacing="6" BorderThickness="0,1,0,0" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <TextBlock x:Name="NoFolders" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Collapsed" />
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="CheckAgainBtn" Click="OnCheckAgain" />
+                <TextBlock x:Name="FootText" Grid.Column="1" TextWrapping="Wrap" TextReadingOrder="UseFlowDirection" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Button x:Name="ExportBtn" Grid.Column="2" Click="OnExportCsv" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

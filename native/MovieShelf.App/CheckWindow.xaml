@@ -1,0 +1,203 @@
+<Window
+    x:Class="MovieShelf.App.CheckWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieShelf.App">
+
+    <Grid x:Name="Root">
+        <Grid.Resources>
+            <DataTemplate x:Key="ItemTemplate" x:DataType="local:CheckRowVm">
+                <Grid Padding="8,10,12,10" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" IsChecked="{x:Bind Selected, Mode=TwoWay}" Visibility="{x:Bind AddableVis, Mode=OneWay}"
+                              Click="OnRowCheck" MinWidth="0" Width="32" VerticalAlignment="Top" AutomationProperties.Name="{x:Bind Raw}" />
+                    <StackPanel Grid.Column="1" Spacing="3">
+                        <TextBlock Text="{x:Bind Raw}" FontWeight="SemiBold" TextWrapping="Wrap" IsTextSelectionEnabled="True" />
+                        <local:WrapPanel HorizontalSpacing="8" VerticalSpacing="0" Visibility="{x:Bind ImdbVis}">
+                            <HyperlinkButton Content="{x:Bind ImdbTitle}" Tag="{x:Bind}" Click="OnOpenImdb" Padding="0,1" />
+                            <TextBlock Text="{x:Bind ImdbMeta}" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </local:WrapPanel>
+                        <TextBlock Text="{x:Bind NoImdbText}" Visibility="{x:Bind NoImdbVis}" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                        <TextBlock Text="{x:Bind QualityMeta}" Visibility="{x:Bind QualityVis}" FontSize="12" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{x:Bind ShortPath}" Visibility="{x:Bind PathVis}" FontSize="12" TextTrimming="CharacterEllipsis"
+                                   ToolTipService.ToolTip="{x:Bind PathText}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Left" />
+                        <Grid ColumnSpacing="6" Visibility="{x:Bind ReasonVis}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE7BA;" FontSize="12" Foreground="{ThemeResource SystemFillColorCautionBrush}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind Reason}" TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                        </Grid>
+                        <StackPanel Visibility="{x:Bind ChoiceVis}" Spacing="2" Margin="0,4,0,0">
+                            <TextBlock Text="{x:Bind WhichText}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <RadioButtons ItemsSource="{x:Bind ChoiceLabels}" SelectedIndex="{x:Bind ChoiceIndex, Mode=TwoWay}" MaxColumns="1" />
+                        </StackPanel>
+                        <StackPanel Visibility="{x:Bind LibVis}" Spacing="1" Margin="0,4,0,0">
+                            <TextBlock Text="{x:Bind LibHead}" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind LibFiles}" FontSize="12" TextWrapping="Wrap" IsTextSelectionEnabled="True" FlowDirection="LeftToRight"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <TextBlock Text="{x:Bind TwinsText}" Visibility="{x:Bind TwinsVis}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <Border Grid.Column="2" VerticalAlignment="Top" Padding="8,2" CornerRadius="4" Background="{x:Bind BadgeBg, Mode=OneWay}"
+                            ToolTipService.ToolTip="{x:Bind StatusTip, Mode=OneWay}">
+                        <TextBlock Text="{x:Bind StatusLabel, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" Foreground="{x:Bind BadgeFg, Mode=OneWay}" />
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="MissingTemplate" x:DataType="local:CheckMissingVm">
+                <Grid Padding="16,10,12,10" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="3">
+                        <local:WrapPanel HorizontalSpacing="8" Visibility="{x:Bind TitleVis}">
+                            <HyperlinkButton Content="{x:Bind TitleText}" Tag="{x:Bind}" Click="OnOpenMissing" Padding="0,1" />
+                        </local:WrapPanel>
+                        <TextBlock Text="{x:Bind FilesText}" FontSize="12" TextWrapping="Wrap" IsTextSelectionEnabled="True" FlowDirection="LeftToRight"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <Border Grid.Column="1" VerticalAlignment="Top" Padding="8,2" CornerRadius="4" Background="{x:Bind BadgeBg}">
+                        <TextBlock Text="{x:Bind Label}" FontSize="12" FontWeight="SemiBold" Foreground="{x:Bind BadgeFg}" />
+                    </Border>
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="List check" IsBackButtonVisible="False" />
+
+        <InfoBar x:Name="Msg" Grid.Row="1" IsOpen="False" IsClosable="True" Margin="16,0,16,6" />
+
+        <Grid Grid.Row="2">
+            <!-- 1. choose what to check -->
+            <ScrollViewer x:Name="PickView" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                <StackPanel Padding="24,4,24,24" Spacing="16" MaxWidth="780" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Check a list against your library" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap" />
+                    <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="See which movies are new, which you already have, and whether a copy is better or worse quality. Nothing changes until you click Add." />
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="PickFileBtn" Click="OnPickFile" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,12">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <FontIcon Glyph="&#xE8A5;" FontSize="22" />
+                                <StackPanel Spacing="2" MaxWidth="260">
+                                    <TextBlock Text="A list file" FontWeight="SemiBold" />
+                                    <TextBlock Text=".txt with one name per line, or .csv with a name, title + year, or IMDb id column" FontSize="12" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="PickFolderBtn" Grid.Column="1" Click="OnPickFolder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="14,12">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <FontIcon Glyph="&#xE8B7;" FontSize="22" />
+                                <StackPanel Spacing="2" MaxWidth="260">
+                                    <TextBlock Text="A folder of movies" FontWeight="SemiBold" />
+                                    <TextBlock Text="Reads the video file names inside it and its sub-folders. Files are only read, never moved." FontSize="12" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Or type the path of a file or folder" />
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="PathBox" PlaceholderText="D:\Movies   or   C:\lists\new movies.txt" FlowDirection="LeftToRight" KeyDown="OnPathKey" />
+                            <Button x:Name="PathGo" Grid.Column="1" Content="Check" Click="OnCheckPath" Style="{StaticResource AccentButtonStyle}" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Or paste names, one per line" />
+                        <TextBox x:Name="PasteBox" AcceptsReturn="True" TextWrapping="Wrap" Height="130" PlaceholderText="Heat.1995.1080p.BluRay&#x0A;In the Mood for Love 2000" />
+                        <Button x:Name="PasteGo" Content="Check pasted names" Click="OnCheckPaste" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+            </ScrollViewer>
+
+            <!-- 2. running -->
+            <StackPanel x:Name="ProgressView" Visibility="Collapsed" Padding="24,4,24,24" Spacing="12" MaxWidth="780" VerticalAlignment="Top">
+                <TextBlock Text="Checking your list…" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <ProgressBar x:Name="Bar" IsIndeterminate="True" />
+                <TextBlock x:Name="StageText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                <TextBlock Text="Big folders take a minute. You can close this window; the result waits for you." FontSize="12" TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
+
+            <!-- 3. result -->
+            <Grid x:Name="ResultView" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Padding="16,0,16,6" Spacing="2">
+                    <TextBlock x:Name="ResultTitle" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="ResultSource" FontSize="12" TextWrapping="Wrap" IsTextSelectionEnabled="True" FlowDirection="LeftToRight" HorizontalAlignment="Left"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <local:WrapPanel x:Name="Tiles" Grid.Row="1" Margin="16,4,16,8" HorizontalSpacing="8" VerticalSpacing="8" />
+                <ScrollViewer Grid.Row="2" Padding="16,0,16,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+                    <SelectorBar x:Name="Tabs" SelectionChanged="OnTabChanged" />
+                </ScrollViewer>
+                <Grid x:Name="SelectBar" Grid.Row="3" Padding="16,6,16,2" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Select all shown" Click="OnSelectAll" />
+                    <Button Grid.Column="1" Content="Select none shown" Click="OnSelectNone" />
+                    <TextBlock x:Name="SelCount" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </Grid>
+                <Grid Grid.Row="4">
+                    <ListView x:Name="ItemList" ItemTemplate="{StaticResource ItemTemplate}" SelectionMode="None" Margin="8,0,8,0" />
+                    <ListView x:Name="MissingList" ItemTemplate="{StaticResource MissingTemplate}" SelectionMode="None" Visibility="Collapsed" Margin="8,0,8,0" />
+                    <TextBlock x:Name="EmptyText" Text="Nothing here." HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </Grid>
+                <Border Grid.Row="5" Padding="16,10,16,12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Name="Note" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Selected names are added to added.txt in your list folder, then matched like the rest." />
+                        <local:WrapPanel HorizontalSpacing="8" VerticalSpacing="8">
+                            <Button Content="Export report (CSV)" Click="OnExport" />
+                            <Button x:Name="WishBtn" Content="Add selected to wishlist" Click="OnWish" />
+                            <Button Content="Check another" Click="OnCheckAnother" />
+                            <Button x:Name="AddBtn" Click="OnAdd" Style="{StaticResource AccentButtonStyle}" />
+                        </local:WrapPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Border x:Name="JobHost" Grid.Row="3" />
+    </Grid>
+</Window>

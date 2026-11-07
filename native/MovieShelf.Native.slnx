@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MovieShelf.App/MovieShelf.App.csproj" />
+  <Project Path="MovieShelf.Core.Tests/MovieShelf.Core.Tests.csproj" />
+  <Project Path="MovieShelf.Core/MovieShelf.Core.csproj" />
+</Solution>

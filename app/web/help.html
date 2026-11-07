@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MovieShelf Help</title>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  var p = 'system';
+  try { p = localStorage.getItem('theme') || 'system'; } catch (e) { }
+  var dark = p === 'dark' || (p === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+})();
+</script>
+<link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="helppage">
+<header class="top" data-rtl>
+  <div class="brand"><span class="logo" aria-hidden="true"><img src="/static/logo.svg" alt="" width="28" height="28"></span><span class="brand-name">MovieShelf</span></div>
+  <h1 class="helptitle" data-i18n>Help</h1>
+  <div class="top-actions">
+    <button type="button" class="btn outline small" id="hp-lang">فارسی</button>
+    <button type="button" class="btn outline small" id="hp-print" data-i18n>Print</button>
+    <a class="btn small" href="/" data-i18n>Back to MovieShelf</a>
+  </div>
+</header>
+<main class="helpmain" id="help"></main>
+<script src="/static/i18n.js"></script>
+<script src="/static/help.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+async function show() {
+  applyI18n();
+  document.getElementById('hp-lang').textContent = LANG === 'fa' ? 'English' : 'فارسی';
+  await helpMount(document.getElementById('help'), LANG, location.hash.slice(1) || params.get('s'));
+}
+document.getElementById('hp-lang').addEventListener('click', () => {
+  LANG = LANG === 'fa' ? 'en' : 'fa';
+  try { localStorage.setItem('lang', LANG); } catch (e) { }
+  show();
+});
+document.getElementById('hp-print').addEventListener('click', () => print());
+show();
+</script>
+</body>
+</html>

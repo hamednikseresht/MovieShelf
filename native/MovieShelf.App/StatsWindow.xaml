@@ -1,0 +1,72 @@
+<Window
+    x:Class="MovieShelf.App.StatsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieShelf.App">
+
+    <Grid x:Name="Root">
+        <Grid.Resources>
+            <!-- A bar that can be clicked: the label, the bar and the count -->
+            <DataTemplate x:Key="BarClickTemplate" x:DataType="local:BarVm">
+                <Button Tag="{x:Bind}" Click="OnBar" Padding="8,4" Margin="0,1" Background="Transparent" BorderThickness="0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTipService.ToolTip="{x:Bind Tip}">
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="52" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Grid Grid.Column="1" Height="10" CornerRadius="5" Background="{ThemeResource ControlAltFillColorTertiaryBrush}" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{x:Bind Fill}" />
+                                <ColumnDefinition Width="{x:Bind Rest}" />
+                            </Grid.ColumnDefinitions>
+                            <Border CornerRadius="5" Background="{ThemeResource AccentFillColorDefaultBrush}" />
+                        </Grid>
+                        <TextBlock Grid.Column="2" Text="{x:Bind CountText}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FlowDirection="LeftToRight" />
+                    </Grid>
+                </Button>
+            </DataTemplate>
+            <!-- The same bar without a click, for the rating ranges -->
+            <DataTemplate x:Key="BarPlainTemplate" x:DataType="local:BarVm">
+                <Grid ColumnSpacing="10" Padding="8,5" Margin="0,1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="132" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="52" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    <Grid Grid.Column="1" Height="10" CornerRadius="5" Background="{ThemeResource ControlAltFillColorTertiaryBrush}" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind Fill}" />
+                            <ColumnDefinition Width="{x:Bind Rest}" />
+                        </Grid.ColumnDefinitions>
+                        <Border CornerRadius="5" Background="{ThemeResource AccentFillColorDefaultBrush}" />
+                    </Grid>
+                    <TextBlock Grid.Column="2" Text="{x:Bind CountText}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FlowDirection="LeftToRight" />
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="Statistics" IsBackButtonVisible="False" />
+
+        <InfoBar x:Name="Info" Grid.Row="1" IsOpen="False" IsClosable="True" Margin="16,0,16,8" />
+
+        <Grid Grid.Row="2">
+            <ScrollViewer x:Name="Scroll" SizeChanged="OnScrollSize" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Padding="16,4,16,24" Spacing="16">
+                    <SelectorBar x:Name="KindBar" SelectionChanged="OnKindChanged" HorizontalAlignment="Left" />
+                    <local:WrapPanel x:Name="TilePanel" HorizontalSpacing="12" VerticalSpacing="12" />
+                    <local:WrapPanel x:Name="CardPanel" HorizontalSpacing="16" VerticalSpacing="16" />
+                </StackPanel>
+            </ScrollViewer>
+            <ProgressRing x:Name="Ring" IsActive="True" Width="48" Height="48" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Window>

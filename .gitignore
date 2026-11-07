@@ -1,0 +1,21 @@
+# build output
+bin/
+obj/
+dist/
+.vs/
+*.user
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# releases are attached to GitHub releases, not committed
+*.exe
+*.rar
+SHA256SUMS.txt
+MovieShelf-Python-*.zip
+# local data
+*.db-wal
+*.db-shm
+graphify-out/
+.taste-skill/

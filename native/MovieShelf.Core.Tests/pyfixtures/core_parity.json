@@ -1,0 +1,1025 @@
+{
+ "reasons": [
+  {
+   "conf": "none",
+   "fy": null,
+   "ty": null,
+   "text": "Not found on IMDb — the name may be misspelled, or the year in the name is wrong"
+  },
+  {
+   "conf": "fuzzy",
+   "fy": 1999,
+   "ty": 1999,
+   "text": "Name is spelled differently on IMDb"
+  },
+  {
+   "conf": "noyear",
+   "fy": null,
+   "ty": 1999,
+   "text": "No year in the name — several movies may share this title"
+  },
+  {
+   "conf": "online",
+   "fy": 2000,
+   "ty": 2000,
+   "text": "Only found by online search"
+  },
+  {
+   "conf": "review",
+   "fy": 1999,
+   "ty": 2000,
+   "text": "Year in the name (1999) differs from IMDb (2000)"
+  },
+  {
+   "conf": "review",
+   "fy": 1999,
+   "ty": 1999,
+   "text": "Several titles share this name and year"
+  },
+  {
+   "conf": "review",
+   "fy": null,
+   "ty": 1999,
+   "text": "Several titles share this name and year"
+  },
+  {
+   "conf": "exact",
+   "fy": 1999,
+   "ty": 1999,
+   "text": ""
+  },
+  {
+   "conf": "good",
+   "fy": 1999,
+   "ty": 1999,
+   "text": ""
+  }
+ ],
+ "sidefiles": [
+  {
+   "name": "Heat.1995.1080p.srt",
+   "side": true
+  },
+  {
+   "name": "Heat.1995.1080p.SRT",
+   "side": true
+  },
+  {
+   "name": " \"Heat.1995.nfo\" ",
+   "side": true
+  },
+  {
+   "name": "Heat.1995.1080p",
+   "side": false
+  },
+  {
+   "name": "Heat.1995.mkv",
+   "side": false
+  },
+  {
+   "name": "poster.jpg",
+   "side": true
+  },
+  {
+   "name": ".srt",
+   "side": false
+  },
+  {
+   "name": "a.7z",
+   "side": true
+  },
+  {
+   "name": "readme.txt",
+   "side": true
+  },
+  {
+   "name": "Heat 1995",
+   "side": false
+  },
+  {
+   "name": "Mr. Robot",
+   "side": false
+  },
+  {
+   "name": "St. Elmo.srt ",
+   "side": true
+  },
+  {
+   "name": "x.tar.gz",
+   "side": false
+  },
+  {
+   "name": "dir\\sub.idx",
+   "side": true
+  },
+  {
+   "name": "dir.srt/name",
+   "side": false
+  },
+  {
+   "name": "a.sami",
+   "side": true
+  },
+  {
+   "name": "a.webp",
+   "side": true
+  },
+  {
+   "name": "a.exe",
+   "side": true
+  }
+ ],
+ "imagetypes": [
+  {
+   "hex": "ffd8ffe0",
+   "type": "image/jpeg"
+  },
+  {
+   "hex": "ffd8",
+   "type": null
+  },
+  {
+   "hex": "89504e470d0a1a0a00",
+   "type": "image/png"
+  },
+  {
+   "hex": "89504e470d0a1a",
+   "type": null
+  },
+  {
+   "hex": "52494646000000005745425000",
+   "type": "image/webp"
+  },
+  {
+   "hex": "5249464600000000",
+   "type": null
+  },
+  {
+   "hex": "474946383761",
+   "type": "image/gif"
+  },
+  {
+   "hex": "474946383961ff",
+   "type": "image/gif"
+  },
+  {
+   "hex": "474946383861",
+   "type": null
+  },
+  {
+   "hex": "3c68746d6c3e",
+   "type": null
+  },
+  {
+   "hex": "",
+   "type": null
+  }
+ ],
+ "alt": [
+  {
+   "name": "Foo.().2014.1080p",
+   "title": "Foo",
+   "alt": "",
+   "year": 2014
+  },
+  {
+   "name": "Foo.(...).2014.1080p",
+   "title": "Foo",
+   "alt": "",
+   "year": 2014
+  },
+  {
+   "name": "Foo.(Bar).2014.720p",
+   "title": "Foo",
+   "alt": "Bar",
+   "year": 2014
+  },
+  {
+   "name": "Foo.2014.720p",
+   "title": "Foo",
+   "alt": null,
+   "year": 2014
+  },
+  {
+   "name": "().2014.720p",
+   "title": "",
+   "alt": "",
+   "year": 2014
+  },
+  {
+   "name": "Foo ( ) AKA Bar 2014",
+   "title": "Foo",
+   "alt": "Bar",
+   "year": 2014
+  },
+  {
+   "name": "Foo aka Bar.2014",
+   "title": "Foo",
+   "alt": "Bar",
+   "year": 2014
+  }
+ ],
+ "sniff": [
+  {
+   "line": "Title,Year",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"Title\",\"Year\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"Title\";\"Year\"",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "'Title';'Year'",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "'",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "Title, Year",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "\"a\", \"b\", \"c\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "a;b,c",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "a\tb;c",
+   "dialect": {
+    "delimiter": "\t",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "Name",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"Name\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"a\"\"b\",c",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "x|\"y\"|z,title",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"name\",year",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "name,\"year\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "don't,name",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"Say \"\"hi\"\"\",Year",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": ",",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": ";;",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"a, b\";c",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "file;\"size\"",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "Title,  Year",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "Title; Year",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "a, b,c",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"a\" , \"b\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "'a', 'b'",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "'",
+    "doublequote": false,
+    "skipspace": true
+   }
+  },
+  {
+   "line": "\"a\"\t\"b\"",
+   "dialect": {
+    "delimiter": "\t",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "name\t\"year\"",
+   "dialect": {
+    "delimiter": "\t",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"x\" title",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"\",\"\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "Const,Your Rating,Date Rated,Title",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"Const\";\"Title\"",
+   "dialect": {
+    "delimiter": ";",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "it's,'quoted',name",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "'",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"unclosed,name",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "نام,سال",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "\"نام\",\"سال\"",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": false,
+    "skipspace": false
+   }
+  },
+  {
+   "line": "a,\"b \"\"c\"\" d\",e",
+   "dialect": {
+    "delimiter": ",",
+    "quote": "\"",
+    "doublequote": true,
+    "skipspace": false
+   }
+  }
+ ],
+ "csv": [
+  {
+   "text": "Title,Year\nHeat,1995\n\"Amélie, Le fabuleux\",2001\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat 1995",
+     "tconst": null
+    },
+    {
+     "raw": "Amélie, Le fabuleux 2001",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "Title, Year\nHeat, 1995\nSeven,  1995\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat 1995",
+     "tconst": null
+    },
+    {
+     "raw": "Seven 1995",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "\"Title\"; \"Year\"\n\"Heat\"; \"1995\"\n\"Alien\"; 1979\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat 1995",
+     "tconst": null
+    },
+    {
+     "raw": "Alien 1979",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "'Title';'Year'\n'Heat';'1995'\n'It''s';2000\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat 1995",
+     "tconst": null
+    },
+    {
+     "raw": "It's' 2000",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "Title,Year\n\"Say \"\"hi\"\" now\",2001\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Say \"hi\"\" now\" 2001",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "\"Title\",\"Year\"\n\"Say \"\"hi\"\" now\",2001\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Say \"hi\"\" now\" 2001",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "\"Say \"\"hi\"\"\",Year\n\"Say \"\"hi\"\" now\",2001\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Say \"hi\"",
+     "tconst": null
+    },
+    {
+     "raw": "Say \"hi\" now",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "File\tSize\n\"Heat 1995.mkv\"\t1\nAlien.1979.avi\t2\n",
+   "name": "a.tsv",
+   "entries": [
+    {
+     "raw": "Heat 1995",
+     "tconst": null
+    },
+    {
+     "raw": "Alien.1979",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "name,year\nHeat.1995.srt,1995\nHeat.1995.mkv,1995\nposter.jpg,\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat.1995",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "Heat.1995.720p\nHeat.1995.720p.srt\n\"Alien.1979.nfo\"\nSeven 1995\n",
+   "name": "a.txt",
+   "entries": [
+    {
+     "raw": "Heat.1995.720p",
+     "tconst": null
+    },
+    {
+     "raw": "Seven 1995",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "Const,Title\ntt0113277,Heat\ntt0000003,\n,\n",
+   "name": "x.csv",
+   "entries": [
+    {
+     "raw": "Heat",
+     "tconst": 113277
+    },
+    {
+     "raw": "tt0000003",
+     "tconst": 3
+    }
+   ]
+  },
+  {
+   "text": "title;imdb\nA 2000;tt1234567\nB.nfo;tt7654321\n",
+   "name": "pasted.txt",
+   "entries": [
+    {
+     "raw": "A 2000",
+     "tconst": 1234567
+    }
+   ]
+  },
+  {
+   "text": "Title,Year\n\"open quote,2001\nHeat,1995\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "open quote,2001\nHeat,1995",
+     "tconst": null
+    }
+   ]
+  },
+  {
+   "text": "Title,Year\nHeat \"the movie\",1995\n",
+   "name": "a.csv",
+   "entries": [
+    {
+     "raw": "Heat \"the movie\" 1995",
+     "tconst": null
+    }
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "text": "a,b\n\"c,d\",e\n\nf",
+   "delim": ",",
+   "rows": [
+    [
+     "a",
+     "b"
+    ],
+    [
+     "c,d",
+     "e"
+    ],
+    [],
+    [
+     "f"
+    ]
+   ]
+  },
+  {
+   "text": "\"a\nb\",c\n",
+   "delim": ",",
+   "rows": [
+    [
+     "a\nb",
+     "c"
+    ]
+   ]
+  },
+  {
+   "text": "a,\"b\"\"c\"\n",
+   "delim": ",",
+   "rows": [
+    [
+     "a",
+     "b\"c"
+    ]
+   ]
+  },
+  {
+   "text": "a,\"b\"c,d\n",
+   "delim": ",",
+   "rows": [
+    [
+     "a",
+     "bc",
+     "d"
+    ]
+   ]
+  },
+  {
+   "text": "a,b\"c,d\n",
+   "delim": ",",
+   "rows": [
+    [
+     "a",
+     "b\"c",
+     "d"
+    ]
+   ]
+  },
+  {
+   "text": "\"open",
+   "delim": ",",
+   "rows": [
+    [
+     "open"
+    ]
+   ]
+  },
+  {
+   "text": "a;b;\n",
+   "delim": ";",
+   "rows": [
+    [
+     "a",
+     "b",
+     ""
+    ]
+   ]
+  },
+  {
+   "text": "a\r\nb\r\n",
+   "delim": ",",
+   "rows": [
+    [
+     "a"
+    ],
+    [
+     "b"
+    ]
+   ]
+  }
+ ],
+ "removed": {
+  "lines": [
+   "Heat.1995.720p",
+   "Alien.1979.1080p",
+   "Seven.1995.1080p",
+   "پدرخوانده.1972.720p",
+   "Seven.1995.srt",
+   "Heat.1995.720p.nfo"
+  ],
+  "items": [
+   {
+    "raw": "Alien.1979.1080p",
+    "tconst": 2,
+    "title": "Alien",
+    "removed": null
+   },
+   {
+    "raw": "پدرخوانده.1972.720p",
+    "tconst": null,
+    "title": "پدرخوانده",
+    "removed": null
+   }
+  ],
+  "raws_after_scan": [
+   "Heat.1995.720p",
+   "Seven.1995.1080p"
+  ],
+  "all_raws": [
+   "Alien.1979.1080p",
+   "Heat.1995.720p",
+   "Seven.1995.1080p",
+   "پدرخوانده.1972.720p"
+  ]
+ },
+ "reparse": {
+  "lines": [
+   "Heat.1995.720p",
+   "Alien.1979.1080p.BluRay.x264",
+   "Seven.1995.1080p",
+   "Fixed.By.Hand.2000.720p",
+   "Foo.().2014.1080p"
+  ],
+  "cols": [
+   "raw",
+   "title",
+   "alt_title",
+   "year",
+   "resolution",
+   "source",
+   "codec",
+   "bit10",
+   "hdr",
+   "audio",
+   "farsi_dubbed",
+   "dual_audio",
+   "softsub",
+   "edition",
+   "grp",
+   "matched",
+   "manual",
+   "present",
+   "tconst",
+   "conf"
+  ],
+  "rows": [
+   [
+    "Heat.1995.720p",
+    "Heat",
+    null,
+    1995,
+    "720p",
+    null,
+    null,
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    1,
+    0,
+    1,
+    5,
+    "good"
+   ],
+   [
+    "Alien.1979.1080p.BluRay.x264",
+    "Alien",
+    null,
+    1979,
+    "1080p",
+    "BluRay",
+    "x264",
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    0,
+    0,
+    1,
+    5,
+    "good"
+   ],
+   [
+    "Seven.1995.1080p",
+    "Seven",
+    null,
+    1995,
+    "1080p",
+    null,
+    null,
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    1,
+    0,
+    1,
+    5,
+    "good"
+   ],
+   [
+    "Fixed.By.Hand.2000.720p",
+    "Fixed By Hand",
+    null,
+    2000,
+    "720p",
+    null,
+    null,
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    1,
+    1,
+    1,
+    5,
+    "manual"
+   ],
+   [
+    "Gone.From.Lists.2001.720p",
+    "Gone From Lists",
+    null,
+    2001,
+    "720p",
+    null,
+    null,
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    0,
+    0,
+    0,
+    5,
+    "good"
+   ],
+   [
+    "Foo.().2014.1080p",
+    "Foo",
+    "",
+    2014,
+    "1080p",
+    null,
+    null,
+    0,
+    0,
+    null,
+    0,
+    0,
+    0,
+    null,
+    null,
+    0,
+    0,
+    1,
+    5,
+    "good"
+   ]
+  ],
+  "parser_version": 2
+ }
+}

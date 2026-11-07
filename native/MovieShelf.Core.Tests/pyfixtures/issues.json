@@ -1,0 +1,2591 @@
+{
+"report": {
+"novideo": [
+{
+"k": "f99",
+"tt": null,
+"title": "Empty Folder",
+"year": 2000,
+"rating": null,
+"votes": null,
+"files": [
+{
+"id": 99,
+"raw": "Empty.Folder.2000.1080p",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "novideo:f99",
+"note": "The folder is empty: no video file",
+"sub": null,
+"wasted": 0,
+"ignored": false,
+"junk_ids": [
+99
+],
+"junk": [
+{
+"id": 99,
+"raw": "Empty.Folder.2000.1080p",
+"path": "D:\\m\\Empty.Folder.2000.1080p",
+"nfiles": 0,
+"size": 0,
+"names": []
+}
+]
+},
+{
+"k": "f104",
+"tt": null,
+"title": "Ignored Junk",
+"year": 2000,
+"rating": null,
+"votes": null,
+"files": [
+{
+"id": 104,
+"raw": "Ignored.Junk.2000.1080p",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "novideo:f104",
+"note": "The folder is empty: no video file",
+"sub": null,
+"wasted": 0,
+"ignored": true,
+"junk_ids": [
+104
+],
+"junk": [
+{
+"id": 104,
+"raw": "Ignored.Junk.2000.1080p",
+"path": "D:\\m\\Ignored.Junk",
+"nfiles": 0,
+"size": 0,
+"names": []
+}
+]
+},
+{
+"k": "tt0000074",
+"tt": "tt0000074",
+"title": "Junk Folder",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 100,
+"raw": "Junk.Folder.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "novideo:tt0000074",
+"note": "The folder has no video file, only other files (a.nfo, b.jpg, c.url)",
+"sub": null,
+"wasted": 0,
+"ignored": false,
+"junk_ids": [
+100
+],
+"junk": [
+{
+"id": 100,
+"raw": "Junk.Folder.2000.1080p.mkv",
+"path": "D:\\m\\Junk.Folder.2000.1080p.mkv",
+"nfiles": 8,
+"size": 123456,
+"names": [
+"a.nfo",
+"b.jpg",
+"c.url",
+"d.txt",
+"e.txt",
+"f.txt"
+]
+}
+]
+},
+{
+"k": "tt0000076",
+"tt": "tt0000076",
+"title": "Long Junk",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 103,
+"raw": "Long.Junk.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "novideo:tt0000076",
+"note": "The folder has no video file, only other files (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.nfo, yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy)",
+"sub": null,
+"wasted": 0,
+"ignored": false,
+"junk_ids": [
+103
+],
+"junk": [
+{
+"id": 103,
+"raw": "Long.Junk.2000.1080p.mkv",
+"path": "D:\\m\\Long.Junk",
+"nfiles": 3,
+"size": 3,
+"names": [
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.nfo",
+"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy.jpg",
+"😀😀😀😀😀😀😀😀😀😀.url"
+]
+}
+]
+},
+{
+"k": "tt0000075",
+"tt": "tt0000075",
+"title": "Two Junk",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 101,
+"raw": "Two.Junk.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 102,
+"raw": "Two.Junk.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "novideo:tt0000075",
+"note": "The folder has no video file, only other files (a.nfo, b.jpg)",
+"sub": null,
+"wasted": 0,
+"ignored": false,
+"junk_ids": [
+101,
+102
+],
+"junk": [
+{
+"id": 101,
+"raw": "Two.Junk.2000.1080p.mkv",
+"path": "D:\\m\\Two.Junk 1",
+"nfiles": 2,
+"size": 9,
+"names": [
+"a.nfo",
+"b.jpg"
+]
+},
+{
+"id": 101,
+"raw": "Two.Junk.2000.1080p.mkv",
+"path": "E:\\m\\Two.Junk 2",
+"nfiles": 0,
+"size": 0,
+"names": []
+},
+{
+"id": 102,
+"raw": "Two.Junk.2000.720p.mkv",
+"path": "F:\\m\\Two.Junk 3",
+"nfiles": 1,
+"size": 3,
+"names": [
+"a.nfo"
+]
+}
+]
+}
+],
+"dupes": [
+{
+"k": "tt0000019",
+"tt": "tt0000019",
+"title": "Ignored Dup",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 35,
+"raw": "Ignored.Dup.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 36,
+"raw": "Ignored.Dup.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": 9000000000,
+"paths": [
+"D:\\m\\ign.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000019:35-36",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 9000000000,
+"ignored": true
+},
+{
+"k": "tt0000001",
+"tt": "tt0000001",
+"title": "Same Quality",
+"year": 2000,
+"rating": 7.5,
+"votes": 5,
+"files": [
+{
+"id": 1,
+"raw": "Same.Quality.2000.1080p.BluRay.x264-A.mkv",
+"quality": "1080p BluRay x264",
+"verdict": "keep",
+"size": 8000000000,
+"paths": [
+"D:\\m\\same a.mkv"
+]
+},
+{
+"id": 2,
+"raw": "Same.Quality.2000.1080p.BluRay.x265-B.mkv",
+"quality": "1080p BluRay x265",
+"verdict": "same",
+"size": 5000000000,
+"paths": [
+"D:\\m\\same b.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000001:1-2",
+"note": "Two copies of the same quality",
+"sub": "same",
+"wasted": 5000000000,
+"ignored": false
+},
+{
+"k": "tt0000017",
+"tt": "tt0000017",
+"title": "Two Folders",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 32,
+"raw": "Two.Folders.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 4000000000,
+"paths": [
+"D:\\m\\two.mkv",
+"E:\\m\\two.mkv",
+"F:\\m\\two.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000017:copies:32",
+"note": "The same file is in 3 folders",
+"sub": "copies",
+"wasted": 4000000000,
+"ignored": false
+},
+{
+"k": "tt0000004",
+"tt": "tt0000004",
+"title": "Lower Copy",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 7,
+"raw": "Lower.Copy.2000.720p.WEB-DL.mkv",
+"quality": "720p WEB-DL",
+"verdict": "lower",
+"size": 2000000000,
+"paths": [
+"D:\\m\\lower 720.mkv"
+]
+},
+{
+"id": 8,
+"raw": "Lower.Copy.2000.1080p.BluRay.10bit.HDR.DTS.5.1.mkv",
+"quality": "1080p BluRay HDR 10-bit 5.1",
+"verdict": "keep",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000004:7-8",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 2000000000,
+"ignored": false
+},
+{
+"k": "tt0000018",
+"tt": "tt0000018",
+"title": "Copies Plus Dup",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 33,
+"raw": "Copies.Plus.Dup.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 34,
+"raw": "Copies.Plus.Dup.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": 1000000000,
+"paths": [
+"D:\\m\\cpd.mkv",
+"E:\\m\\cpd.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000018:33-34",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 1000000000,
+"ignored": false
+},
+{
+"k": "tt0000018",
+"tt": "tt0000018",
+"title": "Copies Plus Dup",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 33,
+"raw": "Copies.Plus.Dup.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 34,
+"raw": "Copies.Plus.Dup.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": 1000000000,
+"paths": [
+"D:\\m\\cpd.mkv",
+"E:\\m\\cpd.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000018:copies:34",
+"note": "The same file is in 2 folders",
+"sub": "copies",
+"wasted": 1000000000,
+"ignored": false
+},
+{
+"k": "tt0000033",
+"tt": "tt0000033",
+"title": "Second Path",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 56,
+"raw": "Second.Path.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\sp1.mkv",
+"D:\\m\\sp2.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000033:copies:56",
+"note": "The same file is in 2 folders",
+"sub": "copies",
+"wasted": 1000000000,
+"ignored": false
+},
+{
+"k": "tt0000032",
+"tt": "tt0000032",
+"title": "Small 4K",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 54,
+"raw": "Small.4K.2000.2160p.mkv",
+"quality": "2160p",
+"verdict": "keep",
+"size": 1000000000,
+"paths": [
+"D:\\m\\s4k.mkv"
+]
+},
+{
+"id": 55,
+"raw": "Small.4K.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "lower",
+"size": 1000000000,
+"paths": [
+"D:\\m\\s1k.mkv"
+]
+}
+],
+"ikey": "dupes:tt0000032:54-55",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 1000000000,
+"ignored": false
+},
+{
+"k": "tt0000009",
+"tt": "tt0000009",
+"title": "Bonus Pair",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 17,
+"raw": "Bonus.Pair.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 18,
+"raw": "Bonus.Pair.Featurette.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000009:17-18",
+"note": "Two copies of the same quality",
+"sub": "same",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000028",
+"tt": "tt0000028",
+"title": "Dub Pair",
+"year": 2000,
+"rating": 7.5,
+"votes": 31,
+"files": [
+{
+"id": 49,
+"raw": "Dub.Pair.2000.1080p.Dubbed.mkv",
+"quality": "1080p Farsi dubbed",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 50,
+"raw": "Dub.Pair.2000.720p.Dubbed.mkv",
+"quality": "720p Farsi dubbed",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000028:49-50",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000011",
+"tt": "tt0000011",
+"title": "Episodes 1x02",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 21,
+"raw": "Episodes.1x01.2000.mkv",
+"quality": "?",
+"verdict": "keep",
+"size": 1000000000,
+"paths": [
+"D:\\m\\ep1 a.mkv",
+"E:\\m\\ep1 b.mkv"
+]
+},
+{
+"id": 22,
+"raw": "Episodes.1x02.2000.mkv",
+"quality": "?",
+"verdict": "unsure",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000011:series",
+"note": "The file names have episode numbers (like S01E02): a series, not copies",
+"sub": "series",
+"wasted": 0,
+"ignored": false,
+"manual": false
+},
+{
+"k": "tt0000010",
+"tt": "tt0000010",
+"title": "Episodes Named",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 19,
+"raw": "Episodes.Named.S01E01.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 20,
+"raw": "Episodes.Named.S01E02.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000010:series",
+"note": "The file names have episode numbers (like S01E02): a series, not copies",
+"sub": "series",
+"wasted": 0,
+"ignored": false,
+"manual": false
+},
+{
+"k": "tt0000020",
+"tt": "tt0000020",
+"title": "Equal Everything",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 37,
+"raw": "Equal.Everything.2000.1080p.BluRay.a.mkv",
+"quality": "1080p BluRay",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 38,
+"raw": "Equal.Everything.2000.1080p.BluRay.b.mkv",
+"quality": "1080p BluRay",
+"verdict": "same",
+"size": null,
+"paths": []
+},
+{
+"id": 39,
+"raw": "Equal.Everything.2000.1080p.BluRay.c.mkv",
+"quality": "1080p BluRay",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000020:37-38-39",
+"note": "Two copies of the same quality",
+"sub": "same",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000005",
+"tt": "tt0000005",
+"title": "Lower Source",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 9,
+"raw": "Lower.Source.2000.1080p.WEBRip.mkv",
+"quality": "1080p WEBRip",
+"verdict": "lower",
+"size": null,
+"paths": []
+},
+{
+"id": 10,
+"raw": "Lower.Source.2000.1080p.BluRay.mkv",
+"quality": "1080p BluRay",
+"verdict": "keep",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000005:9-10",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000014",
+"tt": "tt0000014",
+"title": "Marked Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 27,
+"raw": "Marked.Series.a.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 28,
+"raw": "Marked.Series.b.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000014:series",
+"note": "You marked this as a series",
+"sub": "series",
+"wasted": 0,
+"ignored": false,
+"manual": true
+},
+{
+"k": "tt0000013",
+"tt": "tt0000013",
+"title": "Mini Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 25,
+"raw": "Mini.Series.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 26,
+"raw": "Mini.Series.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000013:series",
+"note": "IMDb lists this as a TV series: the files are episodes, not copies",
+"sub": "series",
+"wasted": 0,
+"ignored": false,
+"manual": false
+},
+{
+"k": "tt0000024",
+"tt": "tt0000024",
+"title": "Mixed Low",
+"year": 2000,
+"rating": 7.5,
+"votes": 7,
+"files": [
+{
+"id": 43,
+"raw": "Mixed.Low.2000.480p.mkv",
+"quality": "480p",
+"verdict": "lower",
+"size": null,
+"paths": []
+},
+{
+"id": 44,
+"raw": "Mixed.Low.2000.576p.DVDRip.mkv",
+"quality": "576p DVDRip",
+"verdict": "keep",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000024:43-44",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000015",
+"tt": "tt0000015",
+"title": "Not Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 29,
+"raw": "Not.Series.S01E01.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 30,
+"raw": "Not.Series.S01E02.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000015:29-30",
+"note": "The titles differ by a number (Not Series S01E01 / Not Series S01E02): probably different movies matched to one IMDb title, not duplicates",
+"sub": "mixed",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000025",
+"tt": "tt0000025",
+"title": "Partly Known",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 45,
+"raw": "Partly.Known.2000.480p.mkv",
+"quality": "480p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 46,
+"raw": "Partly.Known.2000.mkv",
+"quality": "?",
+"verdict": "unsure",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000025:45-46",
+"note": "Several copies; at least one has no resolution in its name, so they cannot be compared",
+"sub": "same",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000002",
+"tt": "tt0000002",
+"title": "Same No Size",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 3,
+"raw": "Same.No.Size.2000.720p.mkv",
+"quality": "720p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 4,
+"raw": "Same.No.Size.2000.720p.x264.mkv",
+"quality": "720p x264",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000002:3-4",
+"note": "Two copies of the same quality",
+"sub": "same",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000007",
+"tt": "tt0000007",
+"title": "Star Wars",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 13,
+"raw": "Star.Wars.4.1977.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 14,
+"raw": "Star.Wars.6.1983.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000007:13-14",
+"note": "The titles differ by a number (Star Wars 4 / Star Wars 6): probably different movies matched to one IMDb title, not duplicates",
+"sub": "mixed",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000008",
+"tt": "tt0000008",
+"title": "Three Ten To Yuma",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 15,
+"raw": "3.10.to.Yuma.2007.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 16,
+"raw": "310.to.Yuma.2007.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000008:15-16",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000012",
+"tt": "tt0000012",
+"title": "Tv Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 23,
+"raw": "Tv.Series.2000.part1.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 24,
+"raw": "Tv.Series.2000.part2.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000012:series",
+"note": "IMDb lists this as a TV series: the files are episodes, not copies",
+"sub": "series",
+"wasted": 0,
+"ignored": false,
+"manual": false
+},
+{
+"k": "tt0000075",
+"tt": "tt0000075",
+"title": "Two Junk",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 101,
+"raw": "Two.Junk.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 102,
+"raw": "Two.Junk.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000075:101-102",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000003",
+"tt": "tt0000003",
+"title": "Unsure Copy",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 5,
+"raw": "Unsure.Copy.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 6,
+"raw": "Unsure.Copy.2000.mkv",
+"quality": "?",
+"verdict": "unsure",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000003:5-6",
+"note": "Several copies; at least one has no resolution in its name, so they cannot be compared",
+"sub": "same",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000006",
+"tt": "tt0000006",
+"title": "Versions Pair",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 11,
+"raw": "Versions.Pair.2000.1080p.BluRay.mkv",
+"quality": "1080p BluRay",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 12,
+"raw": "Versions.Pair.2000.1080p.BluRay.Farsi.Dubbed.mkv",
+"quality": "1080p BluRay Farsi dubbed",
+"verdict": "keep",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000006:11-12",
+"note": "Dubbed and original: not redundant, probably on purpose",
+"sub": "versions",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000066",
+"tt": "tt0000066",
+"title": "Worst File",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 90,
+"raw": "Worst.File.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 91,
+"raw": "Worst.File.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000066:90-91",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000044",
+"tt": "tt0000044",
+"title": "Year Second File",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 67,
+"raw": "Year.Second.File.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 68,
+"raw": "Year.Second.File.1995.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dupes:tt0000044:67-68",
+"note": "A lower-quality copy sits beside a better one",
+"sub": "lower",
+"wasted": 0,
+"ignored": false
+}
+],
+"lowq": [
+{
+"k": "tt0000021",
+"tt": "tt0000021",
+"title": "Popular Low",
+"year": 2000,
+"rating": 7.5,
+"votes": 900000,
+"files": [
+{
+"id": 40,
+"raw": "Popular.Low.2000.480p.mkv",
+"quality": "480p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "lowq:tt0000021",
+"note": "Best copy is 480p",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000022",
+"tt": "tt0000022",
+"title": "popular low two",
+"year": 2000,
+"rating": 7.5,
+"votes": 900000,
+"files": [
+{
+"id": 41,
+"raw": "Popular.Low.Two.2000.576p.mkv",
+"quality": "576p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "lowq:tt0000022",
+"note": "Best copy is 576p",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000024",
+"tt": "tt0000024",
+"title": "Mixed Low",
+"year": 2000,
+"rating": 7.5,
+"votes": 7,
+"files": [
+{
+"id": 43,
+"raw": "Mixed.Low.2000.480p.mkv",
+"quality": "480p",
+"verdict": "lower",
+"size": null,
+"paths": []
+},
+{
+"id": 44,
+"raw": "Mixed.Low.2000.576p.DVDRip.mkv",
+"quality": "576p DVDRip",
+"verdict": "keep",
+"size": null,
+"paths": []
+}
+],
+"ikey": "lowq:tt0000024",
+"note": "Best copy is 576p DVDRip",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000023",
+"tt": "tt0000023",
+"title": "Rare Low",
+"year": 2000,
+"rating": null,
+"votes": null,
+"files": [
+{
+"id": 42,
+"raw": "Rare.Low.2000.SD.mkv",
+"quality": "SD",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "lowq:tt0000023",
+"note": "Best copy is SD",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"unknownq": [
+{
+"k": "f106",
+"tt": null,
+"title": ".2000",
+"year": 2000,
+"rating": null,
+"votes": null,
+"files": [
+{
+"id": 106,
+"raw": ".2000",
+"quality": "?",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "unknownq:f106",
+"note": "No resolution in the file name",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000011",
+"tt": "tt0000011",
+"title": "Episodes 1x02",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 21,
+"raw": "Episodes.1x01.2000.mkv",
+"quality": "?",
+"verdict": "keep",
+"size": 1000000000,
+"paths": [
+"D:\\m\\ep1 a.mkv",
+"E:\\m\\ep1 b.mkv"
+]
+},
+{
+"id": 22,
+"raw": "Episodes.1x02.2000.mkv",
+"quality": "?",
+"verdict": "unsure",
+"size": null,
+"paths": []
+}
+],
+"ikey": "unknownq:tt0000011",
+"note": "No resolution in the file name",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000026",
+"tt": "tt0000026",
+"title": "No Res",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 47,
+"raw": "No.Res.2000.mkv",
+"quality": "?",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "unknownq:tt0000026",
+"note": "No resolution in the file name",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "f105",
+"tt": null,
+"title": "Unmatched Name",
+"year": 2000,
+"rating": null,
+"votes": null,
+"files": [
+{
+"id": 105,
+"raw": "Unmatched.Name.2000",
+"quality": "?",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "unknownq:f105",
+"note": "No resolution in the file name",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"dubonly": [
+{
+"k": "tt0000028",
+"tt": "tt0000028",
+"title": "Dub Pair",
+"year": 2000,
+"rating": 7.5,
+"votes": 31,
+"files": [
+{
+"id": 49,
+"raw": "Dub.Pair.2000.1080p.Dubbed.mkv",
+"quality": "1080p Farsi dubbed",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 50,
+"raw": "Dub.Pair.2000.720p.Dubbed.mkv",
+"quality": "720p Farsi dubbed",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "dubonly:tt0000028",
+"note": "Only a Farsi-dubbed copy",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000027",
+"tt": "tt0000027",
+"title": "Dub Only",
+"year": 2000,
+"rating": 7.5,
+"votes": 30,
+"files": [
+{
+"id": 48,
+"raw": "Dub.Only.2000.1080p.Farsi.Dubbed.mkv",
+"quality": "1080p Farsi dubbed",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "dubonly:tt0000027",
+"note": "Only a Farsi-dubbed copy",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"realq": [
+{
+"k": "tt0000029",
+"tt": "tt0000029",
+"title": "Name Vs Picture",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 51,
+"raw": "Name.Vs.Picture.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\nvp.mkv"
+]
+}
+],
+"ikey": "realq:tt0000029",
+"note": "Named 1080p, but the picture is 1280x544",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000033",
+"tt": "tt0000033",
+"title": "Second Path",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 56,
+"raw": "Second.Path.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\sp1.mkv",
+"D:\\m\\sp2.mkv"
+]
+}
+],
+"ikey": "realq:tt0000033",
+"note": "Named 1080p, but the picture is 800x600",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000032",
+"tt": "tt0000032",
+"title": "Small 4K",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 54,
+"raw": "Small.4K.2000.2160p.mkv",
+"quality": "2160p",
+"verdict": "keep",
+"size": 1000000000,
+"paths": [
+"D:\\m\\s4k.mkv"
+]
+},
+{
+"id": 55,
+"raw": "Small.4K.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "lower",
+"size": 1000000000,
+"paths": [
+"D:\\m\\s1k.mkv"
+]
+}
+],
+"ikey": "realq:tt0000032",
+"note": "Named 2160p, but the picture is 1920x1080",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"yeardiff": [
+{
+"k": "tt0000007",
+"tt": "tt0000007",
+"title": "Star Wars",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 13,
+"raw": "Star.Wars.4.1977.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 14,
+"raw": "Star.Wars.6.1983.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "yeardiff:tt0000007",
+"note": "The file name says 1977, IMDb says 2000",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000040",
+"tt": "tt0000040",
+"title": "Year Off",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 63,
+"raw": "Year.Off.2003.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "yeardiff:tt0000040",
+"note": "The file name says 2003, IMDb says 2000",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000044",
+"tt": "tt0000044",
+"title": "Year Second File",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 67,
+"raw": "Year.Second.File.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 68,
+"raw": "Year.Second.File.1995.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "yeardiff:tt0000044",
+"note": "The file name says 1995, IMDb says 2000",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"nonfilm": [
+{
+"k": "tt0000047",
+"tt": "tt0000047",
+"title": "Tv Episode",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 71,
+"raw": "Tv.Episode.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "nonfilm:tt0000047",
+"note": "IMDb lists this as a TV episode",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000046",
+"tt": "tt0000046",
+"title": "Tv Short",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 70,
+"raw": "Tv.Short.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "nonfilm:tt0000046",
+"note": "IMDb lists this as a TV short",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000045",
+"tt": "tt0000045",
+"title": "Tv Special",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 69,
+"raw": "Tv.Special.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "nonfilm:tt0000045",
+"note": "IMDb lists this as a TV special",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"noposter": [
+{
+"k": "tt0000049",
+"tt": "tt0000049",
+"title": "Empty Poster",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 73,
+"raw": "Empty.Poster.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "noposter:tt0000049",
+"note": "No poster found",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000048",
+"tt": "tt0000048",
+"title": "No Poster",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 72,
+"raw": "No.Poster.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "noposter:tt0000048",
+"note": "No poster found",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"runtime": [
+{
+"k": "tt0000034",
+"tt": "tt0000034",
+"title": "Cut Short",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 57,
+"raw": "Cut.Short.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\cs.mkv"
+]
+}
+],
+"ikey": "runtime:tt0000034",
+"note": "The file is 60 min, IMDb says 120 min: cut short, or a different movie",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000036",
+"tt": "tt0000036",
+"title": "Half Minute",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 59,
+"raw": "Half.Minute.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\hm.mkv"
+]
+}
+],
+"ikey": "runtime:tt0000036",
+"note": "The file is 80 min, IMDb says 120 min: cut short, or a different movie",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000037",
+"tt": "tt0000037",
+"title": "Half Minute Odd",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 60,
+"raw": "Half.Minute.Odd.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\hmo.mkv"
+]
+}
+],
+"ikey": "runtime:tt0000037",
+"note": "The file is 80 min, IMDb says 120 min: cut short, or a different movie",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000035",
+"tt": "tt0000035",
+"title": "Long Cut",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 58,
+"raw": "Long.Cut.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": 1000000000,
+"paths": [
+"D:\\m\\lc.mkv"
+]
+}
+],
+"ikey": "runtime:tt0000035",
+"note": "The file is 150 min, IMDb says 100 min: a different cut, or a different movie",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"fatitle": [
+{
+"k": "tt0000050",
+"tt": "tt0000050",
+"title": "Latin Fa",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 74,
+"raw": "Latin.Fa.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "fatitle:tt0000050",
+"note": "The Persian title is written in Latin letters: Salam Donya",
+"sub": null,
+"wasted": 0,
+"ignored": false
+},
+{
+"k": "tt0000053",
+"tt": "tt0000053",
+"title": "Own Latin Fa",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 77,
+"raw": "Own.Latin.Fa.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "fatitle:tt0000053",
+"note": "The Persian title is written in Latin letters: Latin Again",
+"sub": null,
+"wasted": 0,
+"ignored": false
+}
+],
+"namediff": [
+{
+"k": "tt0000061",
+"tt": "tt0000061",
+"title": "Manual Name",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 85,
+"raw": "Other.Thing.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000061",
+"note": "The file name says “Other Thing”, IMDb calls it “Manual Name”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 9.999999999999998
+},
+{
+"k": "tt0000069",
+"tt": "tt0000069",
+"title": "",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 94,
+"raw": "Empty.Title.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000069",
+"note": "The file name says “Blank Title”, IMDb calls it “Only Orig”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 22.22222222222222
+},
+{
+"k": "tt0000066",
+"tt": "tt0000066",
+"title": "Worst File",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 90,
+"raw": "Worst.File.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 91,
+"raw": "Worst.File.2000.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000066",
+"note": "The file name says “Quite Another Thing”, IMDb calls it “Worst File”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 30.76923076923077
+},
+{
+"k": "tt0000055",
+"tt": "tt0000055",
+"title": "Spirited Away",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 79,
+"raw": "Chihiro.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000055",
+"note": "The file name says “Chihiro”, IMDb calls it “Sen to Chihiro no kamikakushi”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 43.75
+},
+{
+"k": "tt0000062",
+"tt": "tt0000062",
+"title": "abcd",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 86,
+"raw": "Tie.Names.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000062",
+"note": "The file name says “xxcd”, IMDb calls it “abcd”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 50.0
+},
+{
+"k": "tt0000063",
+"tt": "tt0000063",
+"title": "wxyz",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 87,
+"raw": "Tie.Other.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000063",
+"note": "The file name says “wxcd”, IMDb calls it “wxyz”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 50.0
+},
+{
+"k": "tt0000008",
+"tt": "tt0000008",
+"title": "Three Ten To Yuma",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 15,
+"raw": "3.10.to.Yuma.2007.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 16,
+"raw": "310.to.Yuma.2007.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000008",
+"note": "The file name says “3.10 to Yuma”, IMDb calls it “Three Ten To Yuma”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 52.17391304347826
+},
+{
+"k": "tt0000073",
+"tt": "tt0000073",
+"title": "Apple Sort",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 98,
+"raw": "Apple.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000073",
+"note": "The file name says “Appel”, IMDb calls it “Apple Sort”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 57.14285714285714
+},
+{
+"k": "tt0000009",
+"tt": "tt0000009",
+"title": "Bonus Pair",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 17,
+"raw": "Bonus.Pair.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 18,
+"raw": "Bonus.Pair.Featurette.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000009",
+"note": "The file name says “Bonus Pair Featurette”, IMDb calls it “Bonus Pair”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 64.28571428571428
+},
+{
+"k": "tt0000056",
+"tt": "tt0000056",
+"title": "Alternate",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 80,
+"raw": "Tercero.aka.Other.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000056",
+"note": "The file name says “Other”, IMDb calls it “Otro”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 66.66666666666667
+},
+{
+"k": "tt0000072",
+"tt": "tt0000072",
+"title": "zebra sort",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 97,
+"raw": "Zebra.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000072",
+"note": "The file name says “Zebrra”, IMDb calls it “zebra sort”",
+"sub": "far",
+"wasted": 0,
+"ignored": false,
+"sim": 66.66666666666667
+},
+{
+"k": "tt0000064",
+"tt": "tt0000064",
+"title": "abcdefghij",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 88,
+"raw": "Seventy.Case.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000064",
+"note": "The file name says “abcdefgxyz”, IMDb calls it “abcdefghij”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 70.0
+},
+{
+"k": "tt0000070",
+"tt": "tt0000070",
+"title": "İstanbul Hatırası",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 95,
+"raw": "Istanbul.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000070",
+"note": "The file name says “Istanbul”, IMDb calls it “İstanbul Hatırası”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 72.72727272727273
+},
+{
+"k": "tt0000065",
+"tt": "tt0000065",
+"title": "abcdefghijklmnopqrstuvwxyzabcd",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 89,
+"raw": "Thirty.Case.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000065",
+"note": "The file name says “abcdefghijklmnopqrstuXXXXXXXXX”, IMDb calls it “abcdefghijklmnopqrstuvwxyzabcd”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 73.33333333333334
+},
+{
+"k": "tt0000015",
+"tt": "tt0000015",
+"title": "Not Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 29,
+"raw": "Not.Series.S01E01.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 30,
+"raw": "Not.Series.S01E02.720p.mkv",
+"quality": "720p",
+"verdict": "lower",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000015",
+"note": "The file name says “Not Series S01E01”, IMDb calls it “Not Series”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 75.0
+},
+{
+"k": "tt0000071",
+"tt": "tt0000071",
+"title": "Ñandú",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 96,
+"raw": "Nandu.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000071",
+"note": "The file name says “Nando”, IMDb calls it “Ñandú”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 80.0
+},
+{
+"k": "tt0000010",
+"tt": "tt0000010",
+"title": "Episodes Named",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 19,
+"raw": "Episodes.Named.S01E01.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 20,
+"raw": "Episodes.Named.S01E02.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000010",
+"note": "The file name says “Episodes Named S01E01”, IMDb calls it “Episodes Named”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 81.25
+},
+{
+"k": "tt0000068",
+"tt": "tt0000068",
+"title": "Fa Name",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 93,
+"raw": "Fa.Name.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000068",
+"note": "The file name says “فلم”, IMDb calls it “فیلم”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 85.71428571428572
+},
+{
+"k": "tt0000054",
+"tt": "tt0000054",
+"title": "The Godfather",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 78,
+"raw": "Godfather.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000054",
+"note": "The file name says “Godfather”, IMDb calls it “The Godfather”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 85.71428571428572
+},
+{
+"k": "tt0000011",
+"tt": "tt0000011",
+"title": "Episodes 1x02",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 21,
+"raw": "Episodes.1x01.2000.mkv",
+"quality": "?",
+"verdict": "keep",
+"size": 1000000000,
+"paths": [
+"D:\\m\\ep1 a.mkv",
+"E:\\m\\ep1 b.mkv"
+]
+},
+{
+"id": 22,
+"raw": "Episodes.1x02.2000.mkv",
+"quality": "?",
+"verdict": "unsure",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000011",
+"note": "The file name says “Episodes 1x01”, IMDb calls it “Episodes 1x02”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 91.66666666666666
+},
+{
+"k": "tt0000007",
+"tt": "tt0000007",
+"title": "Star Wars",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 13,
+"raw": "Star.Wars.4.1977.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 14,
+"raw": "Star.Wars.6.1983.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000007",
+"note": "The file name says “Star Wars 4”, IMDb calls it “Star Wars”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 94.11764705882352
+},
+{
+"k": "tt0000067",
+"tt": "tt0000067",
+"title": "Emoji 😀 Film",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 92,
+"raw": "Emoji.Film.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": null,
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000067",
+"note": "The file name says “Emoji Film X”, IMDb calls it “Emoji 😀 Film”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 94.73684210526316
+},
+{
+"k": "tt0000014",
+"tt": "tt0000014",
+"title": "Marked Series",
+"year": 2000,
+"rating": 7.5,
+"votes": 1000,
+"files": [
+{
+"id": 27,
+"raw": "Marked.Series.a.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "keep",
+"size": null,
+"paths": []
+},
+{
+"id": 28,
+"raw": "Marked.Series.b.2000.1080p.mkv",
+"quality": "1080p",
+"verdict": "same",
+"size": null,
+"paths": []
+}
+],
+"ikey": "namediff:tt0000014",
+"note": "The file name says “Marked Series a”, IMDb calls it “Marked Series”",
+"sub": "close",
+"wasted": 0,
+"ignored": false,
+"sim": 96.0
+}
+],
+"ignored": 2,
+"wasted": 15000000000
+},
+"csv": {
+"novideo/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nEmpty Folder,2000,,,,The folder is empty: no video file,Empty.Folder.2000.1080p [1080p],\r\nIgnored Junk,2000,,,,The folder is empty: no video file,Ignored.Junk.2000.1080p [1080p],yes\r\nJunk Folder,2000,tt0000074,7.5,1000,\"The folder has no video file, only other files (a.nfo, b.jpg, c.url)\",Junk.Folder.2000.1080p.mkv [1080p],\r\nLong Junk,2000,tt0000076,7.5,1000,\"The folder has no video file, only other files (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.nfo, yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy)\",Long.Junk.2000.1080p.mkv [1080p],\r\nTwo Junk,2000,tt0000075,7.5,1000,\"The folder has no video file, only other files (a.nfo, b.jpg)\",\"Two.Junk.2000.1080p.mkv [1080p, keep] | Two.Junk.2000.720p.mkv [720p, lower]\",\r\n",
+"dupes/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nIgnored Dup,2000,tt0000019,7.5,1000,A lower-quality copy sits beside a better one,\"Ignored.Dup.2000.1080p.mkv [1080p, keep] | Ignored.Dup.2000.720p.mkv [720p, lower]\",yes\r\nSame Quality,2000,tt0000001,7.5,5,Two copies of the same quality,\"Same.Quality.2000.1080p.BluRay.x264-A.mkv [1080p BluRay x264, keep] | Same.Quality.2000.1080p.BluRay.x265-B.mkv [1080p BluRay x265, same]\",\r\nTwo Folders,2000,tt0000017,7.5,1000,The same file is in 3 folders,Two.Folders.2000.1080p.mkv [1080p],\r\nLower Copy,2000,tt0000004,7.5,1000,A lower-quality copy sits beside a better one,\"Lower.Copy.2000.720p.WEB-DL.mkv [720p WEB-DL, lower] | Lower.Copy.2000.1080p.BluRay.10bit.HDR.DTS.5.1.mkv [1080p BluRay HDR 10-bit 5.1, keep]\",\r\nCopies Plus Dup,2000,tt0000018,7.5,1000,A lower-quality copy sits beside a better one,\"Copies.Plus.Dup.2000.1080p.mkv [1080p, keep] | Copies.Plus.Dup.2000.720p.mkv [720p, lower]\",\r\nCopies Plus Dup,2000,tt0000018,7.5,1000,The same file is in 2 folders,\"Copies.Plus.Dup.2000.1080p.mkv [1080p, keep] | Copies.Plus.Dup.2000.720p.mkv [720p, lower]\",\r\nSecond Path,2000,tt0000033,7.5,1000,The same file is in 2 folders,Second.Path.2000.1080p.mkv [1080p],\r\nSmall 4K,2000,tt0000032,7.5,1000,A lower-quality copy sits beside a better one,\"Small.4K.2000.2160p.mkv [2160p, keep] | Small.4K.2000.1080p.mkv [1080p, lower]\",\r\nBonus Pair,2000,tt0000009,7.5,1000,Two copies of the same quality,\"Bonus.Pair.2000.1080p.mkv [1080p, keep] | Bonus.Pair.Featurette.2000.1080p.mkv [1080p, same]\",\r\nDub Pair,2000,tt0000028,7.5,31,A lower-quality copy sits beside a better one,\"Dub.Pair.2000.1080p.Dubbed.mkv [1080p Farsi dubbed, keep] | Dub.Pair.2000.720p.Dubbed.mkv [720p Farsi dubbed, lower]\",\r\nEpisodes 1x02,2000,tt0000011,7.5,1000,\"The file names have episode numbers (like S01E02): a series, not copies\",\"Episodes.1x01.2000.mkv [?, keep] | Episodes.1x02.2000.mkv [?, unsure]\",\r\nEpisodes Named,2000,tt0000010,7.5,1000,\"The file names have episode numbers (like S01E02): a series, not copies\",\"Episodes.Named.S01E01.1080p.mkv [1080p, keep] | Episodes.Named.S01E02.1080p.mkv [1080p, same]\",\r\nEqual Everything,2000,tt0000020,7.5,1000,Two copies of the same quality,\"Equal.Everything.2000.1080p.BluRay.a.mkv [1080p BluRay, keep] | Equal.Everything.2000.1080p.BluRay.b.mkv [1080p BluRay, same] | Equal.Everything.2000.1080p.BluRay.c.mkv [1080p BluRay, same]\",\r\nLower Source,2000,tt0000005,7.5,1000,A lower-quality copy sits beside a better one,\"Lower.Source.2000.1080p.WEBRip.mkv [1080p WEBRip, lower] | Lower.Source.2000.1080p.BluRay.mkv [1080p BluRay, keep]\",\r\nMarked Series,2000,tt0000014,7.5,1000,You marked this as a series,\"Marked.Series.a.2000.1080p.mkv [1080p, keep] | Marked.Series.b.2000.1080p.mkv [1080p, same]\",\r\nMini Series,2000,tt0000013,7.5,1000,\"IMDb lists this as a TV series: the files are episodes, not copies\",\"Mini.Series.2000.1080p.mkv [1080p, keep] | Mini.Series.2000.720p.mkv [720p, lower]\",\r\nMixed Low,2000,tt0000024,7.5,7,A lower-quality copy sits beside a better one,\"Mixed.Low.2000.480p.mkv [480p, lower] | Mixed.Low.2000.576p.DVDRip.mkv [576p DVDRip, keep]\",\r\nNot Series,2000,tt0000015,7.5,1000,\"The titles differ by a number (Not Series S01E01 / Not Series S01E02): probably different movies matched to one IMDb title, not duplicates\",\"Not.Series.S01E01.1080p.mkv [1080p, keep] | Not.Series.S01E02.720p.mkv [720p, lower]\",\r\nPartly Known,2000,tt0000025,7.5,1000,\"Several copies; at least one has no resolution in its name, so they cannot be compared\",\"Partly.Known.2000.480p.mkv [480p, keep] | Partly.Known.2000.mkv [?, unsure]\",\r\nSame No Size,2000,tt0000002,7.5,1000,Two copies of the same quality,\"Same.No.Size.2000.720p.mkv [720p, keep] | Same.No.Size.2000.720p.x264.mkv [720p x264, same]\",\r\nStar Wars,2000,tt0000007,7.5,1000,\"The titles differ by a number (Star Wars 4 / Star Wars 6): probably different movies matched to one IMDb title, not duplicates\",\"Star.Wars.4.1977.1080p.mkv [1080p, keep] | Star.Wars.6.1983.1080p.mkv [1080p, same]\",\r\nThree Ten To Yuma,2000,tt0000008,7.5,1000,A lower-quality copy sits beside a better one,\"3.10.to.Yuma.2007.1080p.mkv [1080p, keep] | 310.to.Yuma.2007.720p.mkv [720p, lower]\",\r\nTv Series,2000,tt0000012,7.5,1000,\"IMDb lists this as a TV series: the files are episodes, not copies\",\"Tv.Series.2000.part1.1080p.mkv [1080p, keep] | Tv.Series.2000.part2.1080p.mkv [1080p, same]\",\r\nTwo Junk,2000,tt0000075,7.5,1000,A lower-quality copy sits beside a better one,\"Two.Junk.2000.1080p.mkv [1080p, keep] | Two.Junk.2000.720p.mkv [720p, lower]\",\r\nUnsure Copy,2000,tt0000003,7.5,1000,\"Several copies; at least one has no resolution in its name, so they cannot be compared\",\"Unsure.Copy.2000.1080p.mkv [1080p, keep] | Unsure.Copy.2000.mkv [?, unsure]\",\r\nVersions Pair,2000,tt0000006,7.5,1000,\"Dubbed and original: not redundant, probably on purpose\",\"Versions.Pair.2000.1080p.BluRay.mkv [1080p BluRay, keep] | Versions.Pair.2000.1080p.BluRay.Farsi.Dubbed.mkv [1080p BluRay Farsi dubbed, keep]\",\r\nWorst File,2000,tt0000066,7.5,1000,A lower-quality copy sits beside a better one,\"Worst.File.2000.1080p.mkv [1080p, keep] | Worst.File.2000.720p.mkv [720p, lower]\",\r\nYear Second File,2000,tt0000044,7.5,1000,A lower-quality copy sits beside a better one,\"Year.Second.File.1080p.mkv [1080p, keep] | Year.Second.File.1995.720p.mkv [720p, lower]\",\r\n",
+"lowq/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nPopular Low,2000,tt0000021,7.5,900000,Best copy is 480p,Popular.Low.2000.480p.mkv [480p],\r\npopular low two,2000,tt0000022,7.5,900000,Best copy is 576p,Popular.Low.Two.2000.576p.mkv [576p],\r\nMixed Low,2000,tt0000024,7.5,7,Best copy is 576p DVDRip,\"Mixed.Low.2000.480p.mkv [480p, lower] | Mixed.Low.2000.576p.DVDRip.mkv [576p DVDRip, keep]\",\r\nRare Low,2000,tt0000023,,,Best copy is SD,Rare.Low.2000.SD.mkv [SD],\r\n",
+"unknownq/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\n.2000,2000,,,,No resolution in the file name,.2000 [?],\r\nEpisodes 1x02,2000,tt0000011,7.5,1000,No resolution in the file name,\"Episodes.1x01.2000.mkv [?, keep] | Episodes.1x02.2000.mkv [?, unsure]\",\r\nNo Res,2000,tt0000026,7.5,1000,No resolution in the file name,No.Res.2000.mkv [?],\r\nUnmatched Name,2000,,,,No resolution in the file name,Unmatched.Name.2000 [?],\r\n",
+"dubonly/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nDub Pair,2000,tt0000028,7.5,31,Only a Farsi-dubbed copy,\"Dub.Pair.2000.1080p.Dubbed.mkv [1080p Farsi dubbed, keep] | Dub.Pair.2000.720p.Dubbed.mkv [720p Farsi dubbed, lower]\",\r\nDub Only,2000,tt0000027,7.5,30,Only a Farsi-dubbed copy,Dub.Only.2000.1080p.Farsi.Dubbed.mkv [1080p Farsi dubbed],\r\n",
+"realq/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nName Vs Picture,2000,tt0000029,7.5,1000,\"Named 1080p, but the picture is 1280x544\",Name.Vs.Picture.2000.1080p.mkv [1080p],\r\nSecond Path,2000,tt0000033,7.5,1000,\"Named 1080p, but the picture is 800x600\",Second.Path.2000.1080p.mkv [1080p],\r\nSmall 4K,2000,tt0000032,7.5,1000,\"Named 2160p, but the picture is 1920x1080\",\"Small.4K.2000.2160p.mkv [2160p, keep] | Small.4K.2000.1080p.mkv [1080p, lower]\",\r\n",
+"yeardiff/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nStar Wars,2000,tt0000007,7.5,1000,\"The file name says 1977, IMDb says 2000\",\"Star.Wars.4.1977.1080p.mkv [1080p, keep] | Star.Wars.6.1983.1080p.mkv [1080p, same]\",\r\nYear Off,2000,tt0000040,7.5,1000,\"The file name says 2003, IMDb says 2000\",Year.Off.2003.1080p.mkv [1080p],\r\nYear Second File,2000,tt0000044,7.5,1000,\"The file name says 1995, IMDb says 2000\",\"Year.Second.File.1080p.mkv [1080p, keep] | Year.Second.File.1995.720p.mkv [720p, lower]\",\r\n",
+"nonfilm/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nTv Episode,2000,tt0000047,7.5,1000,IMDb lists this as a TV episode,Tv.Episode.2000.1080p.mkv [1080p],\r\nTv Short,2000,tt0000046,7.5,1000,IMDb lists this as a TV short,Tv.Short.2000.1080p.mkv [1080p],\r\nTv Special,2000,tt0000045,7.5,1000,IMDb lists this as a TV special,Tv.Special.2000.1080p.mkv [1080p],\r\n",
+"noposter/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nEmpty Poster,2000,tt0000049,7.5,1000,No poster found,Empty.Poster.2000.1080p.mkv [1080p],\r\nNo Poster,2000,tt0000048,7.5,1000,No poster found,No.Poster.2000.1080p.mkv [1080p],\r\n",
+"runtime/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nCut Short,2000,tt0000034,7.5,1000,\"The file is 60 min, IMDb says 120 min: cut short, or a different movie\",Cut.Short.2000.1080p.mkv [1080p],\r\nHalf Minute,2000,tt0000036,7.5,1000,\"The file is 80 min, IMDb says 120 min: cut short, or a different movie\",Half.Minute.2000.1080p.mkv [1080p],\r\nHalf Minute Odd,2000,tt0000037,7.5,1000,\"The file is 80 min, IMDb says 120 min: cut short, or a different movie\",Half.Minute.Odd.2000.1080p.mkv [1080p],\r\nLong Cut,2000,tt0000035,7.5,1000,\"The file is 150 min, IMDb says 100 min: a different cut, or a different movie\",Long.Cut.2000.1080p.mkv [1080p],\r\n",
+"fatitle/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nLatin Fa,2000,tt0000050,7.5,1000,The Persian title is written in Latin letters: Salam Donya,Latin.Fa.2000.1080p.mkv [1080p],\r\nOwn Latin Fa,2000,tt0000053,7.5,1000,The Persian title is written in Latin letters: Latin Again,Own.Latin.Fa.2000.1080p.mkv [1080p],\r\n",
+"namediff/all": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nManual Name,2000,tt0000061,7.5,1000,\"The file name says “Other Thing”, IMDb calls it “Manual Name”\",Other.Thing.2000.1080p.mkv [1080p],\r\n,2000,tt0000069,7.5,1000,\"The file name says “Blank Title”, IMDb calls it “Only Orig”\",Empty.Title.2000.1080p.mkv [1080p],\r\nWorst File,2000,tt0000066,7.5,1000,\"The file name says “Quite Another Thing”, IMDb calls it “Worst File”\",\"Worst.File.2000.1080p.mkv [1080p, keep] | Worst.File.2000.720p.mkv [720p, lower]\",\r\nSpirited Away,2000,tt0000055,7.5,1000,\"The file name says “Chihiro”, IMDb calls it “Sen to Chihiro no kamikakushi”\",Chihiro.2000.1080p.mkv [1080p],\r\nabcd,2000,tt0000062,7.5,1000,\"The file name says “xxcd”, IMDb calls it “abcd”\",Tie.Names.2000.1080p.mkv [1080p],\r\nwxyz,2000,tt0000063,7.5,1000,\"The file name says “wxcd”, IMDb calls it “wxyz”\",Tie.Other.2000.1080p.mkv [1080p],\r\nThree Ten To Yuma,2000,tt0000008,7.5,1000,\"The file name says “3.10 to Yuma”, IMDb calls it “Three Ten To Yuma”\",\"3.10.to.Yuma.2007.1080p.mkv [1080p, keep] | 310.to.Yuma.2007.720p.mkv [720p, lower]\",\r\nApple Sort,2000,tt0000073,7.5,1000,\"The file name says “Appel”, IMDb calls it “Apple Sort”\",Apple.2000.1080p.mkv [1080p],\r\nBonus Pair,2000,tt0000009,7.5,1000,\"The file name says “Bonus Pair Featurette”, IMDb calls it “Bonus Pair”\",\"Bonus.Pair.2000.1080p.mkv [1080p, keep] | Bonus.Pair.Featurette.2000.1080p.mkv [1080p, same]\",\r\nAlternate,2000,tt0000056,7.5,1000,\"The file name says “Other”, IMDb calls it “Otro”\",Tercero.aka.Other.2000.1080p.mkv [1080p],\r\nzebra sort,2000,tt0000072,7.5,1000,\"The file name says “Zebrra”, IMDb calls it “zebra sort”\",Zebra.2000.1080p.mkv [1080p],\r\nabcdefghij,2000,tt0000064,7.5,1000,\"The file name says “abcdefgxyz”, IMDb calls it “abcdefghij”\",Seventy.Case.2000.1080p.mkv [1080p],\r\nİstanbul Hatırası,2000,tt0000070,7.5,1000,\"The file name says “Istanbul”, IMDb calls it “İstanbul Hatırası”\",Istanbul.2000.1080p.mkv [1080p],\r\nabcdefghijklmnopqrstuvwxyzabcd,2000,tt0000065,7.5,1000,\"The file name says “abcdefghijklmnopqrstuXXXXXXXXX”, IMDb calls it “abcdefghijklmnopqrstuvwxyzabcd”\",Thirty.Case.2000.1080p.mkv [1080p],\r\nNot Series,2000,tt0000015,7.5,1000,\"The file name says “Not Series S01E01”, IMDb calls it “Not Series”\",\"Not.Series.S01E01.1080p.mkv [1080p, keep] | Not.Series.S01E02.720p.mkv [720p, lower]\",\r\nÑandú,2000,tt0000071,7.5,1000,\"The file name says “Nando”, IMDb calls it “Ñandú”\",Nandu.2000.1080p.mkv [1080p],\r\nEpisodes Named,2000,tt0000010,7.5,1000,\"The file name says “Episodes Named S01E01”, IMDb calls it “Episodes Named”\",\"Episodes.Named.S01E01.1080p.mkv [1080p, keep] | Episodes.Named.S01E02.1080p.mkv [1080p, same]\",\r\nFa Name,2000,tt0000068,7.5,1000,\"The file name says “فلم”, IMDb calls it “فیلم”\",Fa.Name.2000.1080p.mkv [1080p],\r\nThe Godfather,2000,tt0000054,7.5,1000,\"The file name says “Godfather”, IMDb calls it “The Godfather”\",Godfather.2000.1080p.mkv [1080p],\r\nEpisodes 1x02,2000,tt0000011,7.5,1000,\"The file name says “Episodes 1x01”, IMDb calls it “Episodes 1x02”\",\"Episodes.1x01.2000.mkv [?, keep] | Episodes.1x02.2000.mkv [?, unsure]\",\r\nStar Wars,2000,tt0000007,7.5,1000,\"The file name says “Star Wars 4”, IMDb calls it “Star Wars”\",\"Star.Wars.4.1977.1080p.mkv [1080p, keep] | Star.Wars.6.1983.1080p.mkv [1080p, same]\",\r\nEmoji 😀 Film,2000,tt0000067,7.5,1000,\"The file name says “Emoji Film X”, IMDb calls it “Emoji 😀 Film”\",Emoji.Film.2000.1080p.mkv [1080p],\r\nMarked Series,2000,tt0000014,7.5,1000,\"The file name says “Marked Series a”, IMDb calls it “Marked Series”\",\"Marked.Series.a.2000.1080p.mkv [1080p, keep] | Marked.Series.b.2000.1080p.mkv [1080p, same]\",\r\n",
+"dupes/same": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nSame Quality,2000,tt0000001,7.5,5,Two copies of the same quality,\"Same.Quality.2000.1080p.BluRay.x264-A.mkv [1080p BluRay x264, keep] | Same.Quality.2000.1080p.BluRay.x265-B.mkv [1080p BluRay x265, same]\",\r\nBonus Pair,2000,tt0000009,7.5,1000,Two copies of the same quality,\"Bonus.Pair.2000.1080p.mkv [1080p, keep] | Bonus.Pair.Featurette.2000.1080p.mkv [1080p, same]\",\r\nEqual Everything,2000,tt0000020,7.5,1000,Two copies of the same quality,\"Equal.Everything.2000.1080p.BluRay.a.mkv [1080p BluRay, keep] | Equal.Everything.2000.1080p.BluRay.b.mkv [1080p BluRay, same] | Equal.Everything.2000.1080p.BluRay.c.mkv [1080p BluRay, same]\",\r\nPartly Known,2000,tt0000025,7.5,1000,\"Several copies; at least one has no resolution in its name, so they cannot be compared\",\"Partly.Known.2000.480p.mkv [480p, keep] | Partly.Known.2000.mkv [?, unsure]\",\r\nSame No Size,2000,tt0000002,7.5,1000,Two copies of the same quality,\"Same.No.Size.2000.720p.mkv [720p, keep] | Same.No.Size.2000.720p.x264.mkv [720p x264, same]\",\r\nUnsure Copy,2000,tt0000003,7.5,1000,\"Several copies; at least one has no resolution in its name, so they cannot be compared\",\"Unsure.Copy.2000.1080p.mkv [1080p, keep] | Unsure.Copy.2000.mkv [?, unsure]\",\r\n",
+"dupes/lower": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nIgnored Dup,2000,tt0000019,7.5,1000,A lower-quality copy sits beside a better one,\"Ignored.Dup.2000.1080p.mkv [1080p, keep] | Ignored.Dup.2000.720p.mkv [720p, lower]\",yes\r\nLower Copy,2000,tt0000004,7.5,1000,A lower-quality copy sits beside a better one,\"Lower.Copy.2000.720p.WEB-DL.mkv [720p WEB-DL, lower] | Lower.Copy.2000.1080p.BluRay.10bit.HDR.DTS.5.1.mkv [1080p BluRay HDR 10-bit 5.1, keep]\",\r\nCopies Plus Dup,2000,tt0000018,7.5,1000,A lower-quality copy sits beside a better one,\"Copies.Plus.Dup.2000.1080p.mkv [1080p, keep] | Copies.Plus.Dup.2000.720p.mkv [720p, lower]\",\r\nSmall 4K,2000,tt0000032,7.5,1000,A lower-quality copy sits beside a better one,\"Small.4K.2000.2160p.mkv [2160p, keep] | Small.4K.2000.1080p.mkv [1080p, lower]\",\r\nDub Pair,2000,tt0000028,7.5,31,A lower-quality copy sits beside a better one,\"Dub.Pair.2000.1080p.Dubbed.mkv [1080p Farsi dubbed, keep] | Dub.Pair.2000.720p.Dubbed.mkv [720p Farsi dubbed, lower]\",\r\nLower Source,2000,tt0000005,7.5,1000,A lower-quality copy sits beside a better one,\"Lower.Source.2000.1080p.WEBRip.mkv [1080p WEBRip, lower] | Lower.Source.2000.1080p.BluRay.mkv [1080p BluRay, keep]\",\r\nMixed Low,2000,tt0000024,7.5,7,A lower-quality copy sits beside a better one,\"Mixed.Low.2000.480p.mkv [480p, lower] | Mixed.Low.2000.576p.DVDRip.mkv [576p DVDRip, keep]\",\r\nThree Ten To Yuma,2000,tt0000008,7.5,1000,A lower-quality copy sits beside a better one,\"3.10.to.Yuma.2007.1080p.mkv [1080p, keep] | 310.to.Yuma.2007.720p.mkv [720p, lower]\",\r\nTwo Junk,2000,tt0000075,7.5,1000,A lower-quality copy sits beside a better one,\"Two.Junk.2000.1080p.mkv [1080p, keep] | Two.Junk.2000.720p.mkv [720p, lower]\",\r\nWorst File,2000,tt0000066,7.5,1000,A lower-quality copy sits beside a better one,\"Worst.File.2000.1080p.mkv [1080p, keep] | Worst.File.2000.720p.mkv [720p, lower]\",\r\nYear Second File,2000,tt0000044,7.5,1000,A lower-quality copy sits beside a better one,\"Year.Second.File.1080p.mkv [1080p, keep] | Year.Second.File.1995.720p.mkv [720p, lower]\",\r\n",
+"dupes/versions": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nVersions Pair,2000,tt0000006,7.5,1000,\"Dubbed and original: not redundant, probably on purpose\",\"Versions.Pair.2000.1080p.BluRay.mkv [1080p BluRay, keep] | Versions.Pair.2000.1080p.BluRay.Farsi.Dubbed.mkv [1080p BluRay Farsi dubbed, keep]\",\r\n",
+"dupes/mixed": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nNot Series,2000,tt0000015,7.5,1000,\"The titles differ by a number (Not Series S01E01 / Not Series S01E02): probably different movies matched to one IMDb title, not duplicates\",\"Not.Series.S01E01.1080p.mkv [1080p, keep] | Not.Series.S01E02.720p.mkv [720p, lower]\",\r\nStar Wars,2000,tt0000007,7.5,1000,\"The titles differ by a number (Star Wars 4 / Star Wars 6): probably different movies matched to one IMDb title, not duplicates\",\"Star.Wars.4.1977.1080p.mkv [1080p, keep] | Star.Wars.6.1983.1080p.mkv [1080p, same]\",\r\n",
+"dupes/copies": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nTwo Folders,2000,tt0000017,7.5,1000,The same file is in 3 folders,Two.Folders.2000.1080p.mkv [1080p],\r\nCopies Plus Dup,2000,tt0000018,7.5,1000,The same file is in 2 folders,\"Copies.Plus.Dup.2000.1080p.mkv [1080p, keep] | Copies.Plus.Dup.2000.720p.mkv [720p, lower]\",\r\nSecond Path,2000,tt0000033,7.5,1000,The same file is in 2 folders,Second.Path.2000.1080p.mkv [1080p],\r\n",
+"dupes/series": "﻿Title,Year,IMDb,Rating,Votes,Problem,Files,Ignored\r\nEpisodes 1x02,2000,tt0000011,7.5,1000,\"The file names have episode numbers (like S01E02): a series, not copies\",\"Episodes.1x01.2000.mkv [?, keep] | Episodes.1x02.2000.mkv [?, unsure]\",\r\nEpisodes Named,2000,tt0000010,7.5,1000,\"The file names have episode numbers (like S01E02): a series, not copies\",\"Episodes.Named.S01E01.1080p.mkv [1080p, keep] | Episodes.Named.S01E02.1080p.mkv [1080p, same]\",\r\nMarked Series,2000,tt0000014,7.5,1000,You marked this as a series,\"Marked.Series.a.2000.1080p.mkv [1080p, keep] | Marked.Series.b.2000.1080p.mkv [1080p, same]\",\r\nMini Series,2000,tt0000013,7.5,1000,\"IMDb lists this as a TV series: the files are episodes, not copies\",\"Mini.Series.2000.1080p.mkv [1080p, keep] | Mini.Series.2000.720p.mkv [720p, lower]\",\r\nTv Series,2000,tt0000012,7.5,1000,\"IMDb lists this as a TV series: the files are episodes, not copies\",\"Tv.Series.2000.part1.1080p.mkv [1080p, keep] | Tv.Series.2000.part2.1080p.mkv [1080p, same]\",\r\n"
+},
+"counts": {
+"duplicates": 22,
+"novideo": 4
+},
+"scan": {
+"tree": [
+[
+"Heat.1995.1080p/Heat.1995.1080p.mkv",
+40000000
+],
+[
+"Junk.Only.1999/info.nfo",
+10
+],
+[
+"Junk.Only.1999/cover.jpg",
+20
+],
+[
+"Junk.Only.1999/sub/more.url",
+5
+],
+[
+"Sample.Only.1999/Sample.Only.1999-sample.mkv",
+40000000
+],
+[
+"Tiny.Clip.1999/clip.mp4",
+1000
+],
+[
+"Other.Place.2001/readme.txt",
+3
+],
+[
+"elsewhere/Other.Place.2001.mkv",
+40000000
+],
+[
+"Nested.2002/CD1/movie.mkv",
+40000000
+],
+[
+"Group/Inner.2003/cover.jpg",
+4
+],
+[
+".hidden/Hidden.2004/x.nfo",
+1
+],
+[
+"$RECYCLE/Bin.2005/x.nfo",
+1
+]
+],
+"empty": [
+"Empty.2000"
+],
+"lists": [
+"Heat.1995.1080p",
+"Junk.Only.1999",
+"Sample.Only.1999",
+"Tiny.Clip.1999",
+"Other.Place.2001",
+"Nested.2002",
+"Inner.2003",
+"Hidden.2004",
+"Bin.2005",
+"Empty.2000",
+"Gone.2006"
+],
+"novideo": [
+{
+"path": "Empty.2000",
+"raw": "Empty.2000",
+"nfiles": 0,
+"size": 0,
+"names": []
+},
+{
+"path": "Group\\Inner.2003",
+"raw": "Inner.2003",
+"nfiles": 1,
+"size": 4,
+"names": [
+"cover.jpg"
+]
+},
+{
+"path": "Junk.Only.1999",
+"raw": "Junk.Only.1999",
+"nfiles": 3,
+"size": 35,
+"names": [
+"cover.jpg",
+"info.nfo",
+"sub\\more.url"
+]
+},
+{
+"path": "Sample.Only.1999",
+"raw": "Sample.Only.1999",
+"nfiles": 1,
+"size": 40000000,
+"names": [
+"Sample.Only.1999-sample.mkv"
+]
+},
+{
+"path": "Tiny.Clip.1999",
+"raw": "Tiny.Clip.1999",
+"nfiles": 1,
+"size": 1000,
+"names": [
+"clip.mp4"
+]
+}
+]
+}
+}

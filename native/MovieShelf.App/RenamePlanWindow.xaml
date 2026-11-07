@@ -1,0 +1,108 @@
+<Window
+    x:Class="MovieShelf.App.RenamePlanWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MovieShelf.App">
+
+    <Grid x:Name="Root">
+        <Grid.Resources>
+            <DataTemplate x:Key="RowTemplate" x:DataType="local:RenameRowVm">
+                <Border Background="{x:Bind RowBg}" CornerRadius="4" Margin="0,0,0,2" Padding="12,8">
+                    <StackPanel Spacing="2">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Old}" TextWrapping="Wrap" IsTextSelectionEnabled="True" FlowDirection="LeftToRight"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <FontIcon Grid.Column="1" Glyph="&#xE72A;" FontSize="12" MirroredWhenRightToLeft="True" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                      Visibility="{x:Bind ArrowVis}" />
+                            <TextBlock Grid.Column="2" Text="{x:Bind New}" TextWrapping="Wrap" FontWeight="SemiBold" IsTextSelectionEnabled="True" FlowDirection="LeftToRight" />
+                        </Grid>
+                        <TextBlock Text="{x:Bind Kind}" FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Text="{x:Bind Folder}" FontSize="12" TextTrimming="CharacterEllipsis" FlowDirection="LeftToRight" HorizontalAlignment="Left"
+                                   ToolTipService.ToolTip="{x:Bind Folder}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Text="{x:Bind Note}" Visibility="{x:Bind NoteVis}" FontSize="12" Foreground="{ThemeResource SystemFillColorCriticalBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="Rename plan" IsBackButtonVisible="False" />
+
+        <InfoBar x:Name="Msg" Grid.Row="1" IsOpen="False" IsClosable="True" Margin="16,0,16,6" />
+
+        <StackPanel x:Name="PatternPanel" Grid.Row="2" Margin="16,0,16,8" Spacing="6">
+            <TextBlock x:Name="PatternLabel" FontWeight="SemiBold" />
+            <TextBlock x:Name="PatternHelp" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBox x:Name="PatternBox" FlowDirection="LeftToRight" IsSpellCheckEnabled="False" KeyDown="OnPatternKey" />
+            <local:WrapPanel x:Name="Chips" HorizontalSpacing="6" VerticalSpacing="6" />
+            <local:WrapPanel HorizontalSpacing="8" VerticalSpacing="6">
+                <Button x:Name="PreviewBtn" Click="OnPreview" Style="{StaticResource AccentButtonStyle}" />
+                <Button x:Name="DefaultBtn" Click="OnDefaultPattern" />
+            </local:WrapPanel>
+            <TextBlock x:Name="PatternError" TextWrapping="Wrap" Visibility="Collapsed" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+        </StackPanel>
+
+        <Grid Grid.Row="3">
+            <Grid x:Name="Body" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <InfoBar x:Name="Explain" Severity="Informational" IsOpen="True" IsClosable="False" Margin="16,0,16,8"
+                         Title="Nothing is renamed by this app"
+                         Message="MovieShelf only proposes new names. Save the script, read it, and run it yourself if you agree. A name that is already taken is never renamed over." />
+                <local:WrapPanel x:Name="Tiles" Grid.Row="1" Margin="16,0,16,8" HorizontalSpacing="8" VerticalSpacing="8" />
+                <ScrollViewer Grid.Row="2" Padding="16,0,16,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+                    <SelectorBar x:Name="Tabs" SelectionChanged="OnTabChanged" />
+                </ScrollViewer>
+                <Grid Grid.Row="3">
+                    <ListView x:Name="RowList" ItemTemplate="{StaticResource RowTemplate}" SelectionMode="None" Margin="12,6,12,0" />
+                    <TextBlock x:Name="EmptyText" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </Grid>
+                <Border Grid.Row="4" Padding="16,10,16,12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Name="More" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <local:WrapPanel HorizontalSpacing="8" VerticalSpacing="8">
+                            <Button x:Name="BatBtn" Click="OnSaveBat" Style="{StaticResource AccentButtonStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE74E;" FontSize="14" />
+                                    <TextBlock Text="Save rename script (.bat)" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="CsvBtn" Content="Save table (.csv)" Click="OnSaveCsv" />
+                            <Button x:Name="ListBtn" Content="Save new names (.txt)" Click="OnSaveList" />
+                            <Button Content="Plan again" Click="OnReload" />
+                        </local:WrapPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <StackPanel x:Name="Empty" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="520" Padding="24">
+                <FontIcon Glyph="&#xE8B7;" FontSize="32" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Text="MovieShelf does not know where your movie files are yet." TextWrapping="Wrap" TextAlignment="Center" FontWeight="SemiBold" />
+                <TextBlock Text="The plan needs the location of each file. Add your movie folders in Settings → General first, then plan again." TextWrapping="Wrap" TextAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Button Content="Plan again" Click="OnReload" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel x:Name="Busy" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                <ProgressRing IsActive="True" Width="48" Height="48" />
+                <TextBlock Text="Planning the names…" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

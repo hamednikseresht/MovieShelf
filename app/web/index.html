@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MovieShelf</title>
+<meta name="color-scheme" content="light dark">
+<script>
+// apply the saved theme before first paint (no flash): 'light' | 'dark' | 'system'
+(function () {
+  var p = 'system', ps = 'm';
+  try { p = localStorage.getItem('theme') || 'system'; ps = localStorage.getItem('psize') || 'm'; } catch (e) { }
+  var dark = p === 'dark' || (p === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.documentElement.dataset.psize = ps;
+})();
+</script>
+<link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top" data-rtl>
+  <button class="btn plain icon only-narrow" id="filtersBtn" aria-label="Show filters" aria-expanded="false" aria-controls="side" data-i18n-attr="aria-label">
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+  </button>
+  <div class="brand"><span class="logo" aria-hidden="true"><img src="/static/logo.svg" alt="" width="28" height="28"></span><span class="brand-name">MovieShelf</span></div>
+
+  <div class="search" role="search">
+    <svg viewBox="0 0 24 24" class="i ico" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    <input id="q" type="search" aria-label="Search movies" placeholder="Search titles, people, files…  try  year:1999  rating:&gt;8" data-i18n-attr="aria-label placeholder" autocomplete="off" dir="auto" role="combobox" aria-expanded="false" aria-controls="qpanel" aria-haspopup="dialog">
+    <kbd class="kbd" aria-hidden="true">/</kbd>
+    <button type="button" class="search-help" id="qhelp" aria-label="Search tips" aria-expanded="false" aria-controls="qpanel" title="Search tips" data-i18n-attr="title aria-label">
+      <svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>
+    </button>
+    <div class="pop qpanel hidden" id="qpanel" role="dialog" aria-label="Search tips and recent searches"></div>
+  </div>
+
+  <div class="top-actions">
+    <button class="btn outline icon labeled" id="loadBtn" aria-label="Load a list or folder of movie names into the library" title="Load a list or folder of movie names into the library" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+      <span class="lbl" aria-hidden="true" data-i18n>Load list</span>
+    </button>
+    <button class="btn outline icon labeled" id="checkBtn" aria-label="Check a list or folder against the library" title="Check a list or folder against the library" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+      <span class="lbl" aria-hidden="true" data-i18n>Check list</span>
+    </button>
+    <button class="btn outline icon labeled has-count" id="probBtn" aria-label="Problems: titles that need a check" title="Problems: titles that need a check" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01"/></svg>
+      <span class="lbl" aria-hidden="true" data-i18n>Problems</span>
+      <span class="count hidden" id="probCount" aria-hidden="true"></span>
+    </button>
+    <button class="btn plain icon has-count" id="wishBtn" aria-label="Wishlist" title="Wishlist" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span class="count hidden" id="wishCount" aria-hidden="true"></span>
+    </button>
+    <button class="btn plain icon" id="collBtn" aria-label="Collections" title="Collections: franchises and what is missing" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5"/></svg>
+    </button>
+    <button class="btn plain icon" id="statsBtn" aria-label="Statistics" title="Statistics" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+    </button>
+    <button class="btn plain icon" id="settingsBtn" aria-label="Settings and update" title="Settings and update" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+    <button class="btn plain icon" id="helpBtn" aria-label="Help and guides" title="Help and guides" data-i18n-attr="title aria-label">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>
+    </button>
+    <button class="btn plain icon langbtn" id="langBtn" aria-label="Language" title="Language: English / فارسی" data-i18n-attr="title aria-label">
+      <span class="lang-t" aria-hidden="true">FA</span>
+    </button>
+    <div class="menu-wrap">
+      <button class="btn plain icon" id="themeBtn" aria-label="Theme" aria-haspopup="menu" aria-expanded="false" aria-controls="themeMenu" title="Theme" data-i18n-attr="title aria-label"></button>
+      <div class="pop menu hidden" id="themeMenu" role="menu" aria-label="Theme" data-i18n-attr="aria-label"></div>
+    </div>
+  </div>
+</header>
+<div id="job" class="job hidden"><div class="bar" aria-hidden="true"><i></i></div><span class="msg" role="status"></span>
+  <button type="button" class="btn outline small hidden" id="jobStop" data-i18n>Stop</button>
+  <button type="button" class="btn outline small hidden" id="jobLog" data-i18n>View log</button>
+  <button type="button" class="jobx hidden" id="jobX" aria-label="Dismiss this message" data-i18n-attr="aria-label"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+
+<div class="layout">
+  <aside class="side" id="side" data-rtl aria-label="Filters" data-i18n-attr="aria-label">
+    <div class="side-head">
+      <h2 data-i18n>Filters</h2>
+      <button type="button" class="link" id="reset" data-i18n>Reset all</button>
+    </div>
+    <details class="sec" data-sec="views" open>
+      <summary><span data-i18n>Saved views</span></summary>
+      <div id="views-list" class="vlist"></div>
+      <button type="button" class="btn outline small wide" id="viewSave" data-i18n>Save the current view…</button>
+      <div class="vsave hidden" id="vsave"><input type="text" id="vname" maxlength="60" placeholder="Name this view" aria-label="Name of the view" data-i18n-attr="aria-label placeholder"><button type="button" class="btn small" id="vok" data-i18n>Save</button></div>
+    </details>
+    <details class="sec" data-sec="library" open>
+      <summary><span data-i18n>Library</span><span class="n" data-n="library"></span></summary>
+      <div class="chips" id="f-status"></div>
+    </details>
+    <details class="sec" data-sec="genre" open>
+      <summary><span data-i18n>Genre</span><span class="n" data-n="genre"></span></summary>
+      <div class="chips" id="f-genre"></div>
+    </details>
+    <details class="sec" data-sec="year" open>
+      <summary><span data-i18n>Year</span><span class="n" data-n="year"></span></summary>
+      <div class="range"><input id="yMin" type="number" inputmode="numeric" placeholder="From" aria-label="Year from" data-i18n-attr="aria-label placeholder"><span aria-hidden="true">–</span><input id="yMax" type="number" inputmode="numeric" placeholder="To" aria-label="Year to" data-i18n-attr="aria-label placeholder"></div>
+      <div class="chips" id="f-decade"></div>
+    </details>
+    <details class="sec" data-sec="scores" open>
+      <summary><span data-i18n>Ratings</span><span class="n" data-n="scores"></span></summary>
+      <div class="slider"><label for="rMin" data-i18n>IMDb rating</label><output id="rMinLbl" for="rMin" data-i18n>any</output><input id="rMin" type="range" min="0" max="9" step="0.5" value="0"></div>
+      <div class="slider"><label for="vMin" data-i18n>Votes</label><output id="vMinLbl" for="vMin" data-i18n>any</output><input id="vMin" type="range" min="0" max="6" step="1" value="0"></div>
+      <div class="slider"><label for="rtMin"><span data-ico="rt"></span> Rotten Tomatoes</label><output id="rtMinLbl" for="rtMin" data-i18n>any</output><input id="rtMin" type="range" min="0" max="100" step="5" value="0"></div>
+      <div class="slider"><label for="mcMin"><span data-ico="mc"></span> Metacritic</label><output id="mcMinLbl" for="mcMin" data-i18n>any</output><input id="mcMin" type="range" min="0" max="100" step="5" value="0"></div>
+    </details>
+    <details class="sec" data-sec="runtime">
+      <summary><span data-i18n>Runtime</span><span class="n" data-n="runtime"></span></summary>
+      <div class="chips" id="f-runtime"></div>
+    </details>
+    <details class="sec" data-sec="quality">
+      <summary><span data-i18n>Quality</span><span class="n" data-n="quality"></span></summary>
+      <div class="chips" id="f-res"></div>
+      <div class="chips" id="f-src"></div>
+      <div class="chips" id="f-tech"></div>
+    </details>
+    <details class="sec" data-sec="type">
+      <summary><span data-i18n>Type</span><span class="n" data-n="type"></span></summary>
+      <div class="chips" id="f-type"></div>
+    </details>
+    <details class="sec hidden" data-sec="region" id="sec-country">
+      <summary><span>Country &amp; language</span><span class="n" data-n="region"></span></summary>
+      <label class="fl" for="f-country" data-i18n>Country</label>
+      <div class="sel"><select id="f-country"><option value="" data-i18n>Any</option></select></div>
+      <label class="fl" for="f-lang" data-i18n>Language</label>
+      <div class="sel"><select id="f-lang"><option value="" data-i18n>Any</option></select></div>
+    </details>
+  </aside>
+  <div class="scrim hidden" id="scrim"></div>
+
+  <main>
+    <div class="toolbar" data-rtl>
+      <div class="seg kind" id="kind" role="group" aria-label="Section" data-i18n-attr="aria-label">
+        <button type="button" data-kind="all" class="on" aria-pressed="true"><span data-i18n>All</span><small></small></button>
+        <button type="button" data-kind="movies" aria-pressed="false"><span data-i18n>Movies</span><small></small></button>
+        <button type="button" data-kind="series" aria-pressed="false"><span data-i18n>Series</span><small></small></button>
+      </div>
+      <div class="tb-row">
+        <h1 class="tb-count" id="count" aria-live="polite">Movies</h1>
+        <div class="tb-tools">
+          <div class="sel with-ico" title="Group the results" data-i18n-attr="title">
+            <svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5"/></svg>
+            <label class="sr-only" for="group" data-i18n>Group by</label>
+            <select id="group">
+              <option value="none" data-i18n>No grouping</option>
+              <option value="decade" data-i18n>Group: Decade</option>
+              <option value="year" data-i18n>Group: Year</option>
+              <option value="genre" data-i18n>Group: Genre</option>
+              <option value="rating" data-i18n>Group: IMDb rating</option>
+              <option value="res" data-i18n>Group: Quality</option>
+              <option value="type" data-i18n>Group: Type</option>
+              <option value="letter" data-i18n>Group: Title A–Z</option>
+              <option value="seen" data-i18n>Group: Watched</option>
+            </select>
+          </div>
+          <div class="sel with-ico" title="Sort the results" data-i18n-attr="title">
+            <svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 16 4 4 4-4M7 20V4M21 8l-4-4-4 4M17 4v16"/></svg>
+            <label class="sr-only" for="sort" data-i18n>Sort by</label>
+            <select id="sort">
+              <option value="title" data-i18n>Sort: Title</option>
+              <option value="year-desc" data-i18n>Sort: Year</option>
+              <option value="rating" selected data-i18n>Sort: IMDb rating</option>
+              <option value="rt" data-i18n>Sort: Rotten Tomatoes</option>
+              <option value="mc" data-i18n>Sort: Metacritic</option>
+              <option value="votes" data-i18n>Sort: Popularity</option>
+              <option value="runtime" data-i18n>Sort: Runtime</option>
+              <option value="added" data-i18n>Sort: Recently added</option>
+              <option value="myrating" data-i18n>Sort: My rating</option>
+            </select>
+          </div>
+          <button type="button" class="btn outline icon" id="sortDir" aria-label="Reverse the sort order" aria-pressed="false" title="Reverse the sort order" data-i18n-attr="title aria-label">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </button>
+          <div class="seg" id="view" role="group" aria-label="Layout" data-i18n-attr="aria-label">
+            <button data-v="grid" class="on" aria-pressed="true" aria-label="Poster grid" title="Poster grid" data-i18n-attr="title aria-label">
+              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </button>
+            <button data-v="list" aria-pressed="false" aria-label="Table" title="Table" data-i18n-attr="title aria-label">
+              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+            </button>
+          </div>
+          <button type="button" class="btn outline" id="selBtn" aria-pressed="false" title="Select several movies to change them together" data-i18n-attr="title" data-i18n>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 11 3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Select
+          </button>
+          <button type="button" class="btn outline" id="exportBtn" title="Export the movies shown to Excel or CSV" data-i18n-attr="title" data-i18n>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export
+          </button>
+          <button class="btn outline icon" id="random" aria-label="Watch next: picks from the results" title="Watch next: picks from the results" data-i18n-attr="title aria-label">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22M18 2l4 4-4 4M2 6h1.9c1.5 0 2.9.9 3.6 2.2M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8M18 14l4 4-4 4"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="active" class="active-tags"></div>
+    </div>
+    <div class="scroll" id="scroll">
+      <div id="grid" class="grid" aria-busy="true"></div>
+      <table id="table" class="table hidden">
+        <thead><tr><th><span class="sr-only">Poster</span></th><th data-sort="title"><button type="button">Title</button></th><th>Original</th><th data-sort="year-desc"><button type="button" data-i18n>Year</button></th><th data-sort="rating"><button type="button">IMDb</button></th><th data-sort="votes"><button type="button" data-i18n>Votes</button></th><th data-sort="rt"><button type="button" title="Rotten Tomatoes" aria-label="Rotten Tomatoes"><span data-ico="rt"></span></button></th><th data-sort="mc"><button type="button" title="Metacritic" aria-label="Metacritic"><span data-ico="mc"></span></button></th><th data-sort="runtime"><button type="button">Min</button></th><th>Genres</th><th>Director</th><th data-i18n>Quality</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div id="more" class="more"></div>
+      <div id="empty" class="empty hidden"></div>
+    </div>
+  </main>
+</div>
+
+<div id="bulk" class="bulk hidden" data-rtl role="region" aria-label="Selected movies">
+  <span id="bulk-n" class="bulk-n" aria-live="polite"></span>
+  <button type="button" class="btn outline small" data-bulk="fav" data-i18n>Favorite</button>
+  <button type="button" class="btn outline small" data-bulk="seen" data-i18n>Watched</button>
+  <button type="button" class="btn outline small" data-bulk="unseen" data-i18n>Not watched</button>
+  <div class="sel bulk-sel"><select id="bulk-rate" aria-label="Rate the selected movies"><option value="" data-i18n>Rate…</option><option value="10">10/10</option><option value="9">9/10</option><option value="8">8/10</option><option value="7">7/10</option><option value="6">6/10</option><option value="5">5/10</option><option value="4">4/10</option><option value="3">3/10</option><option value="2">2/10</option><option value="1">1/10</option></select></div>
+  <button type="button" class="btn outline small" data-bulk="wish" data-i18n>Wishlist</button>
+  <button type="button" class="btn outline small" data-bulk="export" data-i18n>Export</button>
+  <button type="button" class="btn outline small" data-bulk="remove" data-i18n>Remove from list</button>
+  <button type="button" class="link" data-bulk="all" data-i18n>Select all results</button>
+  <button type="button" class="link" data-bulk="none" data-i18n>Clear</button>
+  <button type="button" class="btn small" data-bulk="done" data-i18n>Done</button>
+</div>
+<button type="button" class="totop hidden" id="toTop" aria-label="Back to top" data-i18n-attr="aria-label"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
+<div id="modal" class="modal hidden"><div class="dlg" id="dlg" role="dialog" aria-modal="true" tabindex="-1"></div></div>
+<div id="cfm" class="modal top-layer hidden"><div class="dlg cfm" role="alertdialog" aria-modal="true" aria-labelledby="cfm-t" aria-describedby="cfm-d">
+  <h2 id="cfm-t"></h2><p id="cfm-d"></p>
+  <div class="btns"><button type="button" class="btn outline" id="cfm-no" data-i18n>Cancel</button><button type="button" class="btn" id="cfm-yes"></button></div>
+</div></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<div class="sr-only" id="alerts" role="alert"></div>
+<script src="/static/i18n.js"></script>
+<script src="/static/help.js"></script>
+<script src="/static/query.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

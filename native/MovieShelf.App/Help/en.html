@@ -1,0 +1,295 @@
+<section id="welcome">
+<h2>Welcome</h2>
+<p>MovieShelf turns a plain list of movie file names into a searchable movie library on your PC: posters, ratings, cast, quality, duplicates and problems, with nothing to upload. Your list stays yours; the app only reads it.</p>
+<h3>What you get</h3>
+<ul>
+<li><b>Every movie matched to IMDb</b>: English and original titles, year, rating, cast, directors, genres, runtime. Optional Rotten Tomatoes and Metacritic scores.</li>
+<li><b>Fast search and filters</b> with an advanced search language, grouping, sorting and saved views.</li>
+<li><b>Quality tools</b>: file quality is read from the name (and, optionally, from the real file), duplicates and weak spots are listed under Problems.</li>
+<li><b>Your own data</b>: favorites, watched, ratings, notes, a wishlist, backups.</li>
+<li><b>Export to Excel</b> with the movies and columns you choose.</li>
+</ul>
+<h3>How it works</h3>
+<ol>
+<li>You keep one or more <code>.txt</code> files with one movie name per line (for example <code>Heat.1995.1080p.BluRay</code>).</li>
+<li>The app reads each name, finds the title, year and quality in it, and matches it to IMDb using the IMDb datasets stored on your PC.</li>
+<li>It then adds details (cast, posters, scores). Names it cannot match with confidence appear in <b>Problems</b> so you can confirm them.</li>
+</ol>
+<div class="note"><b>Your files are never changed.</b> The app never renames, moves or deletes a movie file. Where an action touches the disk (the rename plan) it writes a script for you to read and run yourself.</div>
+</section>
+
+<section id="setup">
+<h2>Setup guide</h2>
+<h3>What you need</h3>
+<table>
+<tr><th>Item</th><th>Details</th></tr>
+<tr><td>Windows</td><td>Windows 10 version 1809 or later, or Windows 11, 64-bit. Nothing else needs to be installed first.</td></tr>
+<tr><td>Disk space</td><td>About 200 MB for the program. The IMDb data and the title index take about 3 GB more; keep about 4 GB free.</td></tr>
+<tr><td>Internet</td><td>Setup itself needs none. The IMDb data (about 1.9 GB) is downloaded by Setup if you choose it, or on the first start, unless you load a backup that holds it.</td></tr>
+<tr><td>Your list</td><td>A folder with one or more <code>.txt</code> files, one movie per line (not needed when you load a backup).</td></tr>
+</table>
+<h3>Step by step</h3>
+<ol>
+<li><b>Run <code>MovieShelf-Setup.exe</code></b> and follow the wizard: it checks your system, shows the licence, and asks where to install, which optional packages to download and which shortcuts to add. Then it starts MovieShelf. Administrator rights are needed only for an install for all users.</li>
+<li><b>Choose how to start.</b> The first time MovieShelf opens it asks:
+<ul>
+<li><b>Load a backup</b>: pick a full backup (.zip) made on this or another PC. The library, settings, API keys, list files and posters come back; anything the backup does not hold (such as the IMDb data) is downloaded afterwards.</li>
+<li><b>Start with the defaults</b>: choose the folder that holds your <code>.txt</code> list. MovieShelf downloads the IMDb data, matches your list and fetches posters. Plan for about 10 to 20 minutes; the progress bar shows how far it is, and finished parts are kept if you close the app. The IMDb files go to <code>%LOCALAPPDATA%\MovieShelf\data\imdb</code>. The <b>Stop</b> button on the progress bar stops an update at once (a half-downloaded file is removed; finished files and results are kept, and the next update continues).</li>
+</ul></li>
+<li><b>Open MovieShelf</b> later from the Start menu or the desktop shortcut.</li>
+</ol>
+<h3>What Setup does</h3>
+<table>
+<tr><th>#</th><th>Step</th><th>What it does</th></tr>
+<tr><td>1</td><td>System check</td><td>Checks the Windows version, 64-bit, free disk space, memory and internet, and notices a library you already have.</td></tr>
+<tr><td>2</td><td>Program</td><td>Installs MovieShelf into the folder you choose. .NET and the Windows App SDK are included, so nothing else is installed.</td></tr>
+<tr><td>3</td><td>Optional packages</td><td>Downloads the IMDb data and ffprobe, if you chose them.</td></tr>
+<tr><td>4</td><td>Shortcuts</td><td>Adds the Start menu and desktop shortcuts you chose, and an entry in Windows Installed apps.</td></tr>
+</table>
+<p><code>MovieShelf-Setup.exe /S</code> installs without asking anything.</p>
+<h3>If something goes wrong</h3>
+<ul>
+<li>Setup names any failed step on its last page. A failed optional download does not stop the install: the app downloads the IMDb data itself on the first update.</li>
+<li>Full details are in <code>install.log</code> in the program folder (Setup) and <code>%LOCALAPPDATA%\MovieShelf\data\native.log</code> (the app).</li>
+<li>Windows may warn that the setup file is from an unknown publisher. Choose <b>More info</b>, then <b>Run anyway</b>, if you trust where you got it.</li>
+</ul>
+<h3>Optional extras</h3>
+<table>
+<tr><th>Extra</th><th>What it gives you</th><th>Where</th></tr>
+<tr><td>TMDB key (free)</td><td>Plots, taglines, countries, languages, Persian titles, cast photos, collections.</td><td>Settings → Online data</td></tr>
+<tr><td>OMDb key (free)</td><td>Rotten Tomatoes and Metacritic scores that Wikidata does not have.</td><td>Settings → Online data</td></tr>
+<tr><td>Movie folders</td><td>File sizes and places, wasted space, “Show in folder”, rename plan, movies on disk that are in no list.</td><td>Settings → General</td></tr>
+<tr><td>ffprobe (from ffmpeg)</td><td>Real length, picture size, audio languages and subtitles of each file.</td><td>Tick it in Setup, or install it with <code>winget install Gyan.FFmpeg</code>, then Settings → General</td></tr>
+</table>
+<h3>Updating to a new version</h3>
+<p>Your library, posters, IMDb data and settings are in <code>%LOCALAPPDATA%\MovieShelf</code>, so an update only swaps the program. Optional: <b>Settings → Maintenance → Save full backup…</b>. Run the new <code>MovieShelf-Setup.exe</code>: it finds the installed version and upgrades it in place. The library is upgraded on the first start; nothing is lost and nothing big is downloaded again.</p>
+<h3>Moving to another PC</h3>
+<p>Run <code>MovieShelf-Setup.exe</code> on the new PC. To bring everything over (library, favorites, notes, settings, API keys, list files, posters), use <b>Settings → Maintenance → Full backup → Save full backup…</b> on the old PC and <b>Load full backup…</b> on the new one.</p>
+<h3>Removing MovieShelf</h3>
+<p>Open Windows Settings → Apps → Installed apps, and choose <b>Uninstall</b> beside MovieShelf. The wizard asks what to keep. Your library, backups, settings, posters and IMDb data are all kept unless you choose to delete them.</p>
+</section>
+
+<section id="tour">
+<h2>The main window</h2>
+<h3>Top bar</h3>
+<table>
+<tr><th>Button</th><th>What it does</th></tr>
+<tr><td>Search box</td><td>Finds movies as you type. The <b>?</b> button shows the search tips and your recent searches. Press <kbd>/</kbd> to jump to it.</td></tr>
+<tr><td>Check list</td><td>Compares another list, a folder or pasted names with your library.</td></tr>
+<tr><td>Problems</td><td>Matching problems, duplicates, quality issues and more. The badge counts items that need a look.</td></tr>
+<tr><td>Wishlist</td><td>Movies you want, or want in better quality.</td></tr>
+<tr><td>Collections</td><td>Franchises in your library and what is missing.</td></tr>
+<tr><td>Statistics</td><td>Totals and charts for your collection; click a bar to filter.</td></tr>
+<tr><td>Settings</td><td>Folders, keys, updates, backup, appearance, language.</td></tr>
+<tr><td>Theme</td><td>Light, dark, or follow Windows.</td></tr>
+<tr><td>Help, Language</td><td>This guide, and the English / Persian switch for menus and help.</td></tr>
+</table>
+<h3>Filters (left)</h3>
+<p>Sections for Library, Genre, Year, Ratings, Runtime, Quality, Type and Country. Each section shows how many of its filters are on. Click a chip to switch it on; click again to switch it off. <b>Reset all</b> clears every filter. Your filters are remembered between runs (not the search text).</p>
+<h3>Results bar</h3>
+<p>At the top, <b>All / Movies / Series</b> picks the section. <b>Series</b> holds the TV series and mini-series of your library (the poster shows the years it ran and the length of an episode); <b>Movies</b> holds the rest. The filters, search, sorting and counts all work inside the chosen section, which is remembered between runs. Then the count of movies shown, then <b>Group</b>, <b>Sort</b> and the reverse button, the poster / table switch, <b>Select</b>, <b>Export</b> and <b>Watch next</b>. Active filters appear as removable tags under it.</p>
+<h3>Posters and the table</h3>
+<p>Each poster shows the IMDb rating, resolution (4K, 1080p, …), badges such as FA (Farsi dubbed), RT / MC scores, a warning icon if the match needs a check, and heart / tick marks for favorites and watched. In table view click a column heading to sort; click it again to reverse.</p>
+</section>
+
+<section id="find">
+<h2>Finding movies</h2>
+<h3>The search box</h3>
+<p>Type words: all of them must match somewhere in the title (English, original or Persian), cast, directors, file names, genres or year. It ignores accents and capitals.</p>
+<table>
+<tr><th>Write</th><th>Finds</th></tr>
+<tr><td><code>"love story"</code></td><td>The exact phrase, words in this order.</td></tr>
+<tr><td><code>-zombie</code></td><td>Leaves out movies that contain the word.</td></tr>
+<tr><td><code>tt0111161</code></td><td>One IMDb id.</td></tr>
+<tr><td><code>year:1990-1999</code>, <code>year:&gt;2005</code>, <code>year:&lt;=1980</code></td><td>A range, or after / before a year.</td></tr>
+<tr><td><code>rating:&gt;8</code>, <code>rt:&gt;=90</code>, <code>mc:&gt;=75</code>, <code>votes:&gt;100k</code></td><td>IMDb rating, Rotten Tomatoes, Metacritic, votes. A bare number means “at least”.</td></tr>
+<tr><td><code>runtime:&lt;100</code></td><td>Length in minutes.</td></tr>
+<tr><td><code>genre:horror</code></td><td>One genre.</td></tr>
+<tr><td><code>dir:nolan</code>, <code>actor:"tom hanks"</code>, <code>writer:</code></td><td>People.</td></tr>
+<tr><td><code>country:</code>, <code>lang:</code>, <code>type:</code>, <code>collection:</code></td><td>Place, language, kind, franchise.</td></tr>
+<tr><td><code>res:1080p</code>, <code>res:4k</code>, <code>src:bluray</code>, <code>codec:x265</code>, <code>file:farsi</code></td><td>Quality and file names.</td></tr>
+<tr><td><code>audio:persian</code>, <code>sub:english</code></td><td>Audio and subtitle languages (needs ffprobe).</td></tr>
+<tr><td><code>is:fav</code>, <code>is:unwatched</code>, <code>is:review</code>, <code>is:dubbed</code>, <code>has:poster</code>, <code>has:plot</code></td><td>Flags.</td></tr>
+</table>
+<p>Combine freely, for example <code>genre:drama year:&gt;=2000 rating:&gt;7.5 -war is:unwatched</code>. Each operator shows as a tag under the search box; click its cross to remove it. Click the <b>?</b> button for clickable examples.</p>
+<h3>Filters, grouping and sorting</h3>
+<ul>
+<li><b>Filters</b> narrow the list; several chips of one kind all have to match (for genres) or any may match (for qualities).</li>
+<li><b>Group</b> by decade, year, genre (first listed), rating band, quality, type, first letter or watched. Click a group name to fold it.</li>
+<li><b>Sort</b> by title, year, ratings, votes, length, recently added or your own rating. The arrow button reverses the order.</li>
+</ul>
+<h3>Saved views</h3>
+<p>Set up a search, filters, sort and grouping, then <b>Saved views → Save the current view</b>. Click a saved view to apply it; the cross deletes it.</p>
+</section>
+
+<section id="movie">
+<h2>The movie window</h2>
+<p>Click a poster or table row. You see the poster, titles (English, original, IMDb, Persian), ratings (IMDb, Rotten Tomatoes, Metacritic), runtime, genres, plot, cast and crew, and your files.</p>
+<ul>
+<li><b>Favorite</b> and <b>Watched</b> buttons, a 1–10 <b>star rating</b> and a <b>notes</b> box (saved as you type). Watched stores the date.</li>
+<li>Click a <b>cast member, director, writer or crew name</b> to open their <b>profile</b>: photo, birth and death, birthplace, professions, biography (in Persian too, when TMDB has it) and their movies grouped by job (Actor, Director, Writer, Producer, Composer, Cinematographer, Editor and others). The movies in your library come first as posters; the person's other movies are listed below with a <b>Wishlist</b> button. <b>Show all in the library</b> filters the library by the person. The photo, biography and other movies need a TMDB key; without one you still get the IMDb facts and your own movies. Profiles are fetched when opened and kept; <b>Settings → Maintenance → People → Scan people now</b> fetches them in advance for directors and writers, the first five actors, or everyone (an option makes it run after every update).</li>
+<li>The <b>Persian</b> title comes from TMDB, cleaned up (Persian letters and digits, spaces, half-spaces) and, where TMDB only had Persian in Latin letters, replaced by a reviewed Persian-script title. Click <b>Edit</b> next to it to type your own; <b>Reset</b> brings the stored title back. Your edits are kept in backups. Problems → Other → <i>Persian title</i> lists any that are still in Latin letters.</li>
+<li>The <b>tomato</b> shows the Rotten Tomatoes score (a red tomato when fresh, 60% or more; a green splat when rotten) and the <b>M</b> badge the Metacritic score. These small icons are drawn for MovieShelf, they are not the official logos.</li>
+<li>Click a <b>genre</b> or a <b>person</b> to see every movie with them.</li>
+<li><b>Your files</b> lists every file for the movie with quality chips (resolution, source, codec, 10-bit, HDR, audio, Farsi dubbed, edition), size, folder and, if read with ffprobe, length, picture size, audio languages and subtitles. <b>Show in folder</b> opens Explorer on the file.</li>
+<li><b>Wrong movie? Fix match</b> searches IMDb so you can choose the right one. Your choice is kept for good.</li>
+<li><b>Add poster</b> (or <b>Change poster</b>) is for a movie whose poster could not be found or is wrong: choose an image file (JPEG, PNG, WebP or GIF, up to 15 MB), or paste an image address or a file path, then press <b>Use</b>. A poster you add is kept: updates never replace it, and it is part of the full backup. <b>Remove poster</b> clears it. The same button is in Problems → Other → <i>No poster</i>.</li>
+<li><b>Remove from list</b> (next to each file) takes that entry out of your library, for example when its folder holds no movie. Your list files and movie files are not changed.</li>
+</ul>
+</section>
+
+<section id="collection">
+<h2>Working with your collection</h2>
+<h3>Select several movies</h3>
+<p>Click <b>Select</b>, then click movies (hold <kbd>Shift</kbd> for a range). The bar at the bottom changes them together: favorite, watched, not watched, rating, add to the wishlist, export just the selection, or <b>Remove from list</b>. <b>Select all results</b> picks everything the filters show. <kbd>Esc</kbd> or <b>Done</b> leaves selection mode.</p>
+<h3>Watch next</h3>
+<p>The shuffle button picks six movies. Choose the source (current results or the whole library), the kind (<i>Best rated</i>, <i>Surprise me</i>, <i>Hidden gems</i>), a length and a minimum rating. By default only unwatched movies are picked. <b>Watched</b> on a pick marks it and brings another; <b>Pick again</b> reshuffles. The dialog also shows what you watched recently.</p>
+<h3>Wishlist</h3>
+<p>A list of movies you want, or want better copies of. Add titles by hand, from the list check, from Problems → Quality, from a selection or from Collections. Mark items found, copy the list, or save it as text or CSV.</p>
+<h3>Collections</h3>
+<p>Groups your movies by franchise. With a TMDB key, <b>Check for missing movies</b> shows which parts you do not have; <b>Add missing to wishlist</b> collects them.</p>
+<h3>Statistics</h3>
+<p>Totals, decades, genres, directors, actors, qualities and countries. Click a bar to filter the library by it.</p>
+</section>
+
+<section id="check">
+<h2>Check a list or folder</h2>
+<p>Use it before adding new movies, or to compare a hard drive with your library. Choose a <code>.txt</code> or <code>.csv</code> file, a folder of movies, or paste names. Nothing changes until you press <b>Add</b>.</p>
+<table>
+<tr><th>Status</th><th>Meaning</th></tr>
+<tr><td>New</td><td>Not in your library yet.</td></tr>
+<tr><td>Better quality</td><td>You have the movie, but this copy is better.</td></tr>
+<tr><td>Other version</td><td>Same movie with other audio (dubbed or original).</td></tr>
+<tr><td>Lower quality</td><td>You already have a better copy.</td></tr>
+<tr><td>Already have</td><td>Same movie, same quality.</td></tr>
+<tr><td>Same file</td><td>This exact name is already in your list.</td></tr>
+<tr><td>Not found</td><td>Could not be matched to IMDb (wrong name or year).</td></tr>
+</table>
+<p>The result also lists names that need a check (with the choices to pick from), names that appear twice in the checked list, and movies only in your library. Tick what you want and press <b>Add selected to library</b>; the names join your list and are matched. <b>Add selected to wishlist</b> keeps them for later. <b>Export report (CSV)</b> saves the whole result.</p>
+</section>
+
+<section id="problems">
+<h2>Problems</h2>
+<p>The Problems window has five tabs. The badge on the button counts matching problems, duplicates and titles with no video file.</p>
+<table>
+<tr><th>Tab</th><th>What is in it</th><th>What you can do</th></tr>
+<tr><td>Matching</td><td>Names that could not be matched with confidence: different name, wrong year, several movies with one title, no match.</td><td><b>Looks right</b>, pick another candidate, or <b>Search IMDb</b>. Fixes are kept for good.</td></tr>
+<tr><td>Duplicates</td><td>Movies you have more than once. Each copy is marked Keep, Lower quality or Same quality. Sub-lists: same quality, lower copy, dubbed + original, <i>Different movies?</i> (names that differ by a number such as Vol. 1 / Vol. 2) and <i>Same file twice</i>.</td><td>Copy the paths of the extra copies, <b>Fix match</b> if they are really different movies, or <b>Ignore</b>.</td></tr>
+<tr><td>Quality</td><td>Low quality (only SD, 480p or 576p, most popular first: upgrade candidates), unknown quality, name vs real picture, dubbed only.</td><td>Add to wishlist, open the movie, ignore.</td></tr>
+<tr><td>Other</td><td><i>No video file</i> (a list entry whose folder in your movie folders is empty, or holds only junk such as .nfo, .jpg or .url files, or only a sample; needs your movie folders), <i>Name differs</i> (the file name is not the real name of the film: a typo, a missing word, another language; the most different first), year in the file name far from IMDb’s, file length far from IMDb’s runtime, TV specials and shorts in a movie list (series have their own section), missing posters.</td><td>Remove from list, fix match, add a poster, retry posters, ignore.</td></tr>
+</table>
+<ul>
+<li><b>Ignore</b> hides an item until its files change. <b>Show ignored</b> brings them back with a Restore button.</li>
+<li>Every list can be exported to CSV. When movie folders are set, Duplicates also shows sizes, locations and the disk space wasted by redundant copies.</li>
+<li>The app never deletes your files: <b>Copy paths to remove</b> puts the names on the clipboard for you to delete yourself.</li>
+<li><b>Remove from list</b> (on <i>No video file</i>, or <b>Remove all</b> for the whole tab) hides the title in the library, and no update brings it back. It changes no file and no list file. A title that has a real video in another folder is not reported. Every row in Problems has a <b>Remove from list</b> button; where a row has several files, each file has its own.</li>
+<li>Episodes of a TV series are not duplicates: files with episode numbers (like S01E02), or a title IMDb lists as a series, go to <i>Duplicates → Series</i> and are not counted. <b>This is a series</b> puts any duplicate there; <b>Not a series</b> brings it back.</li>
+</ul>
+</section>
+
+<section id="files">
+<h2>Movie folders, ffprobe and the rename plan</h2>
+<h3>Movie folders</h3>
+<p><b>Settings → General → Movie folders</b>: one folder per line (or <b>Add a folder…</b>); it is saved and read when you leave the box. The app goes through the folders by itself, finds every movie in them and lists it, and records path and size. Folders are read-only to the app and rescanned on every update.</p>
+<p>There are only two places to give the app movies: the movie folders, and the <b>Load list</b> button (a .txt or .csv list, or a folder). One of them is enough. A movie found in a folder goes away when its video does, and <b>Remove from list</b> hides it for good.</p>
+<h3>Reading the real files (ffprobe)</h3>
+<p>Tick <b>Read audio languages, subtitles, length and real picture size with ffprobe</b>. Install ffprobe with <code>winget install Gyan.FFmpeg</code> if needed. Each file is read once, again only if it changes. You then get audio and subtitle languages in the movie window and in search (<code>audio:persian</code>), and two new problem lists: <i>Name vs picture</i> and <i>Length differs</i>.</p>
+<h3>Rename plan</h3>
+<p><b>Settings → Maintenance → Rename plan</b> proposes a tidy name for every movie the app has found: the video file, the subtitles beside it, and the folder of the movie (a folder named like the movie that holds only that movie; folders you listed yourself and DVD / Blu-ray folders are left alone). You choose the pattern, for example <code>{title} ({year}) [{res} {src}]</code>: press a field to add it, then <b>Preview</b>. Empty fields vanish with their brackets, and the pattern is kept. It writes a <code>.bat</code> script, a CSV and a list of the new names. <b>Nothing is renamed by the app</b>: read the script, then run it yourself. Items that would get the same name, or a name already taken on disk, are skipped. After renaming, bring the new names in with <b>Load list</b>, because the app finds movies by name.</p>
+</section>
+
+<section id="export">
+<h2>Export to Excel or CSV</h2>
+<p>Click <b>Export</b> above the results (or Settings → Maintenance → Export).</p>
+<ol>
+<li><b>Which movies</b>: the selected movies, the current results (with your filters, in the order shown) or the whole library. <b>Narrow down further</b> adds search text, year range, rating, genre, quality or status.</li>
+<li><b>Layout</b>: one row per movie or per file; optionally one Excel sheet per group (uses the Group setting).</li>
+<li><b>File type</b>: Excel (.xlsx) or CSV.</li>
+<li><b>Columns</b>: tick what you need, by group, or use <i>Essentials</i>, <i>Everything</i>, <i>Clear</i>. Your choice is remembered.</li>
+</ol>
+<p>The Excel file has a frozen header row, filter buttons, sized columns, clickable IMDb links and a last sheet, <i>Export info</i>, with the date and the filters used. The window shows the number of rows and columns before you export. A normal “Save as” window asks where to put the file.</p>
+</section>
+
+<section id="settings">
+<h2>Settings and data</h2>
+<table>
+<tr><th>Tab</th><th>What is there</th></tr>
+<tr><td>General</td><td>Library numbers, movie folders, Load list, ffprobe, automatic updates.</td></tr>
+<tr><td>Appearance</td><td>Theme, poster size, default layout, language.</td></tr>
+<tr><td>Online data</td><td>Optional TMDB and OMDb keys (tested when you save).</td></tr>
+<tr><td>Maintenance</td><td>Update buttons, export, people scan, folder tools, backup, rebuild.</td></tr>
+<tr><td>Activity log</td><td>What the last updates did, and any errors.</td></tr>
+</table>
+<h3>Updating</h3>
+<ul>
+<li><b>Scan list &amp; update</b>: adds new lines from your list files, matches them, fetches details and posters. It also runs each time the app starts.</li>
+<li><b>Update IMDb ratings</b>: downloads only the small ratings file. Done automatically each week if enabled.</li>
+<li><b>Update RT &amp; Metacritic</b>: critic scores from Wikidata (and OMDb with a key). Done monthly if enabled.</li>
+<li><b>Retry missing posters</b>, <b>Re-match everything</b> (manual matches are kept) and <b>Re-download IMDb data</b> (1.9 GB) are for repairs.</li>
+</ul>
+<h3>Full backup (everything)</h3>
+<p><b>Settings → Maintenance → Full backup → Save full backup…</b> writes one <code>.zip</code> file with the whole library (every movie, match, detail and score, plus your favorites, notes, views and wishlist), all settings, <b>the API keys</b>, your list files and the posters. The IMDb data (about 3 GB) is optional because it can be downloaded again. The file holds your API keys as plain text, so keep it private (untick <i>API keys</i> to leave them out).</p>
+<p><b>Load full backup…</b> restores it, on this PC or another one. Tick what to restore and press <b>Restore</b>. The library you have now is replaced, but a safety copy of the library, settings and list files is saved first in <code>data\backups\before-restore-…</code>. If the old list or movie folders do not exist on the new PC, the app tells you and points the list folder at the restored list files.</p>
+<h3>Quick backup (your own data)</h3>
+<p>Favorites, watched flags, ratings, notes, manual matches, ignored problems, saved views and the wishlist exist only in <code>data\library.db</code>. A copy is saved automatically once a day in <code>data\backups</code> (the last 14 are kept). <b>Export backup</b> saves a file anywhere, <b>Import backup</b> and <b>Restore an automatic backup</b> merge a copy back: nothing is deleted.</p>
+<h3>Appearance and language</h3>
+<p>Choose light, dark or system theme, poster size and default layout. The <b>Language</b> button in the top bar (or Settings → Appearance) switches menus and this help between English and Persian. Movie data stays as it is.</p>
+</section>
+
+<section id="keys">
+<h2>Keyboard shortcuts</h2>
+<table>
+<tr><th>Keys</th><th>Action</th></tr>
+<tr><td><kbd>/</kbd></td><td>Jump to the search box.</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>Close a window or menu; leave selection mode; clear the search text.</td></tr>
+<tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Move between controls. Inside a window the focus stays in the window.</td></tr>
+<tr><td><kbd>Enter</kbd> or <kbd>Space</kbd></td><td>Open the focused poster or row (or select it in selection mode).</td></tr>
+<tr><td><kbd>Shift</kbd>+click</td><td>In selection mode, select a range.</td></tr>
+<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Switch tabs in Settings.</td></tr>
+</table>
+</section>
+
+<section id="faq">
+<h2>Troubleshooting and questions</h2>
+<dl>
+<dt>The window stays empty after the first start.</dt>
+<dd>Either the start-up question is still waiting (choose <b>Load a backup</b> or <b>Start with the defaults</b>), or the first build is running. Watch the progress bar at the top; the build takes about 10 to 20 minutes. Open Settings → Activity log for details.</dd>
+<dt>“No .txt files found”.</dt>
+<dd>Press <b>Load list</b> at the top. You see the duplicates first, then choose to add the names to the current list or start a new list. Nothing is deleted: a new list moves the old list files to a <b>previous lists</b> folder.</dd>
+<dt>A movie has the wrong poster or details.</dt>
+<dd>Open it and use <b>Wrong movie? Fix match</b>. Or look in Problems → Matching.</dd>
+<dt>Many titles show “Needs review”.</dt>
+<dd>The name had no year, or several movies share the title. Confirm them in Problems → Matching; the fixes are kept.</dd>
+<dt>There are no plots, cast photos or Persian titles.</dt>
+<dd>Add a free TMDB key (Settings → Online data), then run <b>Scan list &amp; update</b>.</dd>
+<dt>Rotten Tomatoes and Metacritic are empty for some movies.</dt>
+<dd>Wikidata does not have every score. Add a free OMDb key, then <b>Update RT &amp; Metacritic</b>.</dd>
+<dt>“ffprobe not found”.</dt>
+<dd>Run MovieShelf-Setup.exe again and tick ffprobe, or run <code>winget install Gyan.FFmpeg</code> in a terminal, then restart MovieShelf.</dd>
+<dt>“MovieShelf is already running”.</dt>
+<dd>Only one copy runs at a time. Use the open window, or close it first.</dd>
+<dt>Excel shows strange letters in a CSV.</dt>
+<dd>Use the Excel (.xlsx) format, or open the CSV with “From text/CSV” and choose UTF-8.</dd>
+<dt>I lost my favorites after a problem.</dt>
+<dd>Settings → Maintenance → Backup → <b>Restore an automatic backup</b> and pick a recent date.</dd>
+<dt>Is anything sent to the internet?</dt>
+<dd>Only downloads: IMDb datasets and posters, ratings, critic scores from Wikidata, and (if you add keys) TMDB and OMDb lookups. Your list and personal data stay on your PC.</dd>
+</dl>
+</section>
+
+<section id="about">
+<h2>Files, data and licences</h2>
+<table>
+<tr><th>Where</th><th>What</th></tr>
+<tr><td><code>MovieShelf.exe</code></td><td>The program, in the folder you chose in Setup (normally <code>%LOCALAPPDATA%\Programs\MovieShelf</code>).</td></tr>
+<tr><td><code>uninstall.exe</code>, <code>install.log</code>, <code>tools\ffprobe.exe</code></td><td>The uninstaller, the record of the install, and ffprobe if you chose it, in the same folder.</td></tr>
+<tr><td><code>data\library.db</code></td><td>Your library and personal data.</td></tr>
+<tr><td><code>data\backups\</code></td><td>Daily copies of your personal data (last 14).</td></tr>
+<tr><td><code>data\imdb\</code>, <code>data\imdb_index.db</code></td><td>IMDb datasets (about 1.9 GB) and the offline title index (about 1 GB).</td></tr>
+<tr><td><code>data\posters\</code></td><td>Downloaded posters.</td></tr>
+<tr><td><code>data\settings.json</code></td><td>Your settings, including optional API keys.</td></tr>
+<tr><td><code>data\native.log</code></td><td>Log of the app.</td></tr>
+</table>
+<p>Everything the app makes is kept in <code>%LOCALAPPDATA%\MovieShelf</code>: the <code>data\</code> rows above are inside that folder. With a portable install, it is kept in the program folder instead. An older version that kept its data elsewhere is moved there on the first start.</p>
+<p>IMDb data is used under IMDb’s non-commercial licence, for personal use only. Critic scores come from Wikidata (CC0) and, optionally, OMDb. Plots, cast photos and collections come from TMDB when you add a key; this product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+</section>
