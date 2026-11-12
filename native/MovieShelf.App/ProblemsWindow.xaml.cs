@@ -222,7 +222,7 @@ public sealed class IssueVm : INotifyPropertyChanged
     public Visibility WishVis => U2.Vis(area == "quality" && sub == "lowq");
     public string FixLabel => Loc.T(area == "dupes" ? "Not the same movie? Fix match" : "Wrong movie? Fix match");
     /// <summary>Fix match is offered when the match may be wrong. With several files the user picks which one is wrong (the app cannot know), so each file has its own button.</summary>
-    public bool CanFix => (area == "other" && sub is "namediff" or "yeardiff" or "runtime") || (area == "dupes" && R.Sub is not ("versions" or "copies"));
+    public bool CanFix => (area == "other" && sub is "namediff" or "yeardiff" or "runtime" or "samename") || (area == "dupes" && R.Sub is not ("versions" or "copies"));
     public Visibility FixVis => U2.Vis(CanFix && R.Files.Count <= 1);
     public string IgnoreLabel => Loc.T(R.Ignored ? "Restore" : "Ignore");
     public double RowOpacity => R.Ignored || used ? 0.55 : 1;
@@ -253,7 +253,7 @@ public sealed partial class ProblemsWindow : Window
         ["quality"] = new[] { ("lowq", "Low quality"), ("unknownq", "Unknown quality"), ("realq", "Name vs picture"), ("dubonly", "Dubbed only") },
         ["other"] = new[]
         {
-            ("novideo", "No video file"), ("namediff", "Name differs"), ("yeardiff", "Year differs"), ("runtime", "Length differs"), ("fatitle", "Persian title"), ("nonfilm", "TV, not a film"), ("noposter", "No poster"),
+            ("novideo", "No video file"), ("namediff", "Name differs"), ("yeardiff", "Year differs"), ("runtime", "Length differs"), ("fatitle", "Persian title"), ("nonfilm", "TV, not a film"), ("noposter", "No poster"), ("nodata", "Missing data"), ("samename", "Same name and year"),
         },
     };
     static readonly Dictionary<string, string> Help = new()
@@ -274,6 +274,8 @@ public sealed partial class ProblemsWindow : Window
         ["realq"] = "The file name says one resolution but ffprobe sees a smaller picture: a mislabelled or upscaled file. Needs ffprobe (Settings → General → Movie folders).",
         ["runtime"] = "The length of the file is far from IMDb’s runtime: a cut-short download, a different cut, or the wrong movie. Needs ffprobe.",
         ["fatitle"] = "The Persian title from TMDB is written in Latin letters. Open the movie and use Edit next to Persian to type the right one; your edit is kept.",
+        ["nodata"] = "Movies with something unusual missing: no poster, no cast, no IMDb rating, no genres or no length. A new film may simply not have them yet; for an old one the match is often wrong, so open the movie or use Revise to check it is the right IMDb title.",
+        ["samename"] = "IMDb has more than one title with the same name and the same year as these movies (a film and its remake or short, two films with one name). The file may belong to the other one: open the movie, compare, and use Fix match or Revise if it is wrong. Ignore the row when the match is right.",
         ["noposter"] = "No poster was found for these. Retry downloads the missing ones from IMDb, or use Add a poster to choose an image file, or paste an image address.",
         ["novideo"] = "The folder of this title (in your movie folders) has no video file: it is empty, or holds only junk such as .nfo, .jpg or .url files, or only a sample. Remove the title from your list. This hides it in the library; your list files and folders are not changed, and it stays out of every update. Needs your movie folders in Settings.",
     };

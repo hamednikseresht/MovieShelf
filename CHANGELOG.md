@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### 🪟 Windows app
+- **Add movie**: add one movie by its IMDb link or `tt` number
+- **Revise IMDb match** button in a movie's details: give the movie (all its files) another IMDb title by link, number or search
+- Problems → Other: new **Missing data** list (no poster, cast, rating, genres or length) and **Same name and year** list (IMDb has other titles with the same name and year)
+
 ## 1.0.0 (first public release)
 
 The first public release of **MovieShelf** (the new name of MovieDB).

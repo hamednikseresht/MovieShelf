@@ -141,6 +141,22 @@ public static partial class Loc
         ["{0} added to your list (added.txt). They are being matched now."] = "{0} مورد به فهرست شما (added.txt) اضافه شد. هم‌اکنون در حال تطبیق هستند.",
         ["Those names are already in your list"] = "این نام‌ها از قبل در فهرست شما هستند",
         ["Checking your lists and movie folders again…"] = "در حال بررسی دوباره فهرست‌ها و پوشه‌های فیلم…",
+        // ---- add movie, revise, suspicious lists ----
+        ["Revise IMDb match"] = "اصلاح عنوان IMDb",
+        ["This is the wrong IMDb title, for example one of two movies with the same name and year. Give it another IMDb link or number."] = "عنوان IMDb اشتباه است، مثلاً یکی از دو فیلمی که نام و سال یکسان دارند. پیوند یا شماره IMDb دیگری بدهید.",
+        ["Add movie"] = "افزودن فیلم",
+        ["Add one movie by its IMDb link or number"] = "یک فیلم را با پیوند یا شماره IMDb اضافه کنید",
+        ["Paste the IMDb link or the tt-number of the movie. MovieShelf reads its name and year from IMDb, adds it to your library, and fetches the cast, rating and poster."] = "پیوند IMDb یا شماره tt فیلم را بچسبانید. MovieShelf نام و سال آن را از IMDb می‌خواند، به کتابخانه اضافه می‌کند و بازیگران، امتیاز و پوستر را می‌گیرد.",
+        ["IMDb link or tt-number"] = "پیوند یا شماره tt در IMDb",
+        ["That is not an IMDb link or number."] = "این پیوند یا شماره IMDb نیست.",
+        ["Looking it up on IMDb…"] = "در حال جستجو در IMDb…",
+        ["{0} is already in your library."] = "{0} از قبل در کتابخانه شما هست.",
+        ["{0} added. Fetching its details…"] = "{0} اضافه شد. در حال گرفتن اطلاعات…",
+        ["Missing data"] = "اطلاعات ناقص", ["Same name and year"] = "نام و سال یکسان",
+        ["Missing: {0}"] = "کم است: {0}",
+        ["IMDb has other titles with this name and year: {0}"] = "در IMDb عنوان‌های دیگری با همین نام و سال هست: {0}",
+        ["Movies with something unusual missing: no poster, no cast, no IMDb rating, no genres or no length. A new film may simply not have them yet; for an old one the match is often wrong, so open the movie or use Revise to check it is the right IMDb title."] = "فیلم‌هایی که چیز مهمی ندارند: بدون پوستر، بازیگر، امتیاز IMDb، ژانر یا مدت. فیلم تازه شاید هنوز این‌ها را نداشته باشد؛ در فیلم قدیمی معمولاً تطبیق اشتباه است، پس فیلم را باز کنید یا با «اصلاح عنوان IMDb» درستی عنوان را بررسی کنید.",
+        ["IMDb has more than one title with the same name and the same year as these movies (a film and its remake or short, two films with one name). The file may belong to the other one: open the movie, compare, and use Fix match or Revise if it is wrong. Ignore the row when the match is right."] = "در IMDb بیش از یک عنوان با همین نام و همین سال برای این فیلم‌ها هست (فیلم و بازسازی یا کوتاهش، دو فیلم با یک نام). شاید فایل مال دیگری باشد: فیلم را باز کنید، مقایسه کنید و اگر اشتباه بود از اصلاح تطبیق یا اصلاح عنوان IMDb استفاده کنید. اگر تطبیق درست است ردیف را نادیده بگیرید.",
         ["Queued: runs after the current job"] = "در صف: پس از کار فعلی اجرا می‌شود",
     };
 }

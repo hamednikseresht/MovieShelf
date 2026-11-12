@@ -191,6 +191,11 @@ Tick the entries you want and click **Add selected**. They join your list (in `a
 
 When your movie folders are set, a title whose own folder is empty, or holds only junk (`.nfo`, `.jpg`, `.url`, a sample), is listed in **Problems → Other → No video file** (the header badge counts it, and Problems opens there when nothing needs matching). Press **Remove from list**, or **Remove all** for the whole tab. The title is hidden in the library and no update brings it back. Your list files and movie files are not changed. **Remove from list** is also in the movie window (next to each file) and in the selection bar. A title that has a real video in another folder is not reported.
 
+## Add one movie, and revise a wrong match (Windows app)
+
+- ➕ **Add movie** (top bar): paste an IMDb link or a `tt` number. MovieShelf reads the name and year from IMDb, adds the movie to `added.txt` in your list folder, keeps your choice as a manual match, and fetches the cast, rating and poster. A movie you already have is reported, not added twice.
+- ✏️ **Revise IMDb match** (in a movie's details): when a film looks right but IMDb has two titles with the same name and year, open the movie, press **Revise IMDb match**, paste the correct IMDb link or number (or search by name) and press **Use this**. All files of that movie move to the new title, and its details and poster are fetched again.
+
 ## Posters by hand
 
 If no poster can be found, open the movie and press **Add poster** (or use Problems → Other → **No poster**). Choose an image file (JPEG, PNG, WebP or GIF, up to 15 MB), or paste an image address or a file path, then press **Use**. The poster is kept: updates never replace it, and the full backup holds it. **Remove poster** clears it.
@@ -202,7 +207,7 @@ The **Problems** button (with a count) has four tabs:
 - **Matching**: names that could not be matched to IMDb for sure (different name, wrong year, several movies with one title). Confirm the match, pick another, or search.
 - **Duplicates**: movies you have more than once. Every copy is marked *Keep*, *Lower quality* or *Same quality*; a dubbed + original pair is shown as *not redundant*. The app never deletes files: use *Copy names to remove*, or *Ignore* if you keep both on purpose. Files whose names differ by a number (Vol. 1 / Vol. 2, Star Wars 4 / 6) or look like bonus material are listed separately as *Different movies?*: they are probably wrong matches, so use *Fix match*. With movie folders set, *Same file twice* reports a file stored in two places and the list shows sizes and wasted space.
 - **Quality**: movies whose best copy is SD, 480p or 576p (most popular first, the best upgrade candidates), movies with no resolution in the file name, and movies that only exist Farsi-dubbed.
-- **Other**: *Name differs* (the file name is not the real name of the film on IMDb: a typo, a missing word, another language; the most different first, use *Fix match* if it is the wrong film), file-name year two or more years from IMDb's year (possible wrong match), TV specials and shorts in a movie list, and missing posters (with a *Retry* button).
+- **Other**: *Name differs* (the file name is not the real name of the film on IMDb: a typo, a missing word, another language; the most different first, use *Fix match* if it is the wrong film), file-name year two or more years from IMDb's year (possible wrong match), TV specials and shorts in a movie list, missing posters (with a *Retry* button), **Missing data** (no poster, cast, IMDb rating, genres or length: often a wrong match) and **Same name and year** (IMDb has other titles with the same name and year as the movie, so the file may belong to the other one; open it and use *Fix match* or *Revise IMDb match*). The last two are in the Windows app.
 
 ## Series
 

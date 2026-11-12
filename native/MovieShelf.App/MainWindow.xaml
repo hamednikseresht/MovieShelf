@@ -220,6 +220,12 @@
                             <TextBlock x:Name="LoadListLabel" Text="Load list" />
                         </StackPanel>
                     </Button>
+                    <Button Style="{StaticResource TopButton}" Click="OnAddMovie" ToolTipService.ToolTip="Add one movie by its IMDb link or number">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE710;" FontSize="16" />
+                            <TextBlock x:Name="AddMovieLabel" Text="Add movie" />
+                        </StackPanel>
+                    </Button>
                     <Button Style="{StaticResource TopButton}" Click="OnCheckList" ToolTipService.ToolTip="Check a list or folder against the library">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE9D5;" FontSize="16" />
@@ -461,6 +467,12 @@
                                             <StackPanel Orientation="Horizontal" Spacing="6">
                                                 <FontIcon Glyph="&#xE896;" FontSize="13" />
                                                 <TextBlock x:Name="PosterBtnText" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="ReviseBtn" Click="OnRevise" ToolTipService.ToolTip="This is the wrong IMDb title, for example one of two movies with the same name and year. Give it another IMDb link or number.">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon Glyph="&#xE70F;" FontSize="13" />
+                                                <TextBlock Text="Revise IMDb match" />
                                             </StackPanel>
                                         </Button>
                                         <Button x:Name="RemoveAllBtn" Click="OnRemoveMovie" ToolTipService.ToolTip="Take this movie out of your library. Your list files and movie files are not changed.">

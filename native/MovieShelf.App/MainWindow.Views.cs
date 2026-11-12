@@ -156,6 +156,18 @@ public sealed partial class MainWindow
         catch (Exception ex) when (ex is InvalidOperationException or IOException) { Toast(ex.Message, "err"); }
     }
 
+    /// <summary>Add movie: one IMDb title by link or number. The check that fetches its details is already queued.</summary>
+    public async void OnAddMovie(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var r = await Dialogs.AddMovie(Content.XamlRoot);
+            if (r == null || r.AlreadyThere) return;
+            Toast(string.Format(Loc.T("{0} added. Fetching its details…"), r.Title), "info");
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or IOException) { Toast(ex.Message, "err"); }
+    }
+
     void OnRenamePlan(object sender, RoutedEventArgs e) => RenamePlanWindow.Open();
 
     void OnBackups(object sender, RoutedEventArgs e) => OpenBackups();

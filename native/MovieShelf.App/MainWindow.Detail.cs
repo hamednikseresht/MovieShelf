@@ -108,7 +108,7 @@ public sealed partial class MainWindow
 
         LinksPanel.Children.Clear();
         if (matched)
-            foreach (var b in new UIElement[] { ImdbLink, LetterboxdLink, TmdbLink, TrailerLink, PosterBtn }) LinksPanel.Children.Add(b);
+            foreach (var b in new UIElement[] { ImdbLink, LetterboxdLink, TmdbLink, TrailerLink, PosterBtn, ReviseBtn }) LinksPanel.Children.Add(b);
         LinksPanel.Children.Add(RemoveAllBtn);
         ImdbLink.Content = "IMDb " + m.K;
         PosterBtnText.Text = Loc.T(m.HasPoster ? "Change poster" : "Add poster");
@@ -397,6 +397,19 @@ public sealed partial class MainWindow
     void OnOpenTrailer(object sender, RoutedEventArgs e)
     {
         if (current != null) U2.Launch("https://www.youtube.com/results?search_query=" + Uri.EscapeDataString($"{current.Display} {current.Year} trailer"));
+    }
+
+    /// <summary>Revise: the movie sits on the wrong IMDb title. The Fix match dialog takes a link or number (or a search); the other files of the movie follow the first.</summary>
+    async void OnRevise(object sender, RoutedEventArgs e)
+    {
+        if (current is not { } m || m.Files.Count == 0) return;
+        var ids = m.Files.Select(f => f.Id).ToList();
+        int? tc = await Dialogs.FixMatch(Root.XamlRoot, lib, ids[0], m.Files[0].Raw);
+        if (tc == null) return;
+        try { if (ids.Count > 1) await Task.Run(() => lib.ReviseMovie(ids.Skip(1), tc.Value)); }
+        catch (Exception x) when (x is Microsoft.Data.Sqlite.SqliteException or IOException or InvalidOperationException) { Toast(x.Message, "err"); return; }
+        CloseDetailPane();
+        ShowInfo(Loc.T(tc != 0 ? "Match saved" : "Marked as not on IMDb"));
     }
 
     async void OnRemoveMovie(object sender, RoutedEventArgs e)

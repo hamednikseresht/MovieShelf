@@ -76,7 +76,7 @@ public sealed class IssueReport
     {
         "dupes" => OpenDupes().Count,
         "quality" => new[] { "lowq", "unknownq", "realq" }.Sum(OpenCount),
-        "other" => new[] { "novideo", "namediff", "yeardiff", "runtime", "fatitle", "nonfilm", "noposter" }.Sum(OpenCount),
+        "other" => new[] { "novideo", "namediff", "yeardiff", "runtime", "fatitle", "nonfilm", "noposter", "nodata", "samename" }.Sum(OpenCount),
         _ => 0,
     };
 
@@ -98,7 +98,7 @@ public sealed class IssueReport
 /// the bigger one, the same file in two folders is reported, and wasted space is added up.</summary>
 public static class Issues
 {
-    public static readonly string[] Kinds = { "novideo", "dupes", "lowq", "unknownq", "dubonly", "realq", "yeardiff", "nonfilm", "noposter", "runtime", "fatitle", "namediff" };
+    public static readonly string[] Kinds = { "novideo", "dupes", "lowq", "unknownq", "dubonly", "realq", "yeardiff", "nonfilm", "noposter", "runtime", "fatitle", "namediff", "nodata", "samename" };
 
     static readonly HashSet<string> SeriesTypes = new() { "tvSeries", "tvMiniSeries", "tvEpisode" };   // several files of these are episodes, not copies
     static readonly Dictionary<string, string> TvTypes = new() { ["tvEpisode"] = "TV episode", ["tvSpecial"] = "TV special", ["tvShort"] = "TV short" };
@@ -132,7 +132,8 @@ public static class Issues
         public int? Year, Runtime;
         public double? Rating;
         public int? Votes;
-        public bool Poster;
+        public bool Poster, HasCast;
+        public string Genres = "";
     }
 
     /// <summary>&gt;0 when file a is better than b, &lt;0 when worse, 0 when equal or unknown.</summary>
@@ -288,7 +289,7 @@ public static class Issues
         var titles = new Dictionary<int, T>();
         using (var c = db.CreateCommand())
         {
-            c.CommandText = "SELECT t.tconst, t.type, t.title, t.orig, t.en_title, t.year, t.runtime, t.rating, t.votes, t.poster, coalesce(f.title, t.fa_title) FROM titles t LEFT JOIN fa_titles f ON f.tconst = t.tconst";
+            c.CommandText = "SELECT t.tconst, t.type, t.title, t.orig, t.en_title, t.year, t.runtime, t.rating, t.votes, t.poster, coalesce(f.title, t.fa_title), (coalesce(length(t.cast_), 0) > 2 OR coalesce(length(t.tmdb_cast), 0) > 2), coalesce(t.genres, '') FROM titles t LEFT JOIN fa_titles f ON f.tconst = t.tconst";
             using var r = c.ExecuteReader();
             while (r.Read())
             {
@@ -297,7 +298,7 @@ public static class Issues
                 titles[r.GetInt32(0)] = new T
                 {
                     Type = S(1), Title = S(2), Orig = S(3), EnTitle = S(4), Year = I(5), Runtime = I(6), Rating = r.IsDBNull(7) ? null : r.GetDouble(7), Votes = I(8),
-                    Poster = !r.IsDBNull(9) && !(r.GetValue(9) is "" or 0L), Fa = S(10),
+                    Poster = !r.IsDBNull(9) && !(r.GetValue(9) is "" or 0L), Fa = S(10), HasCast = r.GetInt64(11) != 0, Genres = S(12) ?? "",
                 };
             }
         }
@@ -375,6 +376,7 @@ public static class Issues
         }
 
         var report = new IssueReport();
+        var sameName = SameNameOnImdb(lib.Matcher, titles, groups.Values.Select(g => g[0].Tconst).Where(tc => tc != 0).ToHashSet());
         foreach (var k in Kinds) report.Kinds[k] = new();
         foreach (var fs in groups.Values)
         {
@@ -472,18 +474,70 @@ public static class Issues
                     Add(Row("namediff", Say("The file name says “{0}”, IMDb calls it “{1}”", nd.Value.File, nd.Value.Real), nd.Value.Sim >= NameClose ? "close" : "far", sim: nd.Value.Sim));
                 if (t.Type != null && TvTypes.TryGetValue(t.Type, out var tvName)) Add(Row("nonfilm", Say("IMDb lists this as a " + tvName)));
                 if (!t.Poster) Add(Row("noposter", Say("No poster found")));
+                var lacking = new List<string>();
+                if (!t.Poster) lacking.Add("poster");
+                if (!t.HasCast) lacking.Add("cast");
+                if (t.Rating == null) lacking.Add("IMDb rating");
+                if (t.Genres.Length == 0) lacking.Add("genres");
+                if (t.Runtime is null or 0) lacking.Add("length");
+                if (lacking.Count > 0) Add(Row("nodata", Say("Missing: {0}", string.Join(", ", lacking))));
+                if (sameName.TryGetValue(f0.Tconst, out var twins))
+                    Add(Row("samename", Say("IMDb has other titles with this name and year: {0}", string.Join("; ", twins))));
                 if (FaTitles.IsLatinOnly(t.Fa)) Add(Row("fatitle", Say("The Persian title is written in Latin letters: {0}", t.Fa)));
             }
         }
         foreach (var k in new[] { "lowq", "dubonly" })
             report.Kinds[k] = report.Kinds[k].OrderByDescending(r => r.Votes ?? 0).ThenBy(r => r.Title, StringComparer.Ordinal).ToList();
         report.Kinds["dupes"] = report.Kinds["dupes"].OrderByDescending(r => r.Wasted).ThenBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList();
-        foreach (var k in new[] { "novideo", "unknownq", "realq", "yeardiff", "nonfilm", "noposter", "runtime", "fatitle" })
+        foreach (var k in new[] { "novideo", "unknownq", "realq", "yeardiff", "nonfilm", "noposter", "runtime", "fatitle", "nodata", "samename" })
             report.Kinds[k] = report.Kinds[k].OrderBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList();
         report.Kinds["namediff"] = report.Kinds["namediff"].OrderBy(r => r.Sim).ThenBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList(); // the most different names first
         report.Ignored = Kinds.Sum(k => report.Kinds[k].Count(r => r.Ignored));
         report.Wasted = report.Kinds["dupes"].Where(r => !r.Ignored).Sum(r => r.Wasted);
         return report;
+    }
+
+    /// <summary>For every matched title: the other IMDb titles that have the same name and the same year (so the file may belong to either). Needs the offline index.
+    /// Text of each twin: tt number, type and votes.</summary>
+    static Dictionary<int, List<string>> SameNameOnImdb(Matcher matcher, Dictionary<int, T> titles, HashSet<int> used)
+    {
+        var res = new Dictionary<int, List<string>>();
+        if (!matcher.HasIndex || used.Count == 0) return res;
+        var want = new Dictionary<(int Year, string Name), List<int>>();
+        foreach (int tc in used)
+        {
+            if (!titles.TryGetValue(tc, out var t) || t.Year is not > 0) continue;
+            foreach (var n in new[] { t.Title, t.Orig, t.EnTitle }.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => n!.Trim().ToLowerInvariant()).Distinct())
+            {
+                if (!want.TryGetValue((t.Year.Value, n), out var l)) want[(t.Year.Value, n)] = l = new();
+                l.Add(tc);
+            }
+        }
+        if (want.Count == 0) return res;
+        using var ix = matcher.Open();
+        var seen = new HashSet<(int, int)>();
+        foreach (int year in want.Keys.Select(k => k.Year).Distinct())
+        {
+            using var c = ix.CreateCommand();
+            c.CommandText = "SELECT id, type, title, orig, votes FROM titles WHERE year=$year";
+            c.Parameters.AddWithValue("$year", year);
+            using var r = c.ExecuteReader();
+            while (r.Read())
+            {
+                int id = r.GetInt32(0);
+                foreach (var n in new[] { r.IsDBNull(2) ? null : r.GetString(2), r.IsDBNull(3) ? null : r.GetString(3) })
+                {
+                    if (n == null || !want.TryGetValue((year, n.Trim().ToLowerInvariant()), out var owners)) continue;
+                    foreach (int own in owners)
+                    {
+                        if (own == id || !seen.Add((own, id))) continue;
+                        if (!res.TryGetValue(own, out var l)) res[own] = l = new();
+                        if (l.Count < 5) l.Add($"tt{id:0000000} ({(r.IsDBNull(4) ? 0 : r.GetInt64(4)):N0} votes)");
+                    }
+                }
+            }
+        }
+        return res;
     }
 
     /// <summary>The first n characters, a pair of surrogates counting as one (Python's text[:n]).</summary>
