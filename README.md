@@ -41,11 +41,11 @@ You have a pile of movie files (or just a list of names). MovieShelf turns them 
 | **Needs** | Nothing else | Python 3.9 or newer (set up for you) |
 | **Look** | Native WinUI 3 window, very fast | Web page in its own window or your browser |
 | **Same library?** | ✅ Both read the same data format | ✅ |
-| **Get it** | [**MovieShelf-Setup-1.0.0.exe**](https://github.com/hamednikseresht/MovieShelf/releases/latest) | [**MovieShelf-Python-1.0.0.zip**](https://github.com/hamednikseresht/MovieShelf/releases/latest) or clone this repo |
+| **Get it** | [**MovieShelf-Setup-1.0.1.exe**](https://github.com/hamednikseresht/MovieShelf/releases/latest) | [**MovieShelf-Python-1.0.1.zip**](https://github.com/hamednikseresht/MovieShelf/releases/latest) or clone this repo |
 
 ## 🪟 Windows: install in 3 steps
 
-1. ⬇️ Download **`MovieShelf-Setup-1.0.0.exe`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest).
+1. ⬇️ Download **`MovieShelf-Setup-1.0.1.exe`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest).
 2. ▶️ Run it and follow the wizard (English or فارسی). Windows may show a blue *SmartScreen* box: choose **More info → Run anyway** (the app is not code-signed, see [Security](#-security-and-privacy)).
 3. 🎉 Start **MovieShelf** from the Start menu. On the first start, give it your **movie folder** and/or a **list file**, press **Start**, and wait 10 to 20 minutes while it downloads the IMDb data (about 2 GB, once).
 
@@ -55,7 +55,7 @@ You have a pile of movie files (or just a list of names). MovieShelf turns them 
 <summary>🤫 Silent install (for IT or scripts)</summary>
 
 ```bat
-MovieShelf-Setup-1.0.0.exe /S /D=C:\Tools /NODESKTOP
+MovieShelf-Setup-1.0.1.exe /S /D=C:\Tools /NODESKTOP
 "C:\Tools\MovieShelf\uninstall.exe" /S
 ```
 All options: [docs/INSTALL-WINDOWS.md](docs/INSTALL-WINDOWS.md#-silent-install).

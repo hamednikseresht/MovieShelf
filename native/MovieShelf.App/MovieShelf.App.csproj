@@ -15,7 +15,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>..\..\tools\icon\MovieShelf.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Product>MovieShelf</Product>
   </PropertyGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 (2026-11-12)
 
 ### 🪟 Windows app
 - **Add movie**: add one movie by its IMDb link or `tt` number

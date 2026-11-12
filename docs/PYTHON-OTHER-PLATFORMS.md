@@ -15,7 +15,7 @@ chmod +x run.sh
 ./run.sh
 ```
 
-Or download **`MovieShelf-Python-1.0.0.zip`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest), unzip it, and run `./run.sh` inside.
+Or download **`MovieShelf-Python-1.0.1.zip`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest), unzip it, and run `./run.sh` inside.
 
 What `run.sh` does the first time:
 1. finds Python 3.9 or newer,

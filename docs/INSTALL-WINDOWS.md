@@ -7,12 +7,12 @@
 
 ### 1️⃣ Download
 
-Get **`MovieShelf-Setup-1.0.0.exe`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest) (about 39 MB).
+Get **`MovieShelf-Setup-1.0.1.exe`** from the [latest release](https://github.com/hamednikseresht/MovieShelf/releases/latest) (about 39 MB).
 
 🔐 *Optional check:* compare the file's SHA-256 with `SHA256SUMS.txt` on the release page:
 
 ```powershell
-Get-FileHash .\MovieShelf-Setup-1.0.0.exe -Algorithm SHA256
+Get-FileHash .\MovieShelf-Setup-1.0.1.exe -Algorithm SHA256
 ```
 
 ### 2️⃣ Run it
@@ -55,7 +55,7 @@ Run a newer setup file over the old one: it offers **Upgrade or repair** and kee
 ## 🤫 Silent install
 
 ```bat
-MovieShelf-Setup-1.0.0.exe /S [/D=path] [/ALLUSERS] [/COMPONENTS=imdb,ffprobe] [/DESKTOP] [/NODESKTOP] [/NOSTARTMENU] [/PORTABLE] [/RUN] [/LANG=fa] [/LOG=path]
+MovieShelf-Setup-1.0.1.exe /S [/D=path] [/ALLUSERS] [/COMPONENTS=imdb,ffprobe] [/DESKTOP] [/NODESKTOP] [/NOSTARTMENU] [/PORTABLE] [/RUN] [/LANG=fa] [/LOG=path]
 uninstall.exe /S [/DELETEDATA=library,backups,settings,posters,imdb,all] [/LOG=path]
 ```
 
