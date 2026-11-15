@@ -488,10 +488,10 @@ public static class Issues
         }
         foreach (var k in new[] { "lowq", "dubonly" })
             report.Kinds[k] = report.Kinds[k].OrderByDescending(r => r.Votes ?? 0).ThenBy(r => r.Title, StringComparer.Ordinal).ToList();
-        report.Kinds["dupes"] = report.Kinds["dupes"].OrderByDescending(r => r.Wasted).ThenBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList();
+        report.Kinds["dupes"] = report.Kinds["dupes"].OrderByDescending(r => r.Wasted).ThenBy(r => PyLower(r.Title), StringComparer.Ordinal).ToList();
         foreach (var k in new[] { "novideo", "unknownq", "realq", "yeardiff", "nonfilm", "noposter", "runtime", "fatitle", "nodata", "samename" })
-            report.Kinds[k] = report.Kinds[k].OrderBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList();
-        report.Kinds["namediff"] = report.Kinds["namediff"].OrderBy(r => r.Sim).ThenBy(r => r.Title.ToLowerInvariant(), StringComparer.Ordinal).ToList(); // the most different names first
+            report.Kinds[k] = report.Kinds[k].OrderBy(r => PyLower(r.Title), StringComparer.Ordinal).ToList();
+        report.Kinds["namediff"] = report.Kinds["namediff"].OrderBy(r => r.Sim).ThenBy(r => PyLower(r.Title), StringComparer.Ordinal).ToList(); // the most different names first
         report.Ignored = Kinds.Sum(k => report.Kinds[k].Count(r => r.Ignored));
         report.Wasted = report.Kinds["dupes"].Where(r => !r.Ignored).Sum(r => r.Wasted);
         return report;
@@ -532,13 +532,16 @@ public static class Issues
                     {
                         if (own == id || !seen.Add((own, id))) continue;
                         if (!res.TryGetValue(own, out var l)) res[own] = l = new();
-                        if (l.Count < 5) l.Add($"tt{id:0000000} ({(r.IsDBNull(4) ? 0 : r.GetInt64(4)):N0} votes)");
+                        if (l.Count < 5) l.Add($"tt{id:0000000} ({(r.IsDBNull(4) ? 0 : r.GetInt64(4)).ToString("N0", CultureInfo.InvariantCulture)} votes)");
                     }
                 }
             }
         }
         return res;
     }
+
+    /// <summary>Python's str.lower(): the Turkish dotted capital I becomes "i" and a combining dot, so titles sort as they do in the Python app.</summary>
+    static string PyLower(string s) => s.Replace("İ", "i̇").ToLowerInvariant();
 
     /// <summary>The first n characters, a pair of surrogates counting as one (Python's text[:n]).</summary>
     static string Cut(string s, int n)

@@ -5,6 +5,7 @@ When movie folders are set (Settings), file sizes and locations are known: the b
 quality is the bigger one, the same file in two folders is reported, and wasted space is added up."""
 import functools
 import json
+import os
 import re
 
 from rapidfuzz import fuzz
@@ -15,7 +16,7 @@ from .fatitles import is_latin_only
 from .matcher import UNSURE
 from .parse import EDITION_WORDS, norm
 
-KINDS = ['novideo', 'dupes', 'lowq', 'unknownq', 'dubonly', 'realq', 'yeardiff', 'nonfilm', 'noposter', 'runtime', 'fatitle', 'namediff']
+KINDS = ['novideo', 'dupes', 'lowq', 'unknownq', 'dubonly', 'realq', 'yeardiff', 'nonfilm', 'noposter', 'runtime', 'fatitle', 'namediff', 'nodata', 'samename']
 # TV series and mini-series have their own section (Series) and are not problems; these are the rest
 SERIES_TYPES = {'tvSeries', 'tvMiniSeries', 'tvEpisode'}  # several files of these are episodes, not copies
 TV_TYPES = {'tvEpisode': 'TV episode', 'tvSpecial': 'TV special', 'tvShort': 'TV short'}
@@ -107,7 +108,9 @@ def name_diff(fs, t):
 def _rows(db):
     titles = {r['tconst']: r for r in db.execute(
         'SELECT t.tconst, t.type, t.title, t.orig, t.en_title, t.year, t.runtime, t.rating, t.votes, t.poster, '
-        'coalesce(f.title, t.fa_title) AS fa FROM titles t LEFT JOIN fa_titles f ON f.tconst = t.tconst')}
+        'coalesce(f.title, t.fa_title) AS fa, '
+        '(coalesce(length(t.cast_), 0) > 2 OR coalesce(length(t.tmdb_cast), 0) > 2) AS has_cast, coalesce(t.genres, \'\') AS genres '
+        'FROM titles t LEFT JOIN fa_titles f ON f.tconst = t.tconst')}
     info = {}
     for r in db.execute('SELECT raw, path, size FROM fileinfo ORDER BY path'):
         info.setdefault(r['raw'], []).append((r['path'], r['size']))
@@ -134,6 +137,39 @@ def _key(f):
     return f'tt{f["tconst"]:07d}' if f['tconst'] else f'f{f["id"]}'
 
 
+def same_name_on_imdb(lib, titles, used):
+    """{tconst: [text, ...]}: for every matched title, the other IMDb titles with the same name and the same year
+    (the file may belong to either). Needs the offline index. Each text: tt number and votes."""
+    res = {}
+    if not os.path.exists(lib.index_path) or not used:
+        return res
+    want = {}
+    for tc in used:
+        t = titles.get(tc)
+        if not t or not t['year']:
+            continue
+        for n in {(x or '').strip().lower() for x in (t['title'], t['orig'], t['en_title'])} - {''}:
+            want.setdefault((t['year'], n), []).append(tc)
+    if not want:
+        return res
+    ix = lib.matcher.open()
+    try:
+        seen = set()
+        for year in sorted({y for y, _ in want}):
+            for r in ix.execute('SELECT id, type, title, orig, votes FROM titles WHERE year=?', (year,)):
+                for n in (r['title'], r['orig']):
+                    for own in want.get((year, (n or '').strip().lower()), ()):
+                        if own == r['id'] or (own, r['id']) in seen:
+                            continue
+                        seen.add((own, r['id']))
+                        lst = res.setdefault(own, [])
+                        if len(lst) < 5:
+                            lst.append(f'tt{r["id"]:07d} ({r["votes"] or 0:,} votes)')
+    finally:
+        ix.close()
+    return res
+
+
 def build(lib, db=None):
     """{kind: [row, ...], 'ignored': n, 'wasted': bytes}. Each row: ikey, k, tt, title, year, rating, votes,
     files [{id, raw, quality, verdict, size, paths}], note, sub, wasted, ignored."""
@@ -141,6 +177,7 @@ def build(lib, db=None):
     titles, groups = _rows(db)
     ignored = {r[0] for r in db.execute('SELECT ikey FROM dismissed')}
     out = {k: [] for k in KINDS}
+    same_name = same_name_on_imdb(lib, titles, {fs[0]['tconst'] for fs in groups.values() if fs[0]['tconst']})
     for fs in groups.values():
         f0 = fs[0]
         t = titles.get(f0['tconst']) if f0['tconst'] else None
@@ -219,13 +256,19 @@ def build(lib, db=None):
                 add('nonfilm', f'IMDb lists this as a {TV_TYPES[t["type"]]}')
             if not t['poster']:
                 add('noposter', 'No poster found')
+            lacking = [name for name, missing in (('poster', not t['poster']), ('cast', not t['has_cast']), ('IMDb rating', t['rating'] is None),
+                                                  ('genres', not t['genres']), ('length', not t['runtime'])) if missing]
+            if lacking:
+                add('nodata', 'Missing: ' + ', '.join(lacking))
+            if f0['tconst'] in same_name:
+                add('samename', 'IMDb has other titles with this name and year: ' + '; '.join(same_name[f0['tconst']]))
             if is_latin_only(t['fa']):
                 add('fatitle', f'The Persian title is written in Latin letters: {t["fa"]}')
     by_votes = lambda r: (-(r['votes'] or 0), r['title'] or '')
     for k in ('lowq', 'dubonly'):
         out[k].sort(key=by_votes)
     out['dupes'].sort(key=lambda r: (-(r['wasted'] or 0), (r['title'] or '').lower()))
-    for k in ('novideo', 'unknownq', 'realq', 'yeardiff', 'nonfilm', 'noposter', 'runtime', 'fatitle'):
+    for k in ('novideo', 'unknownq', 'realq', 'yeardiff', 'nonfilm', 'noposter', 'runtime', 'fatitle', 'nodata', 'samename'):
         out[k].sort(key=lambda r: (r['title'] or '').lower())
     out['namediff'].sort(key=lambda r: (r['sim'], (r['title'] or '').lower()))  # the most different names first
     out['ignored'] = len([1 for k in KINDS for r in out[k] if r['ignored']])

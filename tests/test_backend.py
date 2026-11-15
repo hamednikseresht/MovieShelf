@@ -4,6 +4,7 @@ import io
 import json
 import os
 import shutil
+import sqlite3
 import sys
 import tempfile
 import threading
@@ -14,7 +15,7 @@ import zipfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'app'))
 
-from movieshelf import backup, exporter, extras, issues, paths  # noqa: E402
+from movieshelf import backup, exporter, extras, issues, online, paths  # noqa: E402
 from movieshelf.checker import compare_quality  # noqa: E402
 from movieshelf.library import Cancelled, Library  # noqa: E402
 from movieshelf.parse import parse  # noqa: E402
@@ -1264,6 +1265,90 @@ class DataHome(unittest.TestCase):
 
     def test_default_list_folder_is_in_documents(self):
         self.assertEqual(paths.default_list_dir(), os.path.join(os.path.expanduser('~'), 'Documents', 'MovieShelf', 'lists'))
+
+
+class AddAndRevise(TempLibrary):
+    """Add movie by IMDb number, Revise, and the Missing data / Same name and year problem lists. Offline: no job runs."""
+
+    def setUp(self):
+        super().setUp()
+        self.jobs = []
+        self.lib.start = lambda fn, *a, **k: self.jobs.append(fn) or True
+        c = sqlite3.connect(self.lib.index_path)
+        c.executescript('''
+            CREATE TABLE titles(id INTEGER PRIMARY KEY, type INT, title TEXT, orig TEXT, year INT, endyear INT, runtime INT, genres TEXT, rating REAL, votes INT);
+            INSERT INTO titles VALUES (1, 0, 'The Godfather', 'The Godfather', 1972, NULL, 175, 'Crime,Drama', 9.2, 2000000);
+            INSERT INTO titles VALUES (2, 0, 'Heat', 'Heat', 1995, NULL, 170, 'Crime', 8.3, 700000);
+            INSERT INTO titles VALUES (4, 0, 'Heat', 'Heat', 1995, NULL, 90, 'Drama', 6.1, 1200);''')
+        c.commit()
+        c.close()
+
+    def test_imdb_number_is_found_in_a_link_or_typed(self):
+        for text, want in (('https://www.imdb.com/title/tt0111161/', 111161), ('imdb.com/title/tt0111161/?ref_=fn_al_tt_1', 111161),
+                           ('tt0000001', 1), ('  111161 ', 111161), ('TT0068646', 68646), ('', None), ('hello', None),
+                           ('https://example.com/movie', None), ('0', None)):
+            self.assertEqual(Library.parse_imdb_id(text), want, text)
+
+    def test_add_movie_writes_the_name_keeps_the_choice_and_queues_the_check(self):
+        r = self.lib.add_by_imdb(1)
+        self.assertEqual((r['raw'], r['already']), ('The Godfather (1972)', False))
+        added = os.path.join(self.lib.settings()['list_dir'], 'added.txt')
+        with open(added, encoding='utf-8') as f:
+            self.assertIn('The Godfather (1972)', f.read())
+        self.assertEqual(self.lib.db.execute('SELECT tconst FROM forced WHERE raw=?', ('The Godfather (1972)',)).fetchone()[0], 1)
+        self.assertEqual([fn.__name__ for fn in self.jobs][0], 'rescan')
+
+    def test_adding_a_movie_the_library_has_is_reported_not_repeated(self):
+        self.title(2, 'Heat', 1995)
+        self.file('Heat.1995.720p', 2)
+        r = self.lib.add_by_imdb(2)
+        self.assertTrue(r['already'])
+        self.assertFalse(os.path.exists(os.path.join(self.lib.settings()['list_dir'], 'added.txt')))
+        self.assertEqual(self.jobs, [])
+
+    def test_an_unknown_imdb_number_is_an_error(self):
+        orig = online.imdb_suggest
+        online.imdb_suggest = lambda q: []
+        try:
+            with self.assertRaises(ValueError) as cm:
+                self.lib.add_by_imdb(9999999)
+        finally:
+            online.imdb_suggest = orig
+        self.assertIn('tt9999999', str(cm.exception))
+
+    def test_revise_gives_every_file_the_new_title(self):
+        self.title(2, 'Heat', 1995)
+        self.title(1, 'The Godfather', 1972)
+        self.file('Heat.1995.720p', 2)
+        self.file('Heat.1995.1080p', 2)
+        ids = [r[0] for r in self.lib.db.execute('SELECT id FROM files ORDER BY id')]
+        self.lib.db.execute('UPDATE titles SET enriched=1')
+        self.lib.revise_movie(ids, 1)
+        rows = self.lib.db.execute('SELECT tconst, conf, manual FROM files').fetchall()
+        self.assertEqual([tuple(r) for r in rows], [(1, 'manual', 1), (1, 'manual', 1)])
+
+    def test_same_name_and_year_on_imdb_is_listed_with_the_other_title(self):
+        self.title(2, 'Heat', 1995)
+        self.file('Heat.1995.720p', 2)
+        self.title(1, 'The Godfather', 1972)
+        self.file('The.Godfather.1972.1080p', 1)
+        rows = issues.build(self.lib)['samename']
+        self.assertEqual([r['k'] for r in rows], ['tt0000002'])
+        self.assertIn('tt0000004', rows[0]['note'])
+        self.assertIn('1,200 votes', rows[0]['note'])
+
+    def test_missing_data_names_what_is_missing(self):
+        self.title(2, 'Heat', 1995, poster='')
+        self.file('Heat.1995.720p', 2)
+        rows = issues.build(self.lib)['nodata']
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['note'], 'Missing: poster, cast, length')
+
+    def test_a_movie_with_everything_is_not_listed(self):
+        self.title(2, 'Heat', 1995)
+        self.lib.db.execute("UPDATE titles SET cast_='[[1,\"A\",\"B\"]]', runtime=170, rating=8.3 WHERE tconst=2")
+        self.file('Heat.1995.720p', 2)
+        self.assertEqual(issues.build(self.lib)['nodata'], [])
 
 
 if __name__ == '__main__':

@@ -68,13 +68,10 @@ public class IssuesParity : IDisposable
         Assert.True(wrong.Count == 0, $"{kind}: {wrong.Count} of {want.Count} rows differ\n" + string.Join("\n", wrong.Take(3)));
     }
 
-    /// <summary>Problem lists added in the Windows app after this fixture was made; the Python app does not have them (yet).</summary>
-    static readonly string[] NativeOnly = { "nodata", "samename" };
-
     public static TheoryData<string> Kinds()
     {
         var d = new TheoryData<string>();
-        foreach (var k in Issues.Kinds.Except(NativeOnly)) d.Add(k);
+        foreach (var k in Issues.Kinds) d.Add(k);
         return d;
     }
 
@@ -83,7 +80,7 @@ public class IssuesParity : IDisposable
     public void EveryKindMatchesPython(string kind)
     {
         var expected = Fixture.GetProperty("report");
-        Assert.NotEmpty(expected.GetProperty(kind).EnumerateArray());
+        if (kind != "samename") Assert.NotEmpty(expected.GetProperty(kind).EnumerateArray());   // same name and year needs the IMDb index, which this fixture has no room for: ManualTests covers it
         Same(kind, Issues.Build(lib), expected);
     }
 
@@ -266,6 +263,6 @@ public class IssuesParity : IDisposable
         using var l = new Library(home);
         var expected = JsonDocument.Parse(File.ReadAllText(json)).RootElement;
         var report = Issues.Build(l);
-        foreach (var k in Issues.Kinds.Except(NativeOnly)) Same(k, report, expected);
+        foreach (var k in Issues.Kinds) Same(k, report, expected);
     }
 }

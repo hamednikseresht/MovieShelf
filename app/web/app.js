@@ -425,7 +425,8 @@ function openMovie(m) {
           <a class="btn ghost small" href="https://letterboxd.com/imdb/${m.tt}/" target="_blank">Letterboxd</a>
           <a class="btn ghost small" href="https://www.themoviedb.org/redirect?external_source=imdb_id&external_id=${m.tt}" target="_blank">TMDB</a>
           <a class="btn ghost small" href="https://www.youtube.com/results?search_query=${encodeURIComponent((m.en || m.title) + ' ' + (m.year || '') + ' trailer')}" target="_blank">Trailer</a>
-          <button type="button" class="btn ghost small" data-padd="${+m.tt.slice(2)}">${I('download', 'sm')}${m.poster ? 'Change poster' : 'Add poster'}</button>` : ''}
+          <button type="button" class="btn ghost small" data-padd="${+m.tt.slice(2)}">${I('download', 'sm')}${m.poster ? 'Change poster' : 'Add poster'}</button>
+          <button type="button" class="btn outline small" data-revise="1" title="This is the wrong IMDb title, for example one of two movies with the same name and year. Give it another IMDb link or number.">${tr('Revise IMDb match')}</button>` : ''}
           <button type="button" class="btn danger small" data-rmall="1" title="Take this movie out of your library. Your list files and movie files are not changed.">Remove from list</button>
         </div>
         ${m.tt ? `<div data-pbox="${+m.tt.slice(2)}"></div>` : ''}
@@ -673,6 +674,35 @@ async function pickNative(kind) {
   if (!a) return undefined;
   try { return (await (kind === 'folder' ? a.pick_folder() : a.pick_file())) || null; } catch { return undefined; }
 }
+// ---------------- Add movie: one IMDb title by its link or number ----------------
+function openAdd() {
+  $('#dlg').classList.remove('wide');
+  $('#dlg').dataset.mode = 'addmovie';
+  $('#dlg').innerHTML = `${closeBtn}<div class="pad">
+    <h2 id="dlg-title" dir="auto">${tr('Add movie')}</h2>
+    <p style="margin:-6px 0 14px;color:var(--dim)">${tr('Paste the IMDb link or the tt-number of the movie. MovieShelf reads its name and year from IMDb, adds it to your library, and fetches the cast, rating and poster.')}</p>
+    <div class="setrow"><label for="am-in">${tr('IMDb link or tt-number')}</label>
+      <div class="line"><input type="text" id="am-in" placeholder="https://www.imdb.com/title/tt0111161/   or   tt0111161" dir="ltr" autocomplete="off"><button type="button" class="btn" id="am-go">${tr('Add')}</button></div></div>
+    <div id="am-msg" aria-live="polite"></div>
+  </div>`;
+  showModal('dlg-title');
+  $('#am-in').focus();
+}
+function amMsg(text, err) { const el = $('#am-msg'); if (el) el.innerHTML = text ? `<div class="${err ? 'err-box' : 'hint'}" role="${err ? 'alert' : 'status'}">${esc(text)}</div>` : ''; }
+async function addMovie() {
+  const v = $('#am-in').value.trim();
+  if (!/tt\d+|^\d+$/i.test(v)) return amMsg(tr('That is not an IMDb link or number.'), true);
+  const go = $('#am-go'); go.disabled = true;
+  amMsg(tr('Looking it up on IMDb…'));
+  const r = await api('/api/movies/add', { imdb: v });
+  go.disabled = false;
+  if (r.error) return amMsg(r.error, true);
+  if (r.already) return amMsg(tr('{0} is already in your library.').replace('{0}', r.title));
+  closeModal();
+  toast(tr('{0} added. Fetching its details…').replace('{0}', r.title), 'info');
+  load(true); poll();
+}
+
 // ---------------- Load list: the one way to bring movie names in ----------------
 // A list file (.txt/.csv), a folder of lists or a folder of movies. The page first asks what loading would do (duplicates
 // inside the file, names already in the library, similar movies), then asks: add to the current list or start a new one.
@@ -976,7 +1006,7 @@ const PR_AREAS = [['match', 'Matching'], ['dupes', 'Duplicates'], ['quality', 'Q
 const PR_SUBS = {
   dupes: [['all', 'All'], ['same', 'Same quality'], ['lower', 'Lower copy'], ['versions', 'Dubbed + original'], ['mixed', 'Different movies?'], ['copies', 'Same file twice'], ['series', 'Series']],
   quality: [['lowq', 'Low quality'], ['unknownq', 'Unknown quality'], ['realq', 'Name vs picture'], ['dubonly', 'Dubbed only']],
-  other: [['novideo', 'No video file'], ['namediff', 'Name differs'], ['yeardiff', 'Year differs'], ['runtime', 'Length differs'], ['fatitle', 'Persian title'], ['nonfilm', 'TV, not a film'], ['noposter', 'No poster']],
+  other: [['novideo', 'No video file'], ['namediff', 'Name differs'], ['yeardiff', 'Year differs'], ['runtime', 'Length differs'], ['fatitle', 'Persian title'], ['nonfilm', 'TV, not a film'], ['noposter', 'No poster'], ['nodata', 'Missing data'], ['samename', 'Same name and year']],
 };
 const PR_HELP = {
   all: 'Movies you have more than once. Each copy is marked Keep, Lower quality or Same quality. The app never deletes files: copy the names of the extra copies and remove them yourself, or ignore the movie if you want to keep both. If the copies are really different movies (Vol. 1 and Vol. 2, for example), use Fix match on the file that is the wrong movie.',
@@ -995,6 +1025,8 @@ const PR_HELP = {
   realq: 'The file name says one resolution but ffprobe sees a smaller picture: a mislabelled or upscaled file. Needs ffprobe (Settings → General → Movie folders).',
   runtime: 'The length of the file is far from IMDb\u2019s runtime: a cut-short download, a different cut, or the wrong movie. Needs ffprobe.',
   fatitle: 'The Persian title from TMDB is written in Latin letters. Open the movie and use Edit next to Persian to type the right one; your edit is kept.',
+  nodata: 'Movies with something unusual missing: no poster, no cast, no IMDb rating, no genres or no length. A new film may simply not have them yet; for an old one the match is often wrong, so open the movie or use Revise to check it is the right IMDb title.',
+  samename: 'IMDb has more than one title with the same name and the same year as these movies (a film and its remake or short, two films with one name). The file may belong to the other one: open the movie, compare, and use Fix match or Revise if it is wrong. Ignore the row when the match is right.',
   noposter: 'No poster was found for these. Retry downloads the missing ones from IMDb, or use Add a poster to choose an image file, or paste an image address.',
   novideo: 'The folder of this title (in your movie folders) has no video file: it is empty, or holds only junk such as .nfo, .jpg or .url files, or only a sample. Remove the title from your list. This hides it in the library; your list files and folders are not changed, and it stays out of every update. Needs your movie folders in Settings.',
 };
@@ -1004,7 +1036,7 @@ const prOpen = kind => (PR.iss?.[kind] || []).filter(r => !r.ignored);
 const prDupes = () => prOpen('dupes').filter(r => r.sub !== 'series');  // series are listed in their own tab, not counted
 const prCount = a => a === 'match' ? PR.rows.length : a === 'dupes' ? prDupes().length
   : a === 'quality' ? prOpen('lowq').length + prOpen('unknownq').length + prOpen('realq').length
-  : prOpen('novideo').length + prOpen('namediff').length + prOpen('yeardiff').length + prOpen('runtime').length + prOpen('fatitle').length + prOpen('nonfilm').length + prOpen('noposter').length;
+  : prOpen('novideo').length + prOpen('namediff').length + prOpen('yeardiff').length + prOpen('runtime').length + prOpen('fatitle').length + prOpen('nonfilm').length + prOpen('noposter').length + prOpen('nodata').length + prOpen('samename').length;
 function prIssueRows() {
   const sub = prSub(), kind = PR.area === 'dupes' ? 'dupes' : sub;
   let rows = PR.iss?.[kind] || [];
@@ -1026,7 +1058,7 @@ async function openProblems() {
 
 // Fix match is offered on a row when its match may be wrong. With several files the user picks which file is the wrong one
 // (the app cannot know: Keep / Lower quality only compares quality), so each file gets its own button and box.
-const issueCanFix = r => (PR.area === 'other' && ['namediff', 'yeardiff', 'runtime'].includes(PR.sub.other)) || (PR.area === 'dupes' && r.sub !== 'versions' && r.sub !== 'copies');
+const issueCanFix = r => (PR.area === 'other' && ['namediff', 'yeardiff', 'runtime', 'samename'].includes(PR.sub.other)) || (PR.area === 'dupes' && r.sub !== 'versions' && r.sub !== 'copies');
 const issueHtml = r => `<div class="ck iss${r.ignored ? ' done' : ''}" data-ik="${esc(r.ikey)}">
   <div style="min-width:0">
     <div class="im"><b>${esc(r.title)}</b> ${r.year || ''} <small>${[r.rating ? 'IMDb ' + r.rating : '', r.votes ? fmtVotes(r.votes) + ' votes' : ''].filter(Boolean).join(' · ')}</small>
@@ -1259,6 +1291,7 @@ $('#collBtn').addEventListener('click', openCollections);
 $('#exportBtn').addEventListener('click', openExport);
 $('#checkBtn').addEventListener('click', openCheck);
 $('#loadBtn').addEventListener('click', openLoad);
+$('#addBtn').addEventListener('click', openAdd);
 $('#probBtn').addEventListener('click', openProblems);
 $('#settingsBtn').addEventListener('click', () => openSettings());
 
@@ -1270,7 +1303,10 @@ async function fixClick(t, onSaved) {
   if (t.dataset.use !== undefined && t.dataset.f) {
     if (!t.dataset.use && !await confirmBox({ title: 'Mark as not on IMDb?', text: 'This file keeps no IMDb data (no poster, cast or ratings). You can fix it again later.', ok: 'Mark as not on IMDb' })) return true;
     t.disabled = true; t.textContent = 'Saving…';
-    await api('/api/match/' + t.dataset.f, { imdb: t.dataset.use ? 'tt' + String(t.dataset.use).replace(/^tt/, '') : '' });
+    const imdb = t.dataset.use ? 'tt' + String(t.dataset.use).replace(/^tt/, '') : '';
+    const revise = t.dataset.use ? t.closest('[data-fixbox]')?.dataset.revise : '';
+    if (revise) await api('/api/revise', { ids: revise.split(',').map(Number), imdb });
+    else await api('/api/match/' + t.dataset.f, { imdb });
     onSaved(t);
     return true;
   }
@@ -1329,8 +1365,18 @@ const DIALOG_CLICKS = {
       $('.myr .lbl').textContent = v ? v + '/10' : 'My rating';
       await setUser(m, { myrating: v }); return;
     }
+    if (t.dataset.revise !== undefined && m) {  // Revise: the Fix match box of the first file; its choice goes to every file of the movie
+      const first = m.files[0].id;
+      await openFix(first);
+      const bx = $(`[data-fixbox="${first}"]`);
+      bx.dataset.revise = m.files.map(f => f.id).join(',');
+      bx.scrollIntoView({ block: 'center' });
+      return;
+    }
     await fixClick(t, b => { closeModal(); toast(b.dataset.use ? 'Match saved' : 'Marked as not on IMDb'); setTimeout(() => load(true), 1200); });
   },
+
+  async addmovie(t) { if (t.id === 'am-go') await addMovie(); },
 
   stats(t) {
     const sf = t.closest('[data-sf]'); if (sf) { resetFilters(); F[sf.dataset.sf].add(sf.dataset.sv); closeModal(); buildFacets(); apply(); return; }
@@ -1540,6 +1586,7 @@ $('#modal').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.dataset.fq) openFix(+e.target.dataset.fq, e.target.value);
   if (e.key === 'Enter' && e.target.id === 'ck-path') $('#ck-go').click();
   if (e.key === 'Enter' && e.target.id === 'll-path') $('#ll-go').click();
+  if (e.key === 'Enter' && e.target.id === 'am-in') $('#am-go').click();
   if (e.target.dataset.stab && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
     const tabs = $$('[data-stab]'), i = tabs.indexOf(e.target);
     const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];

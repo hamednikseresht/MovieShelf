@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 (2026-11-15)
+
+### 🐍 Python app
+- Everything new in 1.0.1 is now in the Python app too: **Add movie** (top bar), **Revise IMDb match** (in a movie's details), and the **Missing data** and **Same name and year** lists under Problems → Other
+
+### 🪟 Windows app
+- Problem lists sort exactly like the Python app (titles starting with İ)
+- Python and Windows apps are checked against each other on the new lists (275 Windows tests, 92 Python tests)
+
 ## 1.0.1 (2026-11-12)
 
 ### 🪟 Windows app

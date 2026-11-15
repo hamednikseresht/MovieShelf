@@ -2,6 +2,7 @@
 posters, critic scores and (optionally) TMDB data."""
 import glob
 import json
+import re
 import os
 import shutil
 import sqlite3
@@ -1070,6 +1071,60 @@ class Library:
         # people + poster + TMDB in the background
         self.start(lambda: (self.enrich([tconst]), self.fetch_posters(), self.fetch_tmdb([tconst])), queue=True)
 
+    @staticmethod
+    def parse_imdb_id(text):
+        """The IMDb number in what the user typed: a link, 'tt0111161' or just '111161'. None when there is none."""
+        text = str(text or '').strip()
+        m = re.search(r'tt(\d{1,9})', text, re.I) or re.fullmatch(r'(\d{1,9})', text)
+        return int(m.group(1)) if m and int(m.group(1)) > 0 else None
+
+    def _resolve_imdb(self, tconst):
+        """(title, year) of an IMDb title: from the library, else the offline index, else IMDb's online suggestions."""
+        r = self.db.execute('SELECT coalesce(en_title, title), year FROM titles WHERE tconst=? AND title IS NOT NULL', (tconst,)).fetchone()
+        if r and r[0]:
+            return r[0], r[1]
+        if os.path.exists(self.index_path):
+            ix = self.matcher.open()
+            try:
+                r = ix.execute('SELECT title, year FROM titles WHERE id=?', (tconst,)).fetchone()
+            finally:
+                ix.close()
+            if r and r[0]:
+                return r[0], r[1]
+        try:
+            for s in online.imdb_suggest(f'tt{tconst:07d}'):
+                if s['tconst'] == tconst and s['title']:
+                    return s['title'], s['year']
+        except Exception:
+            raise ValueError(f'tt{tconst:07d} is not in the offline IMDb index and IMDb could not be reached. Check your internet and try again.')
+        return None
+
+    def add_by_imdb(self, tconst):
+        """'Add movie': puts one IMDb title in the library by its link or number. Its name goes to added.txt like any
+        list name, the IMDb choice is kept as a manual match, and the check that follows fetches details and poster.
+        Returns {'tconst', 'raw', 'title', 'year', 'already'}. ValueError when IMDb has no such title."""
+        found = self._resolve_imdb(tconst)
+        if not found:
+            raise ValueError(f'IMDb has no title tt{tconst:07d}. Check the link or number.')
+        title, year = found
+        name = re.sub(r'[\r\n\t]+', ' ', title).strip()
+        raw = f'{name} ({year})' if year else name
+        out = {'tconst': tconst, 'raw': raw, 'title': title, 'year': year, 'already': False}
+        if self.db.execute('SELECT 1 FROM files WHERE present=1 AND tconst=?', (tconst,)).fetchone():
+            return {**out, 'already': True}
+        if self.db.execute('SELECT 1 FROM files WHERE present=1 AND raw=?', (raw,)).fetchone():
+            raw += f' tt{tconst:07d}'  # another movie already has this exact line: the number keeps them apart
+            out['raw'] = raw
+        self.add_from_check([{'raw': raw, 'choice': tconst}], update=False)
+        self.start(self.rescan, queue=True)
+        self.start(lambda: (self.enrich([tconst]), self.fetch_posters(), self.fetch_tmdb([tconst])), queue=True)
+        return out
+
+    def revise_movie(self, file_ids, tconst):
+        """'Revise': gives every file of a movie another IMDb title and fetches that title's details."""
+        for fid in file_ids:
+            self.set_match(int(fid), tconst)
+
     def lookup(self, file_id, query=None):
         f = dict(self.db.execute('SELECT * FROM files WHERE id=?', (file_id,)).fetchone())
         out = []
@@ -1366,7 +1421,7 @@ class Library:
     def _check_progress(self, stage, done=0, total=0):
         self.check.update(stage=stage, done=done, total=total)
 
-    def add_from_check(self, items):
+    def add_from_check(self, items, update=True):
         """Append chosen names to '<list folder>/added.txt' and update the library.
         items: [{'raw': ..., 'choice': tconst or None}]; 'choice' is present only when the user
         picked the movie (None = 'not on IMDb')."""
@@ -1391,7 +1446,8 @@ class Library:
                                 [(it['raw'].strip(), int(it['choice']) if it['choice'] else None)
                                  for it in new if 'choice' in it])
             self.db.commit()
-        self.start(self.full_update, queue=True)
+        if update:
+            self.start(self.full_update, queue=True)
         return len(new)
 
     # ---------- export for UI ----------

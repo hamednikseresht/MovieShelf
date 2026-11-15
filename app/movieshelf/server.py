@@ -354,6 +354,21 @@ def make_handler(lib: Library, web_dir):
                 tconst = int(mm.group(1)) if mm else None
                 threading.Thread(target=lib.set_match, args=(int(m.group(1)), tconst), daemon=True).start()
                 return self.send(200, {'ok': True, 'tconst': tconst})
+            if path == '/api/movies/add':
+                tconst = lib.parse_imdb_id(b.get('imdb'))
+                if not tconst:
+                    return self.send(400, {'error': 'That is not an IMDb link or number.'})
+                try:
+                    return self.send(200, lib.add_by_imdb(tconst))
+                except (ValueError, OSError) as e:
+                    return self.send(400, {'error': str(e)})
+            if path == '/api/revise':
+                ids = [int(i) for i in b.get('ids') or []]
+                tconst = lib.parse_imdb_id(b.get('imdb'))
+                if not ids or (not tconst and not b.get('none')):
+                    return self.send(400, {'error': 'Give an IMDb link or number.'})
+                threading.Thread(target=lib.revise_movie, args=(ids, tconst or None), daemon=True).start()
+                return self.send(200, {'ok': True, 'tconst': tconst})
             if path == '/api/user/bulk':
                 n = lib.set_user_many([str(k) for k in b.get('keys') or []], b.get('data') or {})
                 return self.send(200, {'ok': True, 'n': n})
