@@ -656,12 +656,28 @@ public sealed partial class ProblemsWindow : Window
         if (ids.Count == 0) return;
         string title = ids.Count == 1 ? Loc.T("Remove this title from your list?") : string.Format(Loc.T("Remove {0} titles from your list?"), ids.Count.ToString("N0"));
         if (!await WinKit.Confirm(Root.XamlRoot, title, "They are hidden from the library and no update brings them back. Your list files and your movie files are not changed.", "Remove from list")) return;
-        int removed = await Task.Run(() => lib.RemoveFromList(ids));
-        Say(string.Format(Loc.T("{0} removed from your list"), removed.ToString("N0")), InfoBarSeverity.Success);
+        // the rows go at once; the library is written and the lists are built again behind them
         var gone = ids.ToHashSet();
         matches.RemoveAll(p => gone.Contains(p.FileId));
-        await RefreshIssuesAsync();
+        DropFiles(gone);
+        Fill(keepScroll: true);
+        int removed = await Task.Run(() => lib.RemoveFromList(ids));
+        Say(string.Format(Loc.T("{0} removed from your list"), removed.ToString("N0")), InfoBarSeverity.Success);
         changed?.Invoke();
+        await RefreshIssuesAsync();
+    }
+
+    /// <summary>Takes removed files out of the rows on screen; a row with no file left goes.</summary>
+    void DropFiles(HashSet<int> gone)
+    {
+        foreach (var rows in report.Kinds.Values)
+            rows.RemoveAll(r =>
+            {
+                r.Files.RemoveAll(f => gone.Contains(f.Id));
+                r.JunkIds?.RemoveAll(gone.Contains);
+                r.Junk.RemoveAll(j => gone.Contains(j.Id));
+                return r.Files.Count == 0 || r.JunkIds is { Count: 0 };
+            });
     }
 
     async void OnRemoveMatch(object sender, RoutedEventArgs e)

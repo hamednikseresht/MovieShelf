@@ -948,16 +948,32 @@ async function recheckNow() {
 
 // ---------------- remove from list, poster by hand ----------------
 let POSTER_DONE = null;
-async function removeFromList(ids, after) {
+async function removeFromList(ids, after, now) {
   if (!ids.length) return false;
   const n = ids.length;
   if (!await confirmBox({ title: n === 1 ? 'Remove this title from your list?' : `Remove ${n.toLocaleString()} titles from your list?`,
     text: 'They are hidden from the library and no update brings them back. Your list files and your movie files are not changed.', ok: 'Remove from list', danger: true })) return false;
+  now?.();  // the page drops the rows at once; the server confirms below
   const r = await api('/api/remove', { ids });
   toast(`${r.removed.toLocaleString()} removed from your list`);
   await after?.(r);
-  await load(true); poll();
+  load(true).then(poll);  // the movie list refreshes in the background
   return true;
+}
+// Problems: take removed files out of the lists on the page, so the row goes the moment Remove is confirmed
+function prDropFiles(ids) {
+  const gone = new Set(ids);
+  for (const k of Object.keys(PR.iss || {})) {
+    if (!Array.isArray(PR.iss[k])) continue;
+    PR.iss[k] = PR.iss[k].filter(r => {
+      if (!r.files) return true;
+      r.files = r.files.filter(f => !gone.has(f.id));
+      if (r.junk_ids) r.junk_ids = r.junk_ids.filter(i => !gone.has(i));
+      if (r.junk) r.junk = r.junk.filter(j => !gone.has(j.id));
+      return r.files.length > 0 && !(r.junk_ids && r.junk_ids.length === 0);
+    });
+  }
+  PR.rows = (PR.rows || []).filter(r => !gone.has(r.id));
 }
 const posterBoxHtml = (tc, has) => `<div class="fix postbox">
   <div class="row"><input type="text" aria-label="Poster: image address or file path" placeholder="Image address (https://…) or a file path" data-purl="${tc}" dir="ltr"><button type="button" class="btn small" data-pgo="${tc}">Use</button></div>
@@ -1512,8 +1528,13 @@ const DIALOG_CLICKS = {
     if (t.dataset.rmrow || t.dataset.rmfile || t.dataset.rmmatch || t.id === 'pr-rmall') {
       const ids = t.dataset.rmfile ? [+t.dataset.rmfile] : t.dataset.rmmatch ? [+t.dataset.rmmatch]
         : prIssueRows().rows.filter(r => t.id === 'pr-rmall' ? r.junk_ids : r.ikey === t.dataset.rmrow).flatMap(r => r.junk_ids || r.files.map(f => f.id));
-      const ok = await removeFromList(ids, async () => { [PR.iss, PR.rows] = await Promise.all([api('/api/issues'), api('/api/problems')]); });
-      if (ok) probList();
+      await removeFromList(ids, () => {
+        // the server's lists follow in the background; the page already shows the result
+        Promise.all([api('/api/issues'), api('/api/problems')]).then(([iss, rows]) => {
+          PR.iss = iss; PR.rows = rows;
+          if ($('#dlg').dataset.mode === 'problems') probList();
+        });
+      }, () => { prDropFiles(ids); probList(); });
       return;
     }
     if (await posterClick(t, async () => { PR.iss = await api('/api/issues'); probList(); poll(); })) return;

@@ -28,6 +28,9 @@ internal sealed class SettingsWindow : Window
     [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
     static extern IntPtr SetWindowLongPtr(IntPtr hwnd, int index, IntPtr value);
 
+    /// <summary>For the timing run (MOVIESHELF_PERF).</summary>
+    internal static void CloseForTest() => instance?.Close();
+
     public static void Open(MainWindow main, string? tab)
     {
         if (instance == null)
@@ -396,7 +399,7 @@ internal sealed class SettingsWindow : Window
                 {
                     lib.OpenDuplicates();
                     LibraryStats x;
-                    lock (lib.Lock) x = lib.GetLibraryStats();
+                    x = lib.GetLibraryStats();   // its own read connection: does not wait for a running job
                     return (x, File.Exists(lib.IndexPath) ? new FileInfo(lib.IndexPath).Length : 0);
                 });
                 Tiles(st.Files, st.Matched, st.Titles, st.Posters, st.Enriched, st.Scores);

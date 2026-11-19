@@ -100,8 +100,7 @@ def make_handler(lib: Library, web_dir):
                                        'first_run': lib.first_run(),
                                        'settings': {**s, 'tmdb_key': bool(s.get('tmdb_key')), 'omdb_key': bool(s.get('omdb_key'))}})
             if path == '/api/problems':
-                with lib.lock:
-                    return self.send(200, lib.problems())
+                return self.send(200, lib.problems(lib.reader()))
             if path == '/api/removed':
                 return self.send(200, lib.removed_items())
             if path == '/api/probe':
@@ -469,4 +468,14 @@ def serve(lib, web_dir, port=0):
     httpd = _Server(('127.0.0.1', port), make_handler(lib, web_dir))
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
+
+    def warm():
+        """The other candidates of unsure matches take a while the first time (a spelling search in the IMDb index); look
+        them up in the background now, so the Problems window finds them ready. Read-only, on its own connection."""
+        try:
+            lib.problems(lib.reader())
+            lib.issues()
+        except Exception:
+            pass
+    threading.Thread(target=warm, daemon=True).start()
     return httpd

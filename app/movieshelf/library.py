@@ -1285,15 +1285,18 @@ class Library:
         self.version += 1
 
     # ---------- problem list ----------
-    def problems(self):
+    def problems(self, db=None):
+        """Unsure matches with their other candidates. Pass a reader() connection to read without the lock (it is closed here)."""
+        own = db is not None
+        db = db or self.db
         ix = self.matcher.open() if os.path.exists(self.index_path) else None
-        titles = {r['tconst']: r for r in self.db.execute('SELECT tconst, title, year, votes, rating, type FROM titles')}
+        titles = {r['tconst']: r for r in db.execute('SELECT tconst, title, year, votes, rating, type FROM titles')}
         out = []
         where = {}  # list entry -> the places of its video files, for "Show in folder"
-        for r in self.db.execute('SELECT raw, path FROM fileinfo ORDER BY path'):
+        for r in db.execute('SELECT raw, path FROM fileinfo ORDER BY path'):
             where.setdefault(r['raw'], []).append(r['path'])
         q = ','.join('?' * len(UNSURE))
-        for f in self.db.execute(f'SELECT * FROM files WHERE present=1 AND manual=0 AND conf IN ({q}) ORDER BY title', UNSURE):
+        for f in db.execute(f'SELECT * FROM files WHERE present=1 AND manual=0 AND conf IN ({q}) ORDER BY title', UNSURE).fetchall():
             t = titles.get(f['tconst'])
             cur = {'tconst': f['tconst'], 'title': t['title'], 'year': t['year'], 'votes': t['votes'],
                    'rating': t['rating'], 'type': t['type']} if t else None
@@ -1305,6 +1308,8 @@ class Library:
                         'current': cur, 'cands': self._cand_cache.get(ck, []), 'paths': where.get(f['raw'], [])})
         if ix:
             ix.close()
+        if own:
+            db.close()
         order = {c: i for i, c in enumerate(['none', 'review', 'fuzzy', 'noyear', 'online'])}
         out.sort(key=lambda x: order.get(x['conf'], 9))
         return out

@@ -499,45 +499,71 @@ public static class Issues
 
     /// <summary>For every matched title: the other IMDb titles that have the same name and the same year (so the file may belong to either). Needs the offline index.
     /// Text of each twin: tt number, type and votes.</summary>
+    // tconst -> (its names and year, the answer) for one index file; see SameNameOnImdb
+    static readonly object sameLock = new();
+    static (string Path, DateTime Time, long Size)? sameStamp;
+    static readonly Dictionary<int, ((string?, string?, string?, int?) Sig, List<string> Twins)> sameBy = new();
+
     static Dictionary<int, List<string>> SameNameOnImdb(Matcher matcher, Dictionary<int, T> titles, HashSet<int> used)
     {
-        var res = new Dictionary<int, List<string>>();
-        if (!matcher.HasIndex || used.Count == 0) return res;
-        var want = new Dictionary<(int Year, string Name), List<int>>();
-        foreach (int tc in used)
+        // Every IMDb title has a match key for its name and its original name (keys, src 0); names equal when lowercased share
+        // a key, so only titles sharing a key are read, not every title of every year. The answer for a title depends only on
+        // its own names and year, so it is kept until the index file changes: removing a movie does not look anything up again.
+        if (!matcher.HasIndex || used.Count == 0) return new();
+        var fi = new FileInfo(matcher.IndexPath);
+        var stamp = (fi.FullName, fi.LastWriteTimeUtc, fi.Length);
+        lock (sameLock)
         {
-            if (!titles.TryGetValue(tc, out var t) || t.Year is not > 0) continue;
-            foreach (var n in new[] { t.Title, t.Orig, t.EnTitle }.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => n!.Trim().ToLowerInvariant()).Distinct())
+            if (sameStamp != stamp) { sameStamp = stamp; sameBy.Clear(); }
+            var sig = new Dictionary<int, (string?, string?, string?, int?)>();
+            foreach (int tc in used)
+                if (titles.TryGetValue(tc, out var t)) sig[tc] = (t.Title, t.Orig, t.EnTitle, t.Year);
+            var todo = sig.Keys.Where(tc => !sameBy.TryGetValue(tc, out var have) || have.Sig != sig[tc]).ToList();
+            if (todo.Count > 0)
             {
-                if (!want.TryGetValue((t.Year.Value, n), out var l)) want[(t.Year.Value, n)] = l = new();
-                l.Add(tc);
-            }
-        }
-        if (want.Count == 0) return res;
-        using var ix = matcher.Open();
-        var seen = new HashSet<(int, int)>();
-        foreach (int year in want.Keys.Select(k => k.Year).Distinct())
-        {
-            using var c = ix.CreateCommand();
-            c.CommandText = "SELECT id, type, title, orig, votes FROM titles WHERE year=$year";
-            c.Parameters.AddWithValue("$year", year);
-            using var r = c.ExecuteReader();
-            while (r.Read())
-            {
-                int id = r.GetInt32(0);
-                foreach (var n in new[] { r.IsDBNull(2) ? null : r.GetString(2), r.IsDBNull(3) ? null : r.GetString(3) })
+                var want = new Dictionary<(int Year, string Name), List<int>>();
+                foreach (int tc in todo)
                 {
-                    if (n == null || !want.TryGetValue((year, n.Trim().ToLowerInvariant()), out var owners)) continue;
-                    foreach (int own in owners)
+                    var t = titles[tc];
+                    sameBy[tc] = (sig[tc], new List<string>());
+                    if (t.Year is not > 0) continue;
+                    foreach (var n in new[] { t.Title, t.Orig, t.EnTitle }.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => PyLower(n!.Trim())).Distinct())
                     {
-                        if (own == id || !seen.Add((own, id))) continue;
-                        if (!res.TryGetValue(own, out var l)) res[own] = l = new();
-                        if (l.Count < 5) l.Add($"tt{id:0000000} ({(r.IsDBNull(4) ? 0 : r.GetInt64(4)).ToString("N0", CultureInfo.InvariantCulture)} votes)");
+                        if (!want.TryGetValue((t.Year.Value, n), out var l)) want[(t.Year.Value, n)] = l = new();
+                        l.Add(tc);
                     }
                 }
+                var ks = want.Keys.Select(k => TitleKeys.Key(k.Name)).Where(k => k.Length > 0).Distinct().OrderBy(k => k, StringComparer.Ordinal).ToList();
+                var rows = new Dictionary<int, (int Id, string? Title, string? Orig, int Year, long Votes)>();
+                if (ks.Count > 0)
+                    using (var ix = matcher.Open())
+                        for (int i = 0; i < ks.Count; i += 500)
+                        {
+                            var part = ks.Skip(i).Take(500).ToList();
+                            using var c = ix.CreateCommand();
+                            c.CommandText = "SELECT t.id, t.title, t.orig, t.year, t.votes FROM keys k JOIN titles t ON t.id = k.id WHERE k.src = 0 AND k.k IN ("
+                                + string.Join(",", part.Select((_, j) => "$k" + j)) + ")";
+                            for (int j = 0; j < part.Count; j++) c.Parameters.AddWithValue("$k" + j, part[j]);
+                            using var r = c.ExecuteReader();
+                            while (r.Read())
+                                rows[r.GetInt32(0)] = (r.GetInt32(0), r.IsDBNull(1) ? null : r.GetString(1), r.IsDBNull(2) ? null : r.GetString(2),
+                                    r.IsDBNull(3) ? 0 : r.GetInt32(3), r.IsDBNull(4) ? 0 : r.GetInt64(4));
+                        }
+                var seen = new HashSet<(int, int)>();
+                foreach (var r in rows.Values.OrderBy(r => r.Year).ThenBy(r => r.Id))
+                    foreach (var n in new[] { r.Title, r.Orig })
+                    {
+                        if (n == null || !want.TryGetValue((r.Year, PyLower(n.Trim())), out var owners)) continue;
+                        foreach (int own in owners)
+                        {
+                            if (own == r.Id || !seen.Add((own, r.Id))) continue;
+                            var l = sameBy[own].Twins;
+                            if (l.Count < 5) l.Add($"tt{r.Id:0000000} ({r.Votes.ToString("N0", CultureInfo.InvariantCulture)} votes)");
+                        }
+                    }
             }
+            return used.Where(tc => sameBy.TryGetValue(tc, out var h) && h.Twins.Count > 0).ToDictionary(tc => tc, tc => sameBy[tc].Twins.ToList());
         }
-        return res;
     }
 
     /// <summary>Python's str.lower(): the Turkish dotted capital I becomes "i" and a combining dot, so titles sort as they do in the Python app.</summary>

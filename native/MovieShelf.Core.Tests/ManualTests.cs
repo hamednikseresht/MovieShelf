@@ -80,7 +80,7 @@ public class ManualTests : IDisposable
         using var c = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = lib.IndexPath, Pooling = false }.ToString());
         c.Open();
         using var cmd = c.CreateCommand();
-        cmd.CommandText = "INSERT INTO titles VALUES (4, 0, 'Heat', 'Heat', 1995, NULL, 90, 'Drama', 6.1, 1200)";
+        cmd.CommandText = "INSERT INTO titles VALUES (4, 0, 'Heat', 'Heat', 1995, NULL, 90, 'Drama', 6.1, 1200); INSERT INTO keys VALUES ('heat', 4, 0)";
         cmd.ExecuteNonQuery();
     }
 

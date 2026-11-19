@@ -68,6 +68,47 @@ public sealed partial class MainWindow
         sw.Restart();
         var again = await Task.Run(lib.LoadMovies);
         lines.Add($"LoadMovies again {sw.Elapsed.TotalMilliseconds:0} ms ({again.Count})");
+        // windows the user opens: how long the click blocks, and the longest freeze while they fill in
+        double maxGap = 0;
+        var gap = Stopwatch.StartNew();
+        var tick = DispatcherQueue.CreateTimer();
+        tick.Interval = TimeSpan.FromMilliseconds(15);
+        tick.Tick += (_, _) => { maxGap = Math.Max(maxGap, gap.Elapsed.TotalMilliseconds); gap.Restart(); };
+        tick.Start();
+        async Task Measure(string name, Func<Stopwatch, Task> act)
+        {
+            await Task.Delay(500);
+            maxGap = 0;
+            gap.Restart();
+            var w = Stopwatch.StartNew();
+            await act(w);
+            lines.Add($"{name}: total {w.ElapsedMilliseconds} ms, longest UI freeze {maxGap:0} ms");
+        }
+        await Measure("open Settings", async w =>
+        {
+            OnSettings(this, new RoutedEventArgs());
+            lines.Add($"open Settings: click returns after {w.ElapsedMilliseconds} ms");
+            await Task.Delay(3000);
+            SettingsWindow.CloseForTest();
+        });
+        await Measure("open Settings again", async w =>
+        {
+            OnSettings(this, new RoutedEventArgs());
+            lines.Add($"open Settings again: click returns after {w.ElapsedMilliseconds} ms");
+            await Task.Delay(3000);
+            SettingsWindow.CloseForTest();
+        });
+        await Measure("open Problems", async w =>
+        {
+            var p = new ProblemsWindow(_ => { }, () => { });
+            p.Activate();
+            lines.Add($"open Problems: click returns after {w.ElapsedMilliseconds} ms");
+            await Task.Delay(200);
+            for (int i = 0; i < 3000 && p.Busy; i++) await Task.Delay(20);
+            lines.Add($"open Problems: list ready after {w.ElapsedMilliseconds} ms ({p.Timing})");
+            p.Close();
+        });
+        tick.Stop();
         await Task.Delay(1500);
         GC.Collect();
         var me = Process.GetCurrentProcess();

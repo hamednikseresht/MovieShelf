@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3 (2026-11-19)
+
+### ⚡ Faster
+- **Problems** opens much faster: the *Same name and year* check now uses the IMDb index's name keys and remembers its answers (on a 7,000-movie library the problem list went from about 7 s to under 1 s; the Windows Problems window shows its list in 0.5 s instead of 5.4 s)
+- **Remove from list** in Problems: the row disappears at once, and the lists refresh in the background (both apps)
+- Python app: the problem list no longer waits for a running update, and the spelling suggestions are prepared in the background when the app starts
+- Windows app: the numbers in **Settings** and on the toolbar badges no longer wait for a running update
+
 ## 1.0.2 (2026-11-15)
 
 ### 🐍 Python app

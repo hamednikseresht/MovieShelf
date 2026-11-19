@@ -1279,7 +1279,9 @@ class AddAndRevise(TempLibrary):
             CREATE TABLE titles(id INTEGER PRIMARY KEY, type INT, title TEXT, orig TEXT, year INT, endyear INT, runtime INT, genres TEXT, rating REAL, votes INT);
             INSERT INTO titles VALUES (1, 0, 'The Godfather', 'The Godfather', 1972, NULL, 175, 'Crime,Drama', 9.2, 2000000);
             INSERT INTO titles VALUES (2, 0, 'Heat', 'Heat', 1995, NULL, 170, 'Crime', 8.3, 700000);
-            INSERT INTO titles VALUES (4, 0, 'Heat', 'Heat', 1995, NULL, 90, 'Drama', 6.1, 1200);''')
+            INSERT INTO titles VALUES (4, 0, 'Heat', 'Heat', 1995, NULL, 90, 'Drama', 6.1, 1200);
+            CREATE TABLE keys(k TEXT, id INT, src INT);
+            INSERT INTO keys VALUES ('thegodfather', 1, 0), ('heat', 2, 0), ('heat', 4, 0);''')
         c.commit()
         c.close()
 

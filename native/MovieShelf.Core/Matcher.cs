@@ -58,6 +58,7 @@ public sealed class Matcher
     public Matcher(string indexPath) => this.indexPath = indexPath;
 
     public bool HasIndex => File.Exists(indexPath);
+    public string IndexPath => indexPath;
 
     /// <summary>Forget cached index data and release pooled connections (after the index is rebuilt).</summary>
     public void Reset()

@@ -116,24 +116,26 @@ public sealed partial class Library
         return novideoCount;
     }
 
-    /// <summary>All library counters in one call. Quick (a few COUNT queries; duplicates are cached).</summary>
+    /// <summary>All library counters in one call. Quick (a few COUNT queries; duplicates are cached). Needs no lock.</summary>
     public LibraryStats GetLibraryStats()
     {
+        using var rd = Reader();   // its own read connection: a running job holding the lock does not make the counters wait
+        int Q(string sql) { using var c = Cmd(rd, sql, Array.Empty<object?>()); return Convert.ToInt32(c.ExecuteScalar()); }
         string ratings = Path.Combine(ImdbDir, "title.ratings.tsv.gz");
         return new LibraryStats
         {
-            Files = Scalar<int>("SELECT count(*) FROM files WHERE present=1"),
-            Matched = Scalar<int>("SELECT count(*) FROM files WHERE present=1 AND tconst IS NOT NULL"),
-            Titles = Scalar<int>("SELECT count(DISTINCT tconst) FROM files WHERE present=1 AND tconst IS NOT NULL"),
-            Posters = Scalar<int>("SELECT count(*) FROM titles WHERE poster IS NOT NULL"),
-            Enriched = Scalar<int>("SELECT count(*) FROM titles WHERE enriched=1"),
-            Tmdb = Scalar<int>("SELECT count(*) FROM titles WHERE tmdb_done=1 AND tmdb_id IS NOT NULL"),
-            Scores = Scalar<int>("SELECT count(*) FROM titles WHERE rt IS NOT NULL OR mc IS NOT NULL"),
-            Problems = Scalar<int>("SELECT count(*) FROM files WHERE present=1 AND manual=0 AND conf IN ('review','fuzzy','online','noyear','none')"),
+            Files = Q("SELECT count(*) FROM files WHERE present=1"),
+            Matched = Q("SELECT count(*) FROM files WHERE present=1 AND tconst IS NOT NULL"),
+            Titles = Q("SELECT count(DISTINCT tconst) FROM files WHERE present=1 AND tconst IS NOT NULL"),
+            Posters = Q("SELECT count(*) FROM titles WHERE poster IS NOT NULL"),
+            Enriched = Q("SELECT count(*) FROM titles WHERE enriched=1"),
+            Tmdb = Q("SELECT count(*) FROM titles WHERE tmdb_done=1 AND tmdb_id IS NOT NULL"),
+            Scores = Q("SELECT count(*) FROM titles WHERE rt IS NOT NULL OR mc IS NOT NULL"),
+            Problems = Q("SELECT count(*) FROM files WHERE present=1 AND manual=0 AND conf IN ('review','fuzzy','online','noyear','none')"),
             Duplicates = OpenDuplicates(),
             Novideo = OpenNovideo(),
-            Wishlist = Scalar<int>("SELECT count(*) FROM wishlist WHERE status='wanted'"),
-            Unlisted = Scalar<int>("SELECT count(*) FROM unlisted"),
+            Wishlist = Q("SELECT count(*) FROM wishlist WHERE status='wanted'"),
+            Unlisted = Q("SELECT count(*) FROM unlisted"),
             RatingsAgeDays = File.Exists(ratings) ? (DateTime.Now - File.GetLastWriteTime(ratings)).TotalDays : null,
             Index = Matcher.HasIndex,
             Datasets = StatsDatasetNames.All(n => File.Exists(Path.Combine(ImdbDir, n + ".tsv.gz"))),

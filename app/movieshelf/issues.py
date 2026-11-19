@@ -14,7 +14,7 @@ from .checker import EPISODE_RE, RES_RANK, compare_quality, quality_label
 from .probe import real_height_class
 from .fatitles import is_latin_only
 from .matcher import UNSURE
-from .parse import EDITION_WORDS, norm
+from .parse import EDITION_WORDS, key, norm
 
 KINDS = ['novideo', 'dupes', 'lowq', 'unknownq', 'dubonly', 'realq', 'yeardiff', 'nonfilm', 'noposter', 'runtime', 'fatitle', 'namediff', 'nodata', 'samename']
 # TV series and mini-series have their own section (Series) and are not problems; these are the rest
@@ -137,37 +137,57 @@ def _key(f):
     return f'tt{f["tconst"]:07d}' if f['tconst'] else f'f{f["id"]}'
 
 
+_same_cache = {'stamp': None, 'by': {}}  # tconst -> ((title, orig, en_title, year), [text, ...]) for one index file
+
+
 def same_name_on_imdb(lib, titles, used):
     """{tconst: [text, ...]}: for every matched title, the other IMDb titles with the same name and the same year
-    (the file may belong to either). Needs the offline index. Each text: tt number and votes."""
-    res = {}
+    (the file may belong to either). Needs the offline index. Each text: tt number and votes.
+    Every IMDb title has a match key for its name and its original name (keys, src 0), and two names that are equal
+    when lowercased have the same key, so only the titles sharing a key are read, not every title of every year.
+    The answer for a title depends only on its own names and year, so it is kept until the index file changes:
+    removing a movie or ignoring a row does not look anything up again."""
     if not os.path.exists(lib.index_path) or not used:
-        return res
-    want = {}
-    for tc in used:
-        t = titles.get(tc)
-        if not t or not t['year']:
-            continue
-        for n in {(x or '').strip().lower() for x in (t['title'], t['orig'], t['en_title'])} - {''}:
-            want.setdefault((t['year'], n), []).append(tc)
-    if not want:
-        return res
-    ix = lib.matcher.open()
-    try:
+        return {}
+    st = os.stat(lib.index_path)
+    stamp = (lib.index_path, st.st_mtime_ns, st.st_size)
+    if _same_cache['stamp'] != stamp:
+        _same_cache.update(stamp=stamp, by={})
+    by = _same_cache['by']
+    sig = {tc: (t['title'], t['orig'], t['en_title'], t['year']) for tc in used if (t := titles.get(tc)) is not None}
+    todo = [tc for tc in used if tc in sig and by.get(tc, (None,))[0] != sig[tc]]
+    if todo:
+        want = {}
+        for tc in todo:
+            t = titles[tc]
+            by[tc] = (sig[tc], [])
+            if not t['year']:
+                continue
+            for n in {(x or '').strip().lower() for x in (t['title'], t['orig'], t['en_title'])} - {''}:
+                want.setdefault((t['year'], n), []).append(tc)
+        ks = sorted({key(n) for _, n in want} - {''})
+        rows = {}
+        if ks:
+            ix = lib.matcher.open()
+            try:
+                for i in range(0, len(ks), 500):
+                    part = ks[i:i + 500]
+                    for r in ix.execute(f'SELECT t.id, t.title, t.orig, t.year, t.votes FROM keys k JOIN titles t ON t.id = k.id '
+                                        f'WHERE k.src = 0 AND k.k IN ({",".join("?" * len(part))})', part):
+                        rows[r['id']] = r
+            finally:
+                ix.close()
         seen = set()
-        for year in sorted({y for y, _ in want}):
-            for r in ix.execute('SELECT id, type, title, orig, votes FROM titles WHERE year=?', (year,)):
-                for n in (r['title'], r['orig']):
-                    for own in want.get((year, (n or '').strip().lower()), ()):
-                        if own == r['id'] or (own, r['id']) in seen:
-                            continue
-                        seen.add((own, r['id']))
-                        lst = res.setdefault(own, [])
-                        if len(lst) < 5:
-                            lst.append(f'tt{r["id"]:07d} ({r["votes"] or 0:,} votes)')
-    finally:
-        ix.close()
-    return res
+        for r in sorted(rows.values(), key=lambda r: (r['year'] or 0, r['id'])):
+            for n in (r['title'], r['orig']):
+                for own in want.get((r['year'], (n or '').strip().lower()), ()):
+                    if own == r['id'] or (own, r['id']) in seen:
+                        continue
+                    seen.add((own, r['id']))
+                    lst = by[own][1]
+                    if len(lst) < 5:
+                        lst.append(f'tt{r["id"]:07d} ({r["votes"] or 0:,} votes)')
+    return {tc: by[tc][1] for tc in used if tc in by and by[tc][1]}
 
 
 def build(lib, db=None):

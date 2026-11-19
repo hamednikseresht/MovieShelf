@@ -222,11 +222,8 @@ public sealed partial class MainWindow
         var (problems, wishlist) = await Task.Run(() =>
         {
             lib.OpenDuplicates();   // cached: the counters below find it ready and hold the lock for a moment only
-            lock (lib.Lock)
-            {
-                var s = lib.GetLibraryStats();
-                return (s.Problems + s.Duplicates + s.Novideo, s.Wishlist);
-            }
+            var s = lib.GetLibraryStats();   // reads on its own connection: a running job does not hold it up
+            return (s.Problems + s.Duplicates + s.Novideo, s.Wishlist);
         });
         if (run != badgeRun) return;
         ProblemsCount.Text = problems > 999 ? "999+" : problems.ToString();
