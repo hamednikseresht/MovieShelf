@@ -1296,7 +1296,11 @@ class Library:
         for r in db.execute('SELECT raw, path FROM fileinfo ORDER BY path'):
             where.setdefault(r['raw'], []).append(r['path'])
         q = ','.join('?' * len(UNSURE))
-        for f in db.execute(f'SELECT * FROM files WHERE present=1 AND manual=0 AND conf IN ({q}) ORDER BY title', UNSURE).fetchall():
+        files = db.execute(f'SELECT * FROM files WHERE present=1 AND manual=0 AND conf IN ({q}) ORDER BY title', UNSURE).fetchall()
+        if ix:  # the spelling search reads one bucket of IMDb names per year: load the ones still needed all at once first
+            self.matcher.prefetch_fuzzy(y + d for f in files if f['year'] and f['conf'] in ('none', 'fuzzy')
+                                        and (f['id'], f['tconst'], f['conf']) not in self._cand_cache for y in (f['year'],) for d in (0, -1, 1))
+        for f in files:
             t = titles.get(f['tconst'])
             cur = {'tconst': f['tconst'], 'title': t['title'], 'year': t['year'], 'votes': t['votes'],
                    'rating': t['rating'], 'type': t['type']} if t else None

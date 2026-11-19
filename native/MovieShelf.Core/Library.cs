@@ -617,25 +617,29 @@ CREATE TABLE IF NOT EXISTS mediainfo(path TEXT PRIMARY KEY, size INT, mtime REAL
                 if (!where.TryGetValue(r.GetString(0), out var l)) where[r.GetString(0)] = l = new();
                 l.Add(r.GetString(1));
             }
-        SqliteConnection? ix = Matcher.HasIndex ? Matcher.Open() : null;
-        try
+        foreach (var f in rows)
         {
-            foreach (var f in rows)
+            Candidate2? cur = f.Tc != null && titles.TryGetValue(f.Tc.Value, out var t) ? t : null;
+            list.Add(new MatchProblem
             {
-                Candidate2? cur = f.Tc != null && titles.TryGetValue(f.Tc.Value, out var t) ? t : null;
-                var mp = new MatchProblem
-                {
-                    FileId = f.Id, Raw = f.Raw, Title = f.Title, Alt = f.Alt, Year = f.Year, Conf = f.Conf,
-                    Reason = Matcher.Reason(f.Conf, f.Year, cur?.Year), Current = cur,
-                    Paths = where.TryGetValue(f.Raw, out var ps) ? ps : new(),
-                };
-                if (ix != null)
-                    mp.Cands = Matcher.AllCandidates(ix, new MatchInput { Title = f.Title, AltTitle = f.Alt, Year = f.Year, Conf = f.Conf },
-                        f.Tc != null ? new[] { f.Tc.Value } : null, fuzzy: fuzzy);
-                list.Add(mp);
-            }
+                FileId = f.Id, Raw = f.Raw, Title = f.Title, Alt = f.Alt, Year = f.Year, Conf = f.Conf,
+                Reason = Matcher.Reason(f.Conf, f.Year, cur?.Year), Current = cur,
+                Paths = where.TryGetValue(f.Raw, out var ps) ? ps : new(),
+            });
         }
-        finally { ix?.Dispose(); }
+        if (Matcher.HasIndex && rows.Count > 0)
+        {
+            if (fuzzy)   // the spelling search reads one bucket of IMDb names per year: load them all at once first
+                Matcher.PrefetchFuzzy(rows.Where(f => f.Year is > 0 && f.Conf is "none" or "fuzzy").SelectMany(f => new[] { f.Year!.Value, f.Year.Value - 1, f.Year.Value + 1 }));
+            // the other candidates of each file, several files at once (each thread on its own read-only connection; the list keeps its order)
+            Parallel.For(0, rows.Count, new ParallelOptions { MaxDegreeOfParallelism = Math.Clamp(Environment.ProcessorCount - 1, 1, 8) }, () => Matcher.Open(), (i, _, ix) =>
+            {
+                var f = rows[i];
+                list[i].Cands = Matcher.AllCandidates(ix, new MatchInput { Title = f.Title, AltTitle = f.Alt, Year = f.Year, Conf = f.Conf },
+                    f.Tc != null ? new[] { f.Tc.Value } : null, fuzzy: fuzzy);
+                return ix;
+            }, ix => ix.Dispose());
+        }
         var order = new[] { "none", "review", "fuzzy", "noyear", "online" };
         return list.OrderBy(m => Array.IndexOf(order, m.Conf) is var i and >= 0 ? i : 9).ToList();
     }

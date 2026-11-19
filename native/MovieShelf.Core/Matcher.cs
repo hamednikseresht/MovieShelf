@@ -188,18 +188,44 @@ public sealed class Matcher
         return outList.OrderByDescending(c => c.Score).Take(5).ToList();
     }
 
+    readonly object fuzzyLock = new();
+
+    static (List<string> Keys, List<int> Ids) LoadBucket(SqliteConnection ix, int year)
+    {
+        var b = (Keys: new List<string>(), Ids: new List<int>());
+        using var c = Cmd(ix, "SELECT k.k, k.id FROM titles t JOIN keys k ON k.id = t.id WHERE t.year = ? AND t.type <= 6", new object[] { year });
+        using var r = c.ExecuteReader();
+        while (r.Read()) { b.Keys.Add(r.GetString(0)); b.Ids.Add(r.GetInt32(1)); }
+        return b;
+    }
+
+    void Keep(int year, (List<string> Keys, List<int> Ids) b)
+    {
+        fuzzyCache[year] = b;
+        if (fuzzyCache.Count > 400) fuzzyCache.Remove(fuzzyCache.Keys.First());
+    }
+
     (List<string> Keys, List<int> Ids) FuzzyBucket(SqliteConnection ix, int year)
     {
-        if (!fuzzyCache.TryGetValue(year, out var b))
-        {
-            b = (new List<string>(), new List<int>());
-            using var c = Cmd(ix, "SELECT k.k, k.id FROM titles t JOIN keys k ON k.id = t.id WHERE t.year = ? AND t.type <= 6", new object[] { year });
-            using var r = c.ExecuteReader();
-            while (r.Read()) { b.Keys.Add(r.GetString(0)); b.Ids.Add(r.GetInt32(1)); }
-            fuzzyCache[year] = b;
-            if (fuzzyCache.Count > 400) fuzzyCache.Remove(fuzzyCache.Keys.First());
-        }
+        lock (fuzzyLock)
+            if (fuzzyCache.TryGetValue(year, out var have)) return have;
+        var b = LoadBucket(ix, year);
+        lock (fuzzyLock) Keep(year, b);
         return b;
+    }
+
+    /// <summary>Loads the year buckets the coming spelling searches need, several at once, each on its own read-only connection. A bucket holds
+    /// the same rows in the same order as when it is loaded on its own, so the suggestions do not change; only the waiting does.</summary>
+    public void PrefetchFuzzy(IEnumerable<int> years)
+    {
+        List<int> todo;
+        lock (fuzzyLock) todo = years.Distinct().Where(y => !fuzzyCache.ContainsKey(y)).Take(400).ToList();
+        if (todo.Count < 2 || !HasIndex) return;
+        var got = new System.Collections.Concurrent.ConcurrentDictionary<int, (List<string> Keys, List<int> Ids)>();
+        Parallel.ForEach(todo, new ParallelOptions { MaxDegreeOfParallelism = Math.Clamp(Environment.ProcessorCount - 1, 2, 8) },
+            () => Open(), (y, _, ix) => { got[y] = LoadBucket(ix, y); return ix; }, ix => ix.Dispose());
+        lock (fuzzyLock)
+            foreach (int y in todo) Keep(y, got[y]);
     }
 
     IxTitle? Get(SqliteConnection ix, int id)

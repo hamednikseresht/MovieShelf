@@ -2,6 +2,7 @@
 fuzzy spelling within the year, English + original names glued together), then the
 IMDb online suggestion search as a fallback."""
 import math
+import os
 import sqlite3
 import time
 
@@ -106,14 +107,36 @@ class Matcher:
         out.sort(key=lambda x: -x[0])
         return out[:5]
 
+    @staticmethod
+    def _load_bucket(ix, year):
+        cur = ix.cursor()
+        cur.row_factory = None  # plain tuples: much quicker than sqlite3.Row for a hundred thousand rows
+        rows = cur.execute('SELECT k.k, k.id FROM titles t JOIN keys k ON k.id = t.id '
+                           'WHERE t.year = ? AND t.type <= 6', (year,)).fetchall()
+        return [r[0] for r in rows], [r[1] for r in rows]
+
+    def _keep(self, year, bucket):
+        self._fuzzy_cache[year] = bucket
+        if len(self._fuzzy_cache) > 400:
+            self._fuzzy_cache.pop(next(iter(self._fuzzy_cache)))
+
     def _fuzzy_bucket(self, ix, year):
         if year not in self._fuzzy_cache:
-            rows = ix.execute('SELECT k.k, k.id FROM titles t JOIN keys k ON k.id = t.id '
-                              'WHERE t.year = ? AND t.type <= 6', (year,)).fetchall()
-            self._fuzzy_cache[year] = ([r[0] for r in rows], [r[1] for r in rows])
-            if len(self._fuzzy_cache) > 400:
-                self._fuzzy_cache.pop(next(iter(self._fuzzy_cache)))
+            self._keep(year, self._load_bucket(ix, year))
         return self._fuzzy_cache[year]
+
+    def prefetch_fuzzy(self, years):
+        """Load the year buckets the coming spelling searches need, in one go on one plain connection. A bucket holds
+        the same rows in the same order as when loaded on its own, so the suggestions do not change."""
+        todo = [y for y in dict.fromkeys(years) if y not in self._fuzzy_cache][:400]
+        if not todo or not os.path.exists(self.index_path):
+            return
+        c = sqlite3.connect(f'file:{self.index_path}?mode=ro', uri=True)
+        try:
+            for y in todo:
+                self._keep(y, self._load_bucket(c, y))
+        finally:
+            c.close()
 
     def fuzzy(self, ix, p, limit=5, cutoff=84):
         if not p['year']:
