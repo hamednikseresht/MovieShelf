@@ -340,6 +340,7 @@ public sealed partial class MainWindow : Window
                 keep = reloadKeep;
             } while (reloadAgain);
             RefreshBadges();
+            AiChanged();
         }
         catch (Exception e)
         {

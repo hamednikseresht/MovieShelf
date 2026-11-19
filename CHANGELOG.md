@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.4 (2026-11-19)
+
+### 🤖 AI (optional, both apps)
+- **Settings → AI:** choose Anthropic (Claude), OpenAI, DeepSeek, Google (Gemini) or Ollama (on your own PC), paste the key, pick a model (**List models**), **Test & save**
+- **AI search:** the **AI** button next to the search box turns a request in plain words into a search; for a theme or “films like …” it shows the films it names that you own
+- **Translate:** plots and taglines into Persian (or any language you set); translations are kept
+- The search language accepts a list of IMDb ids: `id:tt0113277,tt0068646`
+
+### ⚡ Faster
+- Windows app: the spelling suggestions in Problems are ready in about 5 s instead of 12 s on a 7,000-movie library (the IMDb name buckets load in parallel; same suggestions)
+
 ## 1.0.3 (2026-11-19)
 
 ### ⚡ Faster

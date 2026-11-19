@@ -50,6 +50,7 @@ function parseQuery(q) {
     let fn = null;
     if (key && val) {
       if (NUM_FIELDS[key]) { const [get, bare] = NUM_FIELDS[key], t = numSpec(val, bare); if (t) fn = m => { const v = get(m); return v != null && v !== '' && t(+v); }; }
+      else if (key === 'id' && val.includes(',')) { const ids = new Set(val.split(',').map(x => fold(x.trim())).filter(Boolean)); fn = m => !!m.tt && ids.has(fold(m.tt)); }  // id:tt1,tt2 (AI search)
       else if (TXT_FIELDS[key]) { const get = TXT_FIELDS[key], v = fold(/^(res|quality)$/.test(key) && /^4k$/i.test(val) ? '2160p' : val); fn = m => get(m).includes(v); }
       else if (key === 'is' && IS_FLAGS[val.toLowerCase()]) { const f = IS_FLAGS[val.toLowerCase()]; fn = m => !!f(m); }
       else if (key === 'has' && HAS_FLAGS[val.toLowerCase()]) { const f = HAS_FLAGS[val.toLowerCase()]; fn = m => !!f(m); }

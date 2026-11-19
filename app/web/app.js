@@ -413,6 +413,7 @@ function openMovie(m) {
           ${(m.genres || []).map(g => `<button type="button" class="chip" data-genre="${esc(g)}" title="Show all ${esc(g)} movies">${esc(g)}</button>`).join('')}
         </div>
         ${m.tagline ? `<div class="tagline">${esc(m.tagline)}</div>` : ''}
+        ${AI_READY && m.tt && (m.plot || m.tagline) ? `<div class="trrow"><button type="button" class="link" data-tr="${+m.tt.slice(2)}">${tr('Translate')}</button> <span class="dim" id="tr-msg" role="status"></span></div><div class="plot" id="tr-out" dir="auto" hidden></div>` : ''}
         ${m.plot ? `<div class="plot">${esc(m.plot)}</div>` : (m.tt ? '<div class="plot dim" style="color:var(--muted-foreground)">Add a free TMDB key in Settings to get plots, countries and cast photos.</div>' : '')}
         ${m.dir?.length ? `<h3 class="hh">Director</h3><div class="people">${m.dir.map(p => personChip(p)).join('')}</div>` : ''}
         <div class="ubar">
@@ -532,7 +533,72 @@ function openStats() {
 
 // ---------------- settings ----------------
 let STAB = 'general';
-const STABS = [['general', 'General'], ['appearance', 'Appearance'], ['online', 'Online data'], ['maintenance', 'Maintenance'], ['log', 'Activity log']];
+// Settings -> AI: key, label, default model, needs a key, default address (the same list as movieshelf/ai.py)
+const AI_PROVIDERS = [['anthropic', 'Anthropic (Claude)', 'claude-opus-5-5', true, 'https://api.anthropic.com'], ['openai', 'OpenAI', '', true, 'https://api.openai.com/v1'],
+  ['deepseek', 'DeepSeek', 'deepseek-chat', true, 'https://api.deepseek.com'], ['google', 'Google (Gemini)', '', true, 'https://generativelanguage.googleapis.com/v1beta'],
+  ['ollama', 'Ollama (on this PC)', '', false, 'http://localhost:11434']];
+let AI_READY = false;
+function aiShape(changed) {
+  const p = AI_PROVIDERS.find(x => x[0] === $('#s-aip').value);
+  $('#s-aik').disabled = !p || !p[3];
+  ['#s-aim', '#s-aiu', '#s-ail', '#s-ai-list', '#s-ai-save'].forEach(s => { $(s).disabled = !p; });
+  $('#s-aiu').placeholder = p ? p[4] : '';
+  if (p && (changed || !$('#s-aim').value)) $('#s-aim').value = p[2];
+}
+const aiBody = () => ({ provider: $('#s-aip').value, key: $('#s-aik').value.trim(), model: $('#s-aim').value.trim(), url: $('#s-aiu').value.trim(), lang: $('#s-ail').value.trim() });
+async function aiClick(t) {
+  const msg = $('#s-ai-msg');
+  if (t.id === 's-ai-list') {
+    msg.textContent = tr('Asking for the list of models…');
+    const r = await api('/api/ai/models', aiBody());
+    if (!r.models) return (msg.textContent = r.message || 'Error');
+    $('#s-aim-list').innerHTML = r.models.map(n => `<option value="${esc(n)}">`).join('');
+    msg.textContent = tr('{0} models. Pick one or type its name.').replace('{0}', r.models.length);
+    return true;
+  }
+  if (t.id === 's-ai-save') {
+    t.disabled = true; msg.textContent = tr('Testing…');
+    const r = await api('/api/ai/test', aiBody());
+    t.disabled = false;
+    msg.textContent = (r.ok ? tr('It works: ') : tr('Not saved: ')) + (r.message || '');
+    if (r.ok) { $('#s-aik').value = ''; $('#s-aik').placeholder = 'Key saved – paste a new one to replace'; toast(tr('AI settings saved')); poll(); }
+    return true;
+  }
+  return false;
+}
+// ---- AI search: a request in plain words becomes a search the user can read and change
+function openAiSearch() {
+  if (!AI_READY) {
+    confirmBox({ title: tr('AI search'), text: tr('Connect an AI model first: Settings → AI. Then describe what you want in your own words, for example “funny 90s films with Jim Carrey”.'), ok: tr('Open Settings') })
+      .then(ok => { if (ok) openSettings('ai'); });
+    return;
+  }
+  $('#dlg').classList.remove('wide');
+  $('#dlg').dataset.mode = 'aisearch';
+  $('#dlg').innerHTML = `${closeBtn}<div class="pad">
+    <h2 id="dlg-title" dir="auto">${tr('AI search')}</h2>
+    <div class="line"><input type="text" id="ai-q" dir="auto" autocomplete="off" placeholder="${esc(tr('For example: funny 90s films with Jim Carrey · films like Inception · unwatched sci-fi in 4K'))}"><button type="button" class="btn" id="ai-go">${tr('Search')}</button></div>
+    <div class="hint" id="ai-msg" role="status">${tr('What you type is sent to your AI provider; the answer becomes a normal search you can change.')}</div>
+  </div>`;
+  showModal('dlg-title');
+  $('#ai-q').focus();
+}
+async function aiSearchGo() {
+  const text = $('#ai-q').value.trim(); if (!text) return;
+  const go = $('#ai-go'); go.disabled = true;
+  $('#ai-msg').textContent = tr('Asking the AI…');
+  const r = await api('/api/ai/search', { text });
+  go.disabled = false;
+  if (r.error) return ($('#ai-msg').textContent = r.error);
+  const have = (r.imdb || []).filter(id => ALL.some(m => m.tt === id));
+  const q = have.length ? 'id:' + have.join(',') : r.query;
+  if (!q) return ($('#ai-msg').textContent = tr('None of the films the AI found is in your library.'));
+  closeModal();
+  resetFilters(); $('#q').value = F.q = q; buildFacets(); apply();
+  toast((r.note || tr('AI search')) + (have.length ? ` · ${tr('{0} of the films it found are in your library').replace('{0}', have.length)}` : ''), 'info');
+}
+
+const STABS = [['general', 'General'], ['appearance', 'Appearance'], ['online', 'Online data'], ['ai', 'AI'], ['maintenance', 'Maintenance'], ['log', 'Activity log']];
 const prefBtn = (pref, val, label, cur) => `<button type="button" data-pref="${pref}" data-val="${val}" class="${cur === val ? 'on' : ''}" aria-pressed="${cur === val}">${label}</button>`;
 async function openSettings(tab) {
   if (typeof tab === 'string') STAB = tab;
@@ -589,6 +655,24 @@ async function openSettings(tab) {
           <div class="line"><input type="password" id="s-omdb" placeholder="${s.omdb_key ? 'Key saved – paste a new one to replace' : 'OMDb key'}"><button class="btn outline" id="s-omdb-save">Test &amp; save</button></div>
           <div class="hint">Get one at omdbapi.com/apikey.aspx (free: 1,000 titles a day; the rest continue on the next update). <span id="s-omdb-msg" role="status"></span></div></div>
       </section>`)}
+    ${pane('ai', `
+      <section class="setsec"><h3>AI (optional)</h3>
+        <p class="sub">${esc(tr('Connect an AI model to search in plain words (“funny 90s films with Jim Carrey”, “films like Inception”) and to translate plots. Choose a provider, paste its API key, pick a model and press Test & save.'))}</p>
+        <div class="setrow"><label for="s-aip">Provider</label>
+          <select id="s-aip"><option value="">Off</option>${AI_PROVIDERS.map(([k, l]) => `<option value="${k}" ${s.ai_provider === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+        <div class="setrow"><label for="s-aik">API key</label>
+          <input type="password" id="s-aik" placeholder="${s.ai_key ? 'Key saved – paste a new one to replace' : 'API key'}" autocomplete="off"></div>
+        <div class="setrow"><label for="s-aim">Model</label>
+          <div class="line"><input type="text" id="s-aim" list="s-aim-list" dir="ltr" value="${esc(s.ai_model || '')}" autocomplete="off"><datalist id="s-aim-list"></datalist><button type="button" class="btn outline" id="s-ai-list">List models</button></div></div>
+        <div class="setrow"><label for="s-aiu">Server address (optional)</label>
+          <input type="text" id="s-aiu" dir="ltr" value="${esc(s.ai_url || '')}" autocomplete="off">
+          <div class="hint">Ollama runs models on this PC and needs no key; its address is usually http://localhost:11434. The other providers need an account and an API key from their website, and charge for use.</div></div>
+        <div class="setrow"><label for="s-ail">Translate into</label>
+          <input type="text" id="s-ail" value="${esc(s.ai_lang || 'Persian')}" placeholder="Persian"></div>
+        <div class="btns"><button type="button" class="btn" id="s-ai-save">Test &amp; save</button></div>
+        <div class="hint" id="s-ai-msg" role="status"></div>
+        <p class="sub">Privacy: what you type into AI search, and the plot of a movie you translate, are sent to the provider you choose. Your library list, files and notes are not sent.</p>
+      </section>`)}
     ${pane('maintenance', `
       <section class="setsec"><h3>Update</h3>
         <p class="sub">“Scan list &amp; update” adds new lines from your list files. Manual matches are never overwritten.</p>
@@ -641,6 +725,7 @@ async function openSettings(tab) {
       </section>`)}
   </div>`;
   $('#dlg').dataset.mode = 'settings';
+  aiShape(false);
   showModal('dlg-title');
 }
 
@@ -1174,6 +1259,7 @@ async function poll() {
     const st = await api('/api/status');
     const j = st.job;
     LAST_JOB = j;
+    AI_READY = !!st.ai_ready;
     if (!ALL.length && !j.running && j.error) render(0);  // the empty screen explains what to do
     const el = $('#job');
     const showErr = j.error && !j.running && j.error !== dismissedErr;
@@ -1308,6 +1394,7 @@ $('#exportBtn').addEventListener('click', openExport);
 $('#checkBtn').addEventListener('click', openCheck);
 $('#loadBtn').addEventListener('click', openLoad);
 $('#addBtn').addEventListener('click', openAdd);
+$('#aiBtn').addEventListener('click', openAiSearch);
 $('#probBtn').addEventListener('click', openProblems);
 $('#settingsBtn').addEventListener('click', () => openSettings());
 
@@ -1381,6 +1468,19 @@ const DIALOG_CLICKS = {
       $('.myr .lbl').textContent = v ? v + '/10' : 'My rating';
       await setUser(m, { myrating: v }); return;
     }
+    if (t.dataset.tr) {  // Translate: plot and tagline in the language set in Settings -> AI (kept, so a second look is instant)
+      const out = $('#tr-out'), again = !out.hidden;
+      t.disabled = true; $('#tr-msg').textContent = tr('Translating…');
+      const r = await api('/api/ai/translate/' + t.dataset.tr, { again });
+      t.disabled = false;
+      if (r.error) { $('#tr-msg').textContent = r.error; return; }
+      $('#tr-msg').textContent = '';
+      out.textContent = [r.tagline, r.plot].filter(Boolean).join('\n\n');
+      out.style.whiteSpace = 'pre-line';
+      out.hidden = false;
+      t.textContent = tr('Translate again');
+      return;
+    }
     if (t.dataset.revise !== undefined && m) {  // Revise: the Fix match box of the first file; its choice goes to every file of the movie
       const first = m.files[0].id;
       await openFix(first);
@@ -1393,6 +1493,8 @@ const DIALOG_CLICKS = {
   },
 
   async addmovie(t) { if (t.id === 'am-go') await addMovie(); },
+
+  async aisearch(t) { if (t.id === 'ai-go') await aiSearchGo(); },
 
   stats(t) {
     const sf = t.closest('[data-sf]'); if (sf) { resetFilters(); F[sf.dataset.sf].add(sf.dataset.sv); closeModal(); buildFacets(); apply(); return; }
@@ -1462,6 +1564,7 @@ const DIALOG_CLICKS = {
       return;
     }
     if (t.dataset.pref) return setPref(t.dataset.pref, t.dataset.val);
+    if (await aiClick(t)) return;
     if (t.id === 's-tmdb-save') return testKey('tmdb', 'Key works and is saved. Click “Scan list & update” to fetch details.');
     if (t.id === 's-omdb-save') return testKey('omdb', 'Key works and is saved. Click “Update RT & Metacritic now”.');
     if (t.dataset.act) {
@@ -1576,6 +1679,12 @@ $('#modal').addEventListener('click', async e => {
 });
 $('#modal').addEventListener('input', e => { if (e.target.closest?.('#ex')) exUpdate(); });
 $('#modal').addEventListener('change', async e => {
+  if (e.target.id === 's-aip') {  // Settings -> AI: the provider decides which boxes apply; Off is saved at once
+    aiShape(true);
+    $('#s-aim-list').innerHTML = '';
+    if (!e.target.value) { await api('/api/settings', { ai_provider: '' }); $('#s-ai-msg').textContent = tr('AI is off'); poll(); }
+    return;
+  }
   if (e.target.closest?.('#ex')) exUpdate();
   if (e.target.id === 'notes') { const m = ALL.find(x => x.k === $('#dlg').dataset.k); if (m) await setUser(m, { notes: e.target.value }); }
   const opt = { 's-posters': 'online_posters', 's-online': 'online_fallback', 's-auto': 'auto_refresh', 's-probe': 'probe_media', 's-pauto': 'people_auto' }[e.target.id];
@@ -1608,6 +1717,7 @@ $('#modal').addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'ck-path') $('#ck-go').click();
   if (e.key === 'Enter' && e.target.id === 'll-path') $('#ll-go').click();
   if (e.key === 'Enter' && e.target.id === 'am-in') $('#am-go').click();
+  if (e.key === 'Enter' && e.target.id === 'ai-q') $('#ai-go').click();
   if (e.target.dataset.stab && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
     const tabs = $$('[data-stab]'), i = tabs.indexOf(e.target);
     const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];

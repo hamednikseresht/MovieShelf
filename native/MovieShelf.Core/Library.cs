@@ -12,6 +12,8 @@ public sealed class Settings
     public List<string> MediaDirs = new();
     public string FfprobePath = "", PeopleScope = "main";
     public string RenamePattern = RenamePlanner.DefaultPattern;
+    // Settings → AI: provider key (anthropic, openai, deepseek, google, ollama or "" for off), its API key, model, server address, translation language
+    public string AiProvider = "", AiKey = "", AiModel = "", AiUrl = "", AiLang = "Persian";
 
     public static string DefaultListDir() =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", "MovieShelf", "lists");
@@ -148,6 +150,7 @@ CREATE TABLE IF NOT EXISTS mediainfo(path TEXT PRIMARY KEY, size INT, mtime REAL
     {
         Exec(Schema.Replace("\r", ""));
         Exec(NoVideoSchema);
+        Exec(AiSchema);
         foreach (var (table, col, type) in NewColumns)
         {
             bool have = false;
@@ -186,6 +189,11 @@ CREATE TABLE IF NOT EXISTS mediainfo(path TEXT PRIMARY KEY, size INT, mtime REAL
         s.FfprobePath = (string?)o["ffprobe_path"] ?? "";
         s.PeopleScope = (string?)o["people_scope"] ?? "main";
         s.RenamePattern = (string?)o["rename_pattern"] ?? RenamePlanner.DefaultPattern;
+        s.AiProvider = (string?)o["ai_provider"] ?? "";
+        s.AiKey = (string?)o["ai_key"] ?? "";
+        s.AiModel = (string?)o["ai_model"] ?? "";
+        s.AiUrl = (string?)o["ai_url"] ?? "";
+        s.AiLang = (string?)o["ai_lang"] ?? "Persian";
         if (o["media_dirs"] is JsonArray md) s.MediaDirs = md.Select(x => (string?)x ?? "").Where(x => x.Length > 0).ToList();
         return s;
     }
@@ -206,6 +214,11 @@ CREATE TABLE IF NOT EXISTS mediainfo(path TEXT PRIMARY KEY, size INT, mtime REAL
         o["ffprobe_path"] = s.FfprobePath;
         o["people_scope"] = s.PeopleScope;
         o["rename_pattern"] = s.RenamePattern;
+        o["ai_provider"] = s.AiProvider;
+        o["ai_key"] = s.AiKey;
+        o["ai_model"] = s.AiModel;
+        o["ai_url"] = s.AiUrl;
+        o["ai_lang"] = s.AiLang;
         o["media_dirs"] = new JsonArray(s.MediaDirs.Select(x => (JsonNode?)JsonValue.Create(x)).ToArray());
         WriteSettingsJson(o);
     }

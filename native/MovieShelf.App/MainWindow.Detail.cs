@@ -98,6 +98,7 @@ public sealed partial class MainWindow
         PlotText.Text = hint ? Loc.T("Add a free TMDB key in Settings to get plots, countries and cast photos.") : m.Plot ?? "";
         PlotText.Opacity = hint ? 0.7 : 1;
         PlotText.Visibility = U2.Vis(hint || !string.IsNullOrEmpty(m.Plot));
+        ShowTranslateRow(m);
         FillPeople(DirLabel, DirText, m.Dir.Select(p => (p, "")));
 
         FavToggle.IsChecked = m.Fav;

@@ -15,7 +15,7 @@ import zipfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'app'))
 
-from movieshelf import backup, exporter, extras, issues, online, paths  # noqa: E402
+from movieshelf import ai, backup, exporter, extras, issues, online, paths  # noqa: E402
 from movieshelf.checker import compare_quality  # noqa: E402
 from movieshelf.library import Cancelled, Library  # noqa: E402
 from movieshelf.parse import parse  # noqa: E402
@@ -1351,6 +1351,98 @@ class AddAndRevise(TempLibrary):
         self.lib.db.execute("UPDATE titles SET cast_='[[1,\"A\",\"B\"]]', runtime=170, rating=8.3 WHERE tconst=2")
         self.file('Heat.1995.720p', 2)
         self.assertEqual(issues.build(self.lib)['nodata'], [])
+
+
+
+class _Resp(io.BytesIO):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        self.close()
+
+
+class AiFeatures(TempLibrary):
+    """Settings -> AI: the request each provider gets and how its answer is read. A fake opener answers; nothing leaves the test."""
+
+    def fake(self, *answers):
+        calls, queue = [], list(answers)
+
+        def opener(req, timeout=0):
+            calls.append(req)
+            return _Resp(json.dumps(queue.pop(0) if queue else {}).encode('utf-8'))
+        return calls, opener
+
+    def test_anthropic_gets_the_messages_api_shape(self):
+        calls, op = self.fake({'stop_reason': 'end_turn', 'content': [{'type': 'text', 'text': 'OK'}]})
+        self.assertEqual(ai.Client('anthropic', 'k-1', opener=op).ask('sys', 'hi'), 'OK')
+        req = calls[0]
+        self.assertEqual(req.full_url, 'https://api.anthropic.com/v1/messages')
+        h = {k.lower(): v for k, v in req.header_items()}
+        self.assertEqual((h['x-api-key'], h['anthropic-version'], h['anthropic-beta']), ('k-1', '2026-10-21', 'server-side-fallback-2026-07-01'))
+        body = json.loads(req.data)
+        self.assertEqual((body['model'], body['fallbacks'], body['output_config']), ('claude-opus-5-5', 'default', {'effort': 'low'}))
+        self.assertNotIn('temperature', body)
+
+    def test_a_claude_refusal_is_an_error(self):
+        _, op = self.fake({'stop_reason': 'refusal', 'content': []})
+        with self.assertRaises(ai.AiError):
+            ai.Client('anthropic', 'k', opener=op).ask('s', 'u')
+
+    def test_each_provider_gets_its_own_address_and_answer_shape(self):
+        cases = [('openai', 'https://api.openai.com/v1/chat/completions', {'choices': [{'message': {'content': 'OK'}}]}),
+                 ('deepseek', 'https://api.deepseek.com/chat/completions', {'choices': [{'message': {'content': 'OK'}}]}),
+                 ('google', 'https://generativelanguage.googleapis.com/v1beta/models/g-1:generateContent', {'candidates': [{'content': {'parts': [{'text': 'O'}, {'text': 'K'}]}}]}),
+                 ('ollama', 'http://box:11434/api/chat', {'message': {'content': 'OK'}})]
+        for prov, url, answer in cases:
+            calls, op = self.fake(answer)
+            c = ai.Client(prov, '' if prov == 'ollama' else 'k-1', 'g-1' if prov == 'google' else 'm-1', 'http://box:11434/' if prov == 'ollama' else '', opener=op)
+            self.assertEqual(c.ask('s', 'u'), 'OK', prov)
+            self.assertEqual(calls[0].full_url, url, prov)
+        h = {k.lower(): v for k, v in calls[0].header_items()}
+        self.assertNotIn('authorization', h)  # ollama: no key
+
+    def test_a_missing_key_or_model_says_what_to_do(self):
+        with self.assertRaises(ai.AiError) as cm:
+            ai.Client('openai', '')
+        self.assertIn('API key', str(cm.exception))
+        with self.assertRaises(ai.AiError) as cm:
+            ai.Client('openai', 'k').ask('s', 'u')
+        self.assertIn('model', str(cm.exception))
+
+    def test_search_reads_json_inside_a_code_fence(self):
+        _, op = self.fake({'choices': [{'message': {'content': 'Here:\n```json\n{"query": "genre:crime", "imdb": ["tt113277", "bad", "tt0068646"], "note": "crime"}\n```'}}]})
+        r = ai.search(ai.Client('deepseek', 'k', opener=op), '90s crime', ['Crime'])
+        self.assertEqual(r, {'query': 'genre:crime', 'imdb': ['tt0113277', 'tt0068646'], 'note': 'crime'})
+
+    def test_translation_is_asked_once_then_kept(self):
+        self.title(2, 'Heat', 1995)
+        self.lib.db.execute("UPDATE titles SET plot='A crew plans a heist.', tagline='A crime saga' WHERE tconst=2")
+        self.lib.db.commit()
+        self.lib.save_settings({'ai_provider': 'deepseek', 'ai_key': 'k'})
+        calls, op = self.fake({'choices': [{'message': {'content': '{"plot": "گروهی سرقت می‌کنند.", "tagline": "حماسه"}'}}]})
+        orig = ai.Client.__init__
+
+        def init(c, *a, **k):
+            orig(c, *a, **k)
+            c.open = op
+        ai.Client.__init__ = init
+        try:
+            self.assertEqual(self.lib.ai_translate(2), {'plot': 'گروهی سرقت می‌کنند.', 'tagline': 'حماسه'})
+            self.assertIn('into Persian', json.loads(calls[0].data)['messages'][0]['content'])
+            self.assertEqual(self.lib.ai_translate(2)['plot'], 'گروهی سرقت می‌کنند.')
+            self.assertEqual(len(calls), 1)  # the second time from the cache
+        finally:
+            ai.Client.__init__ = orig
+
+    def test_ai_is_ready_only_with_a_provider_and_its_key(self):
+        self.assertFalse(self.lib.ai_ready())
+        self.lib.save_settings({'ai_provider': 'openai'})
+        self.assertFalse(self.lib.ai_ready())
+        self.lib.save_settings({'ai_key': 'k'})
+        self.assertTrue(self.lib.ai_ready())
+        self.lib.save_settings({'ai_provider': 'ollama', 'ai_key': ''})
+        self.assertTrue(self.lib.ai_ready())
 
 
 if __name__ == '__main__':

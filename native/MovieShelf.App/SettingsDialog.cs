@@ -58,7 +58,7 @@ internal sealed class SettingsWindow : Window
 
     static readonly (string Key, string Label)[] TabDefs =
     {
-        ("general", "General"), ("appearance", "Appearance"), ("online", "Online data"), ("maintenance", "Maintenance"), ("log", "Activity log"),
+        ("general", "General"), ("appearance", "Appearance"), ("online", "Online data"), ("ai", "AI"), ("maintenance", "Maintenance"), ("log", "Activity log"),
     };
 
     readonly Library lib = App.Lib;
@@ -172,6 +172,7 @@ internal sealed class SettingsWindow : Window
             {
                 "appearance" => Appearance(),
                 "online" => Online(),
+                "ai" => AiPane(),
                 "maintenance" => Maintenance(),
                 "log" => LogPane(),
                 _ => General(),
@@ -491,6 +492,83 @@ internal sealed class SettingsWindow : Window
             Note(Loc.T("Get one at themoviedb.org → Settings → API.")), tmdbMsg,
             Label("OMDb API key"), Note(Loc.T("Fills Rotten Tomatoes and Metacritic scores that Wikidata does not have.")), omdbRow,
             Note(Loc.T("Get one at omdbapi.com/apikey.aspx (free: 1,000 titles a day; the rest continue on the next update).")), omdbMsg);
+        return p;
+    }
+
+    // ---------- AI ----------
+    FrameworkElement AiPane()
+    {
+        var p = Pane();
+        var prov = new ComboBox { Header = Loc.T("Provider"), HorizontalAlignment = HorizontalAlignment.Stretch };
+        prov.Items.Add(new ComboBoxItem { Content = Loc.T("Off"), Tag = "" });
+        foreach (var x in AiClient.Providers) prov.Items.Add(new ComboBoxItem { Content = x.Label, Tag = x.Key });
+        prov.SelectedIndex = Math.Max(0, prov.Items.Cast<ComboBoxItem>().ToList().FindIndex(i => (string)i.Tag == s!.AiProvider));
+        var key = new PasswordBox { Header = Loc.T("API key"), PlaceholderText = Loc.T(s!.AiKey != "" ? "Key saved – paste a new one to replace" : "API key") };
+        var model = new ComboBox { Header = Loc.T("Model"), IsEditable = true, Text = s.AiModel, HorizontalAlignment = HorizontalAlignment.Stretch };
+        var url = new TextBox { Header = Loc.T("Server address (optional)"), Text = s.AiUrl, FlowDirection = FlowDirection.LeftToRight };
+        var lang = new TextBox { Header = Loc.T("Translate into"), Text = s.AiLang, PlaceholderText = "Persian" };
+        var msg = Note();
+        string Prov() => prov.SelectedItem is ComboBoxItem { Tag: string t } ? t : "";
+        void Shape()
+        {
+            var pr = AiClient.Find(Prov());
+            key.IsEnabled = pr?.NeedsKey == true;
+            model.IsEnabled = url.IsEnabled = lang.IsEnabled = pr != null;
+            url.PlaceholderText = pr?.DefaultUrl ?? "";
+            if (pr != null && string.IsNullOrWhiteSpace(model.Text)) model.Text = pr.DefaultModel;
+        }
+        Shape();
+        prov.SelectionChanged += async (_, _) =>
+        {
+            if (filling) return;
+            model.Items.Clear();
+            model.Text = AiClient.Find(Prov())?.DefaultModel ?? "";
+            Shape();
+            if (Prov() == "") { await Change(x => x.AiProvider = "", "AI is off"); msg.Text = ""; }
+        };
+        lang.LostFocus += (_, _) => { string v = lang.Text.Trim(); if (v != s!.AiLang) _ = Change(x => x.AiLang = v); };
+        string KeyNow() => key.Password.Trim().Length > 0 ? key.Password.Trim() : Prov() == s!.AiProvider ? s.AiKey : "";
+        var list = Btn("List models", async (_, _) =>
+        {
+            msg.Text = Loc.T("Asking for the list of models…");
+            try
+            {
+                var names = await lib.AiModelsAsync(Prov(), KeyNow(), url.Text.Trim());
+                string keep = model.Text;
+                model.Items.Clear();
+                foreach (var n in names) model.Items.Add(n);
+                model.Text = keep;
+                msg.Text = Fmt("{0} models. Pick one or type its name.", names.Count);
+                if (names.Count > 0) model.IsDropDownOpen = true;
+            }
+            catch (Exception e) when (e is HttpRequestException or IOException or TimeoutException or InvalidOperationException or System.Text.Json.JsonException) { msg.Text = e.Message; }
+        });
+        list.VerticalAlignment = VerticalAlignment.Bottom;
+        var test = Btn("Test & save", async (sender, _) =>
+        {
+            var b = (Button)sender;
+            string pv = Prov(), k = KeyNow(), m = model.Text.Trim(), u = url.Text.Trim(), lg = lang.Text.Trim();
+            if (pv == "") return;
+            b.IsEnabled = false;
+            msg.Text = Loc.T("Testing…");
+            var r = await lib.TestAiAsync(pv, k, m, u);
+            if (r.Ok)
+            {
+                await Change(x => { x.AiProvider = pv; x.AiKey = k; x.AiModel = m; x.AiUrl = u; x.AiLang = lg.Length > 0 ? lg : "Persian"; }, "AI settings saved");
+                key.Password = "";
+                key.PlaceholderText = Loc.T("Key saved – paste a new one to replace");
+                msg.Text = Loc.T("It works: ") + r.Message;
+                main.AiChanged();
+            }
+            else msg.Text = Loc.T("Not saved: ") + r.Message;
+            b.IsEnabled = true;
+        }, accent: true);
+        Add(p, Heading("AI (optional)"),
+            Note(Loc.T("Connect an AI model to search in plain words (“funny 90s films with Jim Carrey”, “films like Inception”) and to translate plots. Choose a provider, paste its API key, pick a model and press Test & save.")),
+            prov, key, Line(model, list), url,
+            Note(Loc.T("Ollama runs models on this PC and needs no key; its address is usually http://localhost:11434. The other providers need an account and an API key from their website, and charge for use.")),
+            lang, Row(test), msg,
+            Note(Loc.T("Privacy: what you type into AI search, and the plot of a movie you translate, are sent to the provider you choose. Your library list, files and notes are not sent.")));
         return p;
     }
 

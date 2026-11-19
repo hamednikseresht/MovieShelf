@@ -98,7 +98,8 @@ def make_handler(lib: Library, web_dir):
                 s = lib.settings()
                 return self.send(200, {'job': {**lib.job, 'queued': len(lib.queue)}, 'version': lib.version, 'stats': lib.stats(),
                                        'first_run': lib.first_run(),
-                                       'settings': {**s, 'tmdb_key': bool(s.get('tmdb_key')), 'omdb_key': bool(s.get('omdb_key'))}})
+                                       'ai_ready': lib.ai_ready(),
+                                       'settings': {**s, 'tmdb_key': bool(s.get('tmdb_key')), 'omdb_key': bool(s.get('omdb_key')), 'ai_key': bool(s.get('ai_key'))}})
             if path == '/api/problems':
                 return self.send(200, lib.problems(lib.reader()))
             if path == '/api/removed':
@@ -339,7 +340,7 @@ def make_handler(lib: Library, web_dir):
                     return self.send(200, {'ok': False, 'error': str(e)})
             if path == '/api/settings':
                 s = lib.save_settings(b)
-                return self.send(200, {**s, 'tmdb_key': bool(s.get('tmdb_key')), 'omdb_key': bool(s.get('omdb_key'))})
+                return self.send(200, {**s, 'tmdb_key': bool(s.get('tmdb_key')), 'omdb_key': bool(s.get('omdb_key')), 'ai_key': bool(s.get('ai_key'))})
             if path == '/api/tmdb/test':
                 from .online import Tmdb
                 try:
@@ -353,6 +354,31 @@ def make_handler(lib: Library, web_dir):
                 tconst = int(mm.group(1)) if mm else None
                 threading.Thread(target=lib.set_match, args=(int(m.group(1)), tconst), daemon=True).start()
                 return self.send(200, {'ok': True, 'tconst': tconst})
+            if path in ('/api/ai/test', '/api/ai/models'):
+                s = lib.settings()
+                prov = str(b.get('provider') or '')
+                key = str(b.get('key') or '').strip() or (s.get('ai_key') if prov == s.get('ai_provider') else '')  # the saved key, unless a new one is typed
+                try:
+                    if path == '/api/ai/models':
+                        return self.send(200, {'models': lib.ai_models(prov, key, b.get('url') or '')})
+                    ok, msg = lib.ai_test(prov, key, b.get('model') or '', b.get('url') or '')
+                    if ok:
+                        lib.save_settings({'ai_provider': prov, 'ai_key': key, 'ai_model': str(b.get('model') or '').strip(),
+                                           'ai_url': str(b.get('url') or '').strip(), 'ai_lang': str(b.get('lang') or '').strip() or 'Persian'})
+                    return self.send(200, {'ok': ok, 'message': msg})
+                except ValueError as e:
+                    return self.send(200, {'ok': False, 'message': str(e)})
+            if path == '/api/ai/search':
+                try:
+                    return self.send(200, lib.ai_search(str(b.get('text') or '')))
+                except ValueError as e:
+                    return self.send(400, {'error': str(e)})
+            m = re.fullmatch(r'/api/ai/translate/(\d+)', path)
+            if m:
+                try:
+                    return self.send(200, lib.ai_translate(int(m.group(1)), bool(b.get('again'))))
+                except ValueError as e:
+                    return self.send(400, {'error': str(e)})
             if path == '/api/movies/add':
                 tconst = lib.parse_imdb_id(b.get('imdb'))
                 if not tconst:

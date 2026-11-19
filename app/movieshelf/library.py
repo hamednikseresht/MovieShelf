@@ -11,7 +11,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from . import backup, checker, extras, fatitles, fullbackup, imdb_index, issues, online, paths, probe, scores
+from . import ai, backup, checker, extras, fatitles, fullbackup, imdb_index, issues, online, paths, probe, scores
 from .matcher import UNSURE, Matcher, reason
 from .parse import parse
 
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS persons(nconst INTEGER PRIMARY KEY, tmdb_id INT, data
 CREATE TABLE IF NOT EXISTS unlisted(path TEXT PRIMARY KEY, raw TEXT, size INT, mtime REAL);
 CREATE TABLE IF NOT EXISTS removed(raw TEXT PRIMARY KEY, tconst INT, title TEXT, removed TEXT);
 CREATE TABLE IF NOT EXISTS novideo(path TEXT PRIMARY KEY, raw TEXT, nfiles INT, size INT, names TEXT);
+CREATE TABLE IF NOT EXISTS ai_text(tconst INTEGER, lang TEXT, plot TEXT, tagline TEXT, made TEXT, PRIMARY KEY(tconst, lang));
 CREATE TABLE IF NOT EXISTS mediainfo(path TEXT PRIMARY KEY, size INT, mtime REAL, ok INT, duration INT, width INT, height INT,
     vcodec TEXT, bitrate INT, audio TEXT, subs TEXT, n_audio INT, n_subs INT);
 '''
@@ -148,7 +149,9 @@ class Library:
         s = {'list_dir': paths.default_list_dir(), 'tmdb_key': '', 'omdb_key': '',
              'online_posters': True, 'online_fallback': True, 'auto_refresh': True, 'media_dirs': [],
              'probe_media': False, 'ffprobe_path': '', 'people_auto': False, 'people_scope': 'main',
-             'rename_pattern': '{title} ({year}) [{res} {src}]'}  # = extras.DEFAULT_PATTERN
+             'rename_pattern': '{title} ({year}) [{res} {src}]',  # = extras.DEFAULT_PATTERN
+             # Settings -> AI: provider (anthropic, openai, deepseek, google, ollama or '' for off), its key, model, address, translation language
+             'ai_provider': '', 'ai_key': '', 'ai_model': '', 'ai_url': '', 'ai_lang': 'Persian'}
         if os.path.exists(self.settings_path):
             with open(self.settings_path, encoding='utf-8-sig') as f:  # a BOM from an editor or the installer is fine
                 s.update(json.load(f))
@@ -1070,6 +1073,58 @@ class Library:
         self.version += 1
         # people + poster + TMDB in the background
         self.start(lambda: (self.enrich([tconst]), self.fetch_posters(), self.fetch_tmdb([tconst])), queue=True)
+
+    # ---------- AI (Settings -> AI) ----------
+    def ai_ready(self):
+        s = self.settings()
+        p = ai.BY_KEY.get(s.get('ai_provider') or '')
+        return bool(p) and (not p[3] or bool(s.get('ai_key')))
+
+    def _ai(self):
+        s = self.settings()
+        return ai.Client(s.get('ai_provider'), s.get('ai_key'), s.get('ai_model'), s.get('ai_url'))
+
+    def ai_test(self, provider, key, model, url):
+        """Settings -> AI -> Test: a tiny question with the given choices (not yet saved). (ok, message)."""
+        try:
+            c = ai.Client(provider, key, model, url)
+            a = c.ask('You check that an API connection works.', 'Reply with the single word: OK', 50).strip()
+            return (True, f'{c.model}: {a}') if a else (False, 'The model sent an empty answer.')
+        except ai.AiError as e:
+            return False, str(e)
+
+    def ai_models(self, provider, key, url):
+        return ai.Client(provider, key, 'x', url).models()
+
+    def ai_search(self, request):
+        db = self.reader()
+        try:
+            genres = sorted({g for (gs,) in db.execute("SELECT genres FROM titles WHERE genres IS NOT NULL AND genres != ''") for g in gs.split(',')})
+        finally:
+            db.close()
+        return ai.search(self._ai(), request, genres)
+
+    def ai_translate(self, tconst, again=False):
+        """{'plot', 'tagline'} in the translation language, from the cache or the AI."""
+        lang = (self.settings().get('ai_lang') or '').strip() or 'Persian'
+        db = self.reader()
+        try:
+            if not again:
+                r = db.execute('SELECT plot, tagline FROM ai_text WHERE tconst=? AND lang=?', (tconst, lang)).fetchone()
+                if r:
+                    return {'plot': r['plot'] or '', 'tagline': r['tagline'] or ''}
+            t = db.execute('SELECT plot, tagline FROM titles WHERE tconst=?', (tconst,)).fetchone()
+        finally:
+            db.close()
+        if not t:
+            raise ai.AiError('This title is not in the library.')
+        if not (t['plot'] or '').strip() and not (t['tagline'] or '').strip():
+            raise ai.AiError('This movie has no plot to translate yet (add a TMDB key in Settings → Online data).')
+        plot, tag = ai.translate(self._ai(), lang, t['plot'], t['tagline'])
+        with self.lock:
+            self.db.execute('INSERT OR REPLACE INTO ai_text(tconst, lang, plot, tagline, made) VALUES (?,?,?,?,?)', (tconst, lang, plot, tag, now()))
+            self.db.commit()
+        return {'plot': plot, 'tagline': tag}
 
     @staticmethod
     def parse_imdb_id(text):

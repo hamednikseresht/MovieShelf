@@ -196,6 +196,25 @@ When your movie folders are set, a title whose own folder is empty, or holds onl
 - ➕ **Add movie** (top bar): paste an IMDb link or a `tt` number. MovieShelf reads the name and year from IMDb, adds the movie to `added.txt` in your list folder, keeps your choice as a manual match, and fetches the cast, rating and poster. A movie you already have is reported, not added twice.
 - ✏️ **Revise IMDb match** (in a movie's details): when a film looks right but IMDb has two titles with the same name and year, open the movie, press **Revise IMDb match**, paste the correct IMDb link or number (or search by name) and press **Use this**. All files of that movie move to the new title, and its details and poster are fetched again.
 
+## AI features (optional)
+
+Connect an AI model in **Settings → AI** to get two extra features:
+
+- 🤖 **AI search** (the **AI** button next to the search box): describe what you want in your own words, for example *“funny 90s films with Jim Carrey”*, *“unwatched sci-fi in 4K”* or *“films like Inception”*. The answer becomes a normal search you can read and change. For a theme or “films like …”, the AI names well-known films and you see the ones you own (`id:tt…,tt…`).
+- 🌍 **Translate** (under a movie's plot): translates the plot and tagline into the language you set (Persian by default). A translation is kept, so it opens instantly the next time.
+
+| Provider | What you need |
+|---|---|
+| **Anthropic (Claude)** | An API key from console.anthropic.com. Default model: `claude-opus-5-5` |
+| **OpenAI** | An API key from platform.openai.com. Press **List models** and pick one |
+| **DeepSeek** | An API key from platform.deepseek.com. Default model: `deepseek-chat` |
+| **Google (Gemini)** | An API key from aistudio.google.com. Press **List models** and pick one |
+| **Ollama** | Free, runs on your own PC, no key. Install Ollama, pull a model (`ollama pull llama3.1`), keep the address `http://localhost:11434` |
+
+Choose the provider, paste the key, pick a model and press **Test & save**: it sends one tiny question and saves only when the answer comes back. The paid providers charge for what you use.
+
+🔒 **Privacy:** only what you type into AI search, and the plot of a movie you translate, are sent to the provider you chose. Your library list, files and notes are never sent. Keys are kept in your own `settings.json`.
+
 ## Posters by hand
 
 If no poster can be found, open the movie and press **Add poster** (or use Problems → Other → **No poster**). Choose an image file (JPEG, PNG, WebP or GIF, up to 15 MB), or paste an image address or a file path, then press **Use**. The poster is kept: updates never replace it, and the full backup holds it. **Remove poster** clears it.

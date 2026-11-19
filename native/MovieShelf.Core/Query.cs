@@ -109,6 +109,11 @@ public sealed class SearchQuery
                     var t = NumSpec(val, nf.Bare);
                     if (t != null) fn = m => nf.Get(m) is { } v && t(v);
                 }
+                else if (key == "id" && val.Contains(','))   // id:tt1,tt2,… (AI search lists the films it found this way)
+                {
+                    var ids = val.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(Movie.Fold).ToHashSet();
+                    fn = m => m.Tconst != null && ids.Contains(Movie.Fold(m.K));
+                }
                 else if (TxtFields.TryGetValue(key, out var get))
                 {
                     string v = Movie.Fold(Regex.IsMatch(key, "^(res|quality)$") && val.Equals("4k", StringComparison.OrdinalIgnoreCase) ? "2160p" : val);

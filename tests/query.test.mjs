@@ -87,3 +87,9 @@ test('numSpec', () => {
   assert.ok(numSpec('1k-2k', false)(1500) && !numSpec('1k-2k', false)(2500));
   assert.ok(numSpec('5', true)(5) && numSpec('5', true)(6) && !numSpec('5', false)(6));
 });
+
+test('id: takes a comma list (AI search)', () => {
+  assert.ok(hit('id:tt0000001,tt0113277', movie({ tt: 'tt0113277' })));
+  assert.ok(!hit('id:tt0000001,tt0000002', movie({ tt: 'tt0113277' })));
+  assert.ok(!hit('id:tt0000001,tt0113277', movie({ tt: null })));
+});
